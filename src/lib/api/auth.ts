@@ -1,6 +1,7 @@
 'use client';
 import axios from "axios";
 import { RegisterDto, RegisterUserResponse, LoginDto, LoginResponse } from "@/app/types/Auth";
+import { useAuthStore } from "@/stores/authStore";
 
 // Configure base URL for API calls
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
@@ -23,12 +24,12 @@ export async function registerUser(data: RegisterDto): Promise<RegisterUserRespo
   try {
     const response = await api.post<RegisterUserResponse>('/auth/register', data);
     
-    // Store tokens in localStorage
-    if (response.data.accessToken) {
-      localStorage.setItem('accessToken', response.data.accessToken);
-    }
-    if (response.data.refreshToken) {
-      localStorage.setItem('refreshToken', response.data.refreshToken);
+    // Update Zustand store with auth data
+    if (response.data.user && response.data.accessToken && response.data.refreshToken) {
+      useAuthStore.getState().setAuth(response.data.user, {
+        accessToken: response.data.accessToken,
+        refreshToken: response.data.refreshToken,
+      });
     }
     
     return response.data;
@@ -50,12 +51,12 @@ export async function loginUser(data: LoginDto): Promise<LoginResponse> {
   try {
     const response = await api.post<LoginResponse>('/auth/login', data);
     
-    // Store tokens in localStorage
-    if (response.data.accessToken) {
-      localStorage.setItem('accessToken', response.data.accessToken);
-    }
-    if (response.data.refreshToken) {
-      localStorage.setItem('refreshToken', response.data.refreshToken);
+    // Update Zustand store with auth data
+    if (response.data.user && response.data.accessToken && response.data.refreshToken) {
+      useAuthStore.getState().setAuth(response.data.user, {
+        accessToken: response.data.accessToken,
+        refreshToken: response.data.refreshToken,
+      });
     }
     
     return response.data;
@@ -72,22 +73,35 @@ export async function loginUser(data: LoginDto): Promise<LoginResponse> {
  * Logout user
  */
 export function logoutUser(): void {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('refreshToken');
+  useAuthStore.getState().clearAuth();
 }
 
 /**
  * Get stored access token
  */
 export function getAccessToken(): string | null {
-  return localStorage.getItem('accessToken');
+  return useAuthStore.getState().accessToken;
 }
 
 /**
  * Get stored refresh token
  */
 export function getRefreshToken(): string | null {
-  return localStorage.getItem('refreshToken');
+  return useAuthStore.getState().refreshToken;
+}
+
+/**
+ * Get current user
+ */
+export function getCurrentUser() {
+  return useAuthStore.getState().user;
+}
+
+/**
+ * Check if user is authenticated
+ */
+export function isAuthenticated(): boolean {
+  return useAuthStore.getState().isAuthenticated;
 }
 
 export { api };

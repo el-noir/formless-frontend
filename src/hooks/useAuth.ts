@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAccessToken } from "@/lib/api/auth";
+import { useAuthStore } from "@/stores/authStore";
 
 /**
  * Hook to check authentication status
@@ -11,25 +11,21 @@ import { getAccessToken } from "@/lib/api/auth";
  */
 export function useAuth(redirectTo?: string) {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const { isAuthenticated, isLoading: storeLoading } = useAuthStore();
+  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    const checkAuth = () => {
-      const token = getAccessToken();
-      const isAuth = !!token;
-      setIsAuthenticated(isAuth);
-      setIsLoading(false);
-
-      if (isAuth && redirectTo) {
+    // Wait for store to rehydrate
+    if (!storeLoading) {
+      if (isAuthenticated && redirectTo) {
         router.push(redirectTo);
+      } else {
+        setIsChecking(false);
       }
-    };
+    }
+  }, [isAuthenticated, storeLoading, redirectTo, router]);
 
-    checkAuth();
-  }, [router, redirectTo]);
-
-  return { isAuthenticated, isLoading };
+  return { isAuthenticated, isLoading: storeLoading || isChecking };
 }
 
 /**
@@ -39,23 +35,19 @@ export function useAuth(redirectTo?: string) {
  */
 export function useRequireAuth(redirectTo: string = "/sign-in") {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const { isAuthenticated, isLoading: storeLoading } = useAuthStore();
+  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    const checkAuth = () => {
-      const token = getAccessToken();
-      const isAuth = !!token;
-      setIsAuthenticated(isAuth);
-      setIsLoading(false);
-
-      if (!isAuth) {
+    // Wait for store to rehydrate
+    if (!storeLoading) {
+      if (!isAuthenticated) {
         router.push(redirectTo);
+      } else {
+        setIsChecking(false);
       }
-    };
+    }
+  }, [isAuthenticated, storeLoading, redirectTo, router]);
 
-    checkAuth();
-  }, [router, redirectTo]);
-
-  return { isAuthenticated, isLoading };
+  return { isAuthenticated, isLoading: storeLoading || isChecking };
 }

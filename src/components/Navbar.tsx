@@ -4,12 +4,13 @@ import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { getAccessToken, logoutUser } from '@/lib/api/auth';
+import { useAuthStore } from '@/stores/authStore';
+import { logoutUser } from '@/lib/api/auth';
 import { LogOut, User } from 'lucide-react';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAuthenticated, user } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -21,15 +22,8 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    // Check authentication status
-    const token = getAccessToken();
-    setIsAuthenticated(!!token);
-  }, [pathname]);
-
   const handleLogout = () => {
     logoutUser();
-    setIsAuthenticated(false);
     router.push('/');
   };
 

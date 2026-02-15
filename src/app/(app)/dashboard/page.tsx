@@ -3,10 +3,12 @@
 import React from "react";
 import { motion } from "motion/react";
 import { useRequireAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/stores/authStore";
 import { Loader2 } from "lucide-react";
 
 function Dashboard() {
   const { isLoading } = useRequireAuth();
+  const { user } = useAuthStore();
 
   // Show loading while checking authentication
   if (isLoading) {
@@ -31,7 +33,9 @@ function Dashboard() {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-4xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-gray-400">Welcome back to Formless AI</p>
+          <p className="text-gray-400">
+            Welcome back{user?.firstName ? `, ${user.firstName}` : ' to Formless AI'}
+          </p>
         </motion.div>
 
         {/* Content */}
