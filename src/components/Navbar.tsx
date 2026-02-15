@@ -3,9 +3,15 @@
 import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
+import { getAccessToken, logoutUser } from '@/lib/api/auth';
+import { LogOut, User } from 'lucide-react';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,6 +20,18 @@ export function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    // Check authentication status
+    const token = getAccessToken();
+    setIsAuthenticated(!!token);
+  }, [pathname]);
+
+  const handleLogout = () => {
+    logoutUser();
+    setIsAuthenticated(false);
+    router.push('/');
+  };
 
   return (
     <motion.nav
@@ -46,14 +64,36 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link href="/sign-in" className="text-sm font-medium text-white hover:text-gray-300 hidden sm:block">
-            Sign In
-          </Link>
-          <Link href="/sign-up" className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-            Start Free
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link 
+                href="/dashboard" 
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors"
+              >
+                <User className="w-4 h-4" />
+                <span className="text-sm font-medium hidden sm:block">Dashboard</span>
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="text-sm font-medium hidden sm:block">Logout</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/sign-in" className="text-sm font-medium text-white hover:text-gray-300 hidden sm:block">
+                Sign In
+              </Link>
+              <Link href="/sign-up" className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                Start Free
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </motion.nav>
   );
 }
+

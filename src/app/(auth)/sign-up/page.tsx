@@ -9,12 +9,13 @@ import { motion } from "motion/react";
 import { ChatMockup } from "@/components/ChatMockup";
 import { Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
+import { useAuth } from "@/hooks/useAuth";
 
 function SignUp() {
   const router = useRouter();
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
-
+  
   const {
     register,
     handleSubmit,
@@ -22,6 +23,8 @@ function SignUp() {
   } = useForm<RegisterDto>({
     mode: "onBlur",
   });
+  
+  const { isLoading: checkingAuth } = useAuth("/dashboard");
 
   const onSubmit = async (data: RegisterDto) => {
     setError("");
@@ -40,6 +43,18 @@ function SignUp() {
       setLoading(false);
     }
   };
+
+  // Show loading while checking authentication
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-[#1a1a24] flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-[#7c8aff] mx-auto mb-4" />
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#1a1a24] relative">
