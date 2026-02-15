@@ -7,6 +7,7 @@ import { registerUser } from "@/lib/api/auth";
 import { RegisterDto } from "@/app/types/Auth";
 import { motion } from "motion/react";
 import { ChatMockup } from "@/components/ChatMockup";
+import { Background } from "@/components/Background";
 import { Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { useAuth } from "@/hooks/useAuth";
@@ -47,9 +48,10 @@ function SignUp() {
   // Show loading while checking authentication
   if (checkingAuth) {
     return (
-      <div className="min-h-screen bg-[#1a1a24] flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-[#7c8aff] mx-auto mb-4" />
+      <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
+        <Background />
+        <div className="text-center relative z-10">
+          <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
           <p className="text-gray-400">Loading...</p>
         </div>
       </div>
@@ -57,7 +59,8 @@ function SignUp() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1a1a24] relative">
+    <div className="min-h-screen bg-[#0B0B0F] relative">
+      <Background />
       {/* Navbar */}
       <Navbar />
 
@@ -73,7 +76,7 @@ function SignUp() {
             <div className="mb-12">
               <h1 className="text-5xl font-bold text-white mb-4 leading-tight">
                 Build Forms That{" "}
-                <span className="bg-linear-to-r from-[#8B9FFF] to-[#B39DFF] bg-clip-text text-transparent">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6E8BFF] via-[#9A6BFF] to-[#F4E7B8]">
                   Understand You
                 </span>
               </h1>
@@ -93,7 +96,7 @@ function SignUp() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="bg-[#2a2a38] rounded-2xl p-10 shadow-xl border border-white/5">
+            <div className="bg-[#1C1C24] rounded-2xl p-10 shadow-xl border border-white/10 backdrop-blur-sm">
             {/* Header */}
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-white mb-2">
@@ -140,10 +143,9 @@ function SignUp() {
                           value: 2,
                           message: "Must be at least 2 characters",
                         },
-                      })}
-                      className={`w-full pl-12 pr-4 py-3.5 bg-[#1f1f2e] border ${
-                        errors.firstName ? "border-red-500/50" : "border-[#3a3a4a]"
-                      } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7c8aff]/50 focus:border-transparent transition-all`}
+                      })}                      className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${
+                        errors.firstName ? "border-red-500/50" : "border-white/10"
+                      } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
                       placeholder="John"
                     />
                   </div>
@@ -173,9 +175,9 @@ function SignUp() {
                           message: "Must be at least 2 characters",
                         },
                       })}
-                      className={`w-full pl-12 pr-4 py-3.5 bg-[#1f1f2e] border ${
-                        errors.lastName ? "border-red-500/50" : "border-[#3a3a4a]"
-                      } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7c8aff]/50 focus:border-transparent transition-all`}
+                      className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${
+                        errors.lastName ? "border-red-500/50" : "border-white/10"
+                      } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
                       placeholder="Doe"
                     />
                   </div>
@@ -207,9 +209,9 @@ function SignUp() {
                         message: "Invalid email address",
                       },
                     })}
-                    className={`w-full pl-12 pr-4 py-3.5 bg-[#1f1f2e] border ${
-                      errors.email ? "border-red-500/50" : "border-[#3a3a4a]"
-                    } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7c8aff]/50 focus:border-transparent transition-all`}
+                    className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${
+                      errors.email ? "border-red-500/50" : "border-white/10"
+                    } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
                     placeholder="john@example.com"
                   />
                 </div>
@@ -240,9 +242,9 @@ function SignUp() {
                         message: "Password must be at least 8 characters",
                       },
                     })}
-                    className={`w-full pl-12 pr-4 py-3.5 bg-[#1f1f2e] border ${
-                      errors.password ? "border-red-500/50" : "border-[#3a3a4a]"
-                    } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7c8aff]/50 focus:border-transparent transition-all`}
+                    className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${
+                      errors.password ? "border-red-500/50" : "border-white/10"
+                    } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
                     placeholder="••••••••"
                   />
                 </div>
@@ -262,7 +264,7 @@ function SignUp() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-6 px-6 py-4 rounded-lg bg-linear-to-r from-[#7c8aff] to-[#b39dff] text-white font-semibold hover:shadow-lg hover:shadow-[#7c8aff]/30 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                className="w-full mt-6 px-6 py-4 rounded-lg bg-gradient-to-r from-[#6E8BFF] to-[#9A6BFF] text-white font-semibold hover:shadow-lg hover:shadow-[#6E8BFF]/30 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
@@ -284,7 +286,7 @@ function SignUp() {
                 Already have an account?{" "}
                 <a
                   href="/sign-in"
-                  className="text-[#8b9fff] hover:text-[#b39dff] font-medium transition-colors"
+                  className="text-[#6E8BFF] hover:text-[#9A6BFF] font-medium transition-colors"
                 >
                   Sign in
                 </a>

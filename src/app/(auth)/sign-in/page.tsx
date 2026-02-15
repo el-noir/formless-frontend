@@ -7,6 +7,7 @@ import { loginUser } from "@/lib/api/auth";
 import { LoginDto } from "@/app/types/Auth";
 import { motion } from "motion/react";
 import { ChatMockup } from "@/components/ChatMockup";
+import { Background } from "@/components/Background";
 import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { useAuth } from "@/hooks/useAuth";
@@ -47,9 +48,10 @@ function SignIn() {
   // Show loading while checking authentication
   if (checkingAuth) {
     return (
-      <div className="min-h-screen bg-[#1a1a24] flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-[#7c8aff] mx-auto mb-4" />
+      <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
+        <Background />
+        <div className="text-center relative z-10">
+          <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
           <p className="text-gray-400">Loading...</p>
         </div>
       </div>
@@ -57,7 +59,8 @@ function SignIn() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1a1a24] relative">
+    <div className="min-h-screen bg-[#0B0B0F] relative">
+      <Background />
       {/* Navbar */}
       <Navbar />
 
@@ -73,7 +76,7 @@ function SignIn() {
             <div className="mb-12">
               <h1 className="text-5xl font-bold text-white mb-4 leading-tight">
                 Welcome Back to{" "}
-                <span className="bg-linear-to-r from-[#8B9FFF] to-[#B39DFF] bg-clip-text text-transparent">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6E8BFF] via-[#9A6BFF] to-[#F4E7B8]">
                   Formless AI
                 </span>
               </h1>
@@ -93,7 +96,7 @@ function SignIn() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="bg-[#2a2a38] rounded-2xl p-10 shadow-xl border border-white/5">
+            <div className="bg-[#1C1C24] rounded-2xl p-10 shadow-xl border border-white/10 backdrop-blur-sm">
               {/* Header */}
               <div className="mb-8">
                 <h1 className="text-3xl font-bold text-white mb-2">
@@ -140,9 +143,9 @@ function SignIn() {
                           message: "Invalid email address",
                         },
                       })}
-                      className={`w-full pl-12 pr-4 py-3.5 bg-[#1f1f2e] border ${
-                        errors.email ? "border-red-500/50" : "border-[#3a3a4a]"
-                      } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7c8aff]/50 focus:border-transparent transition-all`}
+                      className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${
+                        errors.email ? "border-red-500/50" : "border-white/10"
+                      } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
                       placeholder="john@example.com"
                     />
                   </div>
@@ -164,7 +167,7 @@ function SignIn() {
                     </label>
                     <a
                       href="#"
-                      className="text-xs text-[#8b9fff] hover:text-[#b39dff] transition-colors"
+                      className="text-xs text-[#6E8BFF] hover:text-[#9A6BFF] transition-colors"
                     >
                       Forgot password?
                     </a>
@@ -181,9 +184,9 @@ function SignIn() {
                           message: "Password must be at least 8 characters",
                         },
                       })}
-                      className={`w-full pl-12 pr-4 py-3.5 bg-[#1f1f2e] border ${
-                        errors.password ? "border-red-500/50" : "border-[#3a3a4a]"
-                      } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7c8aff]/50 focus:border-transparent transition-all`}
+                      className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${
+                        errors.password ? "border-red-500/50" : "border-white/10"
+                      } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
                       placeholder="••••••••"
                     />
                   </div>
@@ -199,7 +202,7 @@ function SignIn() {
                   <input
                     type="checkbox"
                     id="remember"
-                    className="w-4 h-4 rounded border-[#3a3a4a] bg-[#1f1f2e] text-[#7c8aff] focus:ring-2 focus:ring-[#7c8aff]/50"
+                    className="w-4 h-4 rounded border-white/10 bg-[#0B0B0F] text-[#6E8BFF] focus:ring-2 focus:ring-[#6E8BFF]/50"
                   />
                   <label
                     htmlFor="remember"
@@ -213,7 +216,7 @@ function SignIn() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-6 px-6 py-4 rounded-lg bg-linear-to-r from-[#7c8aff] to-[#b39dff] text-white font-semibold hover:shadow-lg hover:shadow-[#7c8aff]/30 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                  className="w-full mt-6 px-6 py-4 rounded-lg bg-gradient-to-r from-[#6E8BFF] to-[#9A6BFF] text-white font-semibold hover:shadow-lg hover:shadow-[#6E8BFF]/30 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <>
@@ -232,10 +235,10 @@ function SignIn() {
               {/* Divider */}
               <div className="relative my-8">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-[#3a3a4a]"></div>
+                  <div className="w-full border-t border-white/10"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-[#2a2a38] text-gray-500">
+                  <span className="px-4 bg-[#1C1C24] text-gray-500">
                     Or continue with
                   </span>
                 </div>
@@ -269,7 +272,7 @@ function SignIn() {
                 </button>
                 <button
                   type="button"
-                  className="flex items-center justify-center gap-3 px-4 py-3 bg-[#1f1f2e] border border-[#3a3a4a] rounded-lg text-white hover:bg-[#252533] transition-all"
+                  className="flex items-center justify-center gap-3 px-4 py-3 bg-[#0B0B0F] border border-white/10 rounded-lg text-white hover:bg-white/5 transition-all"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
@@ -284,7 +287,7 @@ function SignIn() {
                   Don't have an account?{" "}
                   <a
                     href="/sign-up"
-                    className="text-[#8b9fff] hover:text-[#b39dff] font-medium transition-colors"
+                    className="text-[#6E8BFF] hover:text-[#9A6BFF] font-medium transition-colors"
                   >
                     Sign up
                   </a>

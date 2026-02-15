@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "motion/react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
+import { Background } from "@/components/Background";
 import { Loader2 } from "lucide-react";
 
 function Dashboard() {
@@ -13,9 +14,10 @@ function Dashboard() {
   // Show loading while checking authentication
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#1a1a24] flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-[#7c8aff] mx-auto mb-4" />
+      <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
+        <Background />
+        <div className="text-center relative z-10">
+          <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
           <p className="text-gray-400">Loading...</p>
         </div>
       </div>
@@ -23,8 +25,9 @@ function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1a1a24] pt-24 px-6 pb-12">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 pb-12 relative">
+      <Background />
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <motion.div
           className="mb-8"
@@ -40,13 +43,13 @@ function Dashboard() {
 
         {/* Content */}
         <motion.div
-          className="bg-[#2a2a38] rounded-2xl p-8 shadow-xl border border-white/5"
+          className="bg-[#1C1C24] rounded-2xl p-8 shadow-xl border border-white/10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <div className="text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-linear-to-br from-[#7c8aff] to-[#b39dff] flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center">
               <svg
                 className="w-8 h-8 text-white"
                 fill="none"
