@@ -2,6 +2,16 @@
 
 import { motion } from "motion/react";
 import { Hero } from "@/components/Hero";
+import { Background } from "@/components/Background";
+import { BentoFeatures } from "@/components/BentoFeatures";
+import { Testimonials } from "@/components/Testimonials";
+import { Footer } from "@/components/Footer";
+import { HowItWorks } from "@/components/HowItWorks";
+import {Stats} from "@/components/Stats";
+import { LivePreview } from "@/components/LivePreview";
+import { Integrations } from "@/components/Integrations";
+import { FinalCTA } from "@/components/FinalCTA";
+
 
 export default function AppPage() {
   return (
@@ -11,7 +21,20 @@ export default function AppPage() {
         body { font-family: 'Inter', sans-serif; }
         html { scroll-behavior: smooth; }
       `}</style>
-      <Hero />
+            <Background />
+            
+            <main>
+              <Hero />
+              <Stats />
+              <HowItWorks />
+              <LivePreview />
+              <BentoFeatures />
+              <Testimonials />
+              <Integrations />
+              <FinalCTA />
+            </main>
+            
+            <Footer />
     </div>
   );
 }
