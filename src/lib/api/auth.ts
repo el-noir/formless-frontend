@@ -104,4 +104,12 @@ export function isAuthenticated(): boolean {
   return useAuthStore.getState().isAuthenticated;
 }
 
+/**
+ * Initiate Google OAuth login
+ */
+export function loginWithGoogle(): void {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  window.location.href = `${API_BASE_URL}/auth/google`;
+}
+
 export { api };

@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { loginUser } from "@/lib/api/auth";
+import { loginUser, loginWithGoogle } from "@/lib/api/auth";
 import { LoginDto } from "@/app/types/Auth";
 import { motion } from "motion/react";
 import { ChatMockup } from "@/components/ChatMockup";
@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 function SignIn() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
   
@@ -26,6 +27,14 @@ function SignIn() {
   });
   
   const { isLoading: checkingAuth } = useAuth("/dashboard");
+
+  // Check for OAuth errors
+  useEffect(() => {
+    const oauthError = searchParams.get("error");
+    if (oauthError === "auth_failed") {
+      setError("Authentication failed. Please try again.");
+    }
+  }, [searchParams]);
 
   const onSubmit = async (data: LoginDto) => {
     setError("");
@@ -247,8 +256,7 @@ function SignIn() {
               {/* Social Login Buttons */}
               <div className="grid grid-cols-2 gap-3">
                 <button
-                  type="button"
-                  className="flex items-center justify-center gap-3 px-4 py-3 bg-[#1f1f2e] border border-[#3a3a4a] rounded-lg text-white hover:bg-[#252533] transition-all"
+                  type="button"                  onClick={loginWithGoogle}                  className="flex items-center justify-center gap-3 px-4 py-3 bg-[#1f1f2e] border border-[#3a3a4a] rounded-lg text-white hover:bg-[#252533] transition-all"
                 >
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path
