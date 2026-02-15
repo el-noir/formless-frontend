@@ -26,7 +26,7 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
+           <div className="w-8 h-8 rounded-lg bg-linear-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
              F
            </div>
            <span className="text-xl font-bold text-white tracking-tight">Formless AI</span>
@@ -40,7 +40,7 @@ export function Navbar() {
               className="text-sm font-medium text-gray-400 hover:text-white transition-colors relative group"
             >
               {item}
-              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#6E8BFF] transition-all group-hover:w-full" />
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#6E8BFF] transition-all group-hover:w-full" />
             </Link>
           ))}
         </div>
