@@ -1,18 +1,28 @@
-"use client";
+'use client';
 
 import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
-import { useAuthStore } from '@/stores/authStore';
-import { logoutUser } from '@/lib/api/auth';
-import { LogOut, User } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+
+const navItems = [
+  { name: 'Features', href: '#features' },
+  { name: 'How It Works', href: '#how-it-works' },
+  { name: 'Testimonials', href: '#testimonials' },
+  { name: 'Integrations', href: '#integrations' },
+];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const { isAuthenticated, user } = useAuthStore();
-  const router = useRouter();
-  const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,9 +32,8 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    logoutUser();
-    router.push('/');
+  const handleNavClick = () => {
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -35,59 +44,118 @@ export function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
+      role="navigation"
+      aria-label="Main navigation"
     >
+      {/* Skip to content link for accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded-md focus:font-semibold"
+      >
+        Skip to content
+      </a>
+
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-           <div className="w-8 h-8 rounded-lg bg-linear-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
+        <Link 
+          href="/" 
+          className="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F] rounded-lg"
+          aria-label="FormAI home"
+        >
+           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform" aria-hidden="true">
              F
            </div>
-           <span className="text-xl font-bold text-white tracking-tight">Formless AI</span>
+           <span className="text-xl font-bold text-white tracking-tight">FormAI</span>
         </Link>
 
+        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
-          {['Features', 'Pricing', 'Blog', 'Company'].map((item) => (
-            <Link 
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className="text-sm font-medium text-gray-400 hover:text-white transition-colors relative group"
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="text-sm font-medium text-gray-400 hover:text-white transition-colors relative group focus:outline-none focus:text-white"
+              aria-label={`Navigate to ${item.name}`}
             >
-              {item}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#6E8BFF] transition-all group-hover:w-full" />
+              {item.name}
+              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#6E8BFF] transition-all group-hover:w-full group-focus:w-full" />
             </Link>
           ))}
         </div>
 
         <div className="flex items-center gap-4">
-          {isAuthenticated ? (
-            <>
-              <Link 
-                href="/dashboard" 
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors"
-              >
-                <User className="w-4 h-4" />
-                <span className="text-sm font-medium hidden sm:block">Dashboard</span>
-              </Link>
+          <Link 
+            href="/sign-in" 
+            className="text-sm font-medium text-white hover:text-gray-300 hidden sm:block focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F] rounded px-2 py-1"
+            aria-label="Sign in to your account"
+          >
+            Sign In
+          </Link>
+          <Link 
+            href="/sign-up" 
+            className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F]"
+            aria-label="Start free trial"
+          >
+            Start Free
+          </Link>
+
+          {/* Mobile Menu Button */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
               <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors"
+                className="md:hidden p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] rounded-lg"
+                aria-label="Open navigation menu"
+                aria-expanded={mobileMenuOpen}
+                aria-controls="mobile-menu"
               >
-                <LogOut className="w-4 h-4" />
-                <span className="text-sm font-medium hidden sm:block">Logout</span>
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
-            </>
-          ) : (
-            <>
-              <Link href="/sign-in" className="text-sm font-medium text-white hover:text-gray-300 hidden sm:block">
-                Sign In
-              </Link>
-              <Link href="/sign-up" className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                Start Free
-              </Link>
-            </>
-          )}
+            </SheetTrigger>
+            <SheetContent 
+              side="right" 
+              className="bg-[#0B0B0F] border-l border-white/10 w-[300px]"
+              id="mobile-menu"
+            >
+              <SheetHeader>
+                <SheetTitle className="text-white text-left">Navigation</SheetTitle>
+                <SheetDescription className="text-gray-400 text-left">
+                  Explore FormAI features and resources
+                </SheetDescription>
+              </SheetHeader>
+              <div className="flex flex-col gap-6 mt-8">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={handleNavClick}
+                    className="text-lg font-medium text-gray-300 hover:text-white transition-colors focus:outline-none focus:text-white focus:pl-2"
+                    aria-label={`Navigate to ${item.name}`}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+                <div className="border-t border-white/10 pt-6 flex flex-col gap-4">
+                  <Link
+                    href="/sign-in"
+                    onClick={handleNavClick}
+                    className="text-lg font-medium text-gray-300 hover:text-white transition-colors focus:outline-none focus:text-white"
+                    aria-label="Sign in to your account"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/sign-up"
+                    onClick={handleNavClick}
+                    className="px-6 py-3 rounded-full bg-white text-black font-semibold text-center hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]"
+                    aria-label="Start free trial"
+                  >
+                    Start Free Trial
+                  </Link>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </motion.nav>
   );
 }
-

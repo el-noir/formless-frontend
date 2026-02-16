@@ -1,38 +1,50 @@
 import { motion } from 'motion/react';
-import { Link, Bot, Database } from 'lucide-react';
+import { Step1Visual, Step2Visual, Step3Visual } from './ui/HowItWorksVisuals';
 
 const steps = [
   {
-    icon: Link,
+    id: '01',
     title: 'Connect Your Form',
     desc: 'Simply paste your Google Form link. We automatically detect fields and logic.',
+    visual: Step1Visual,
   },
   {
-    icon: Bot,
+    id: '02',
     title: 'AI Conversion',
     desc: 'Our AI transforms questions into a natural, engaging conversation flow.',
+    visual: Step2Visual,
   },
   {
-    icon: Database,
-    title: 'Collect Data',
+    id: '03',
+    title: 'Collect & Sync',
     desc: 'Responses are structured and synced back to your Google Sheet instantly.',
+    visual: Step3Visual,
   },
 ];
 
 export function HowItWorks() {
   return (
-    <section className="py-32 relative overflow-hidden">
+    <section id="how-it-works" className="py-32 relative overflow-hidden bg-[#0B0B0F]" aria-labelledby="how-it-works-title">
+      {/* Background Gradient */}
+      <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-[#1C1C24]/20 to-transparent pointer-events-none" />
+
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-20">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">How It Works</h2>
+          <h2 id="how-it-works-title" className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">How It Works</h2>
           <p className="text-gray-400 text-lg">
             Three simple steps to modernize your data collection.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-12 relative">
+        <div className="grid md:grid-cols-3 gap-8 relative">
           {/* Connecting Line (Desktop) */}
-          <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-[#6E8BFF]/20 via-[#9A6BFF]/20 to-[#F4E7B8]/20" />
+          <div className="hidden md:block absolute top-[180px] left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-[#6E8BFF]/20 via-[#9A6BFF]/20 to-[#F4E7B8]/20 z-0">
+             <motion.div 
+               animate={{ x: ['0%', '100%'] }}
+               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+               className="h-full w-1/3 bg-gradient-to-r from-transparent via-[#9A6BFF] to-transparent opacity-50"
+             />
+          </div>
 
           {steps.map((step, index) => (
             <motion.div
@@ -41,15 +53,33 @@ export function HowItWorks() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.2, duration: 0.6 }}
-              className="relative flex flex-col items-center text-center group"
+              className="relative flex flex-col items-center group z-10"
             >
-              <div className="w-24 h-24 rounded-3xl bg-[#1C1C24] border border-white/5 flex items-center justify-center mb-8 relative z-10 group-hover:border-[#6E8BFF]/30 transition-colors shadow-2xl">
-                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
-                 <step.icon className="w-10 h-10 text-[#9A6BFF] group-hover:scale-110 transition-transform duration-300" />
+              {/* Card Container */}
+              <div className="w-full h-[320px] bg-[#121218] border border-white/10 rounded-3xl overflow-hidden relative group-hover:border-[#6E8BFF]/30 transition-all duration-500 shadow-2xl flex flex-col">
+                 
+                 {/* Visual Area */}
+                 <div className="flex-1 relative bg-gradient-to-b from-[#1C1C24]/50 to-transparent flex items-center justify-center p-6">
+                    {(() => {
+                      const Visual = step.visual;
+                      return <Visual />;
+                    })()}
+                    
+                    {/* Hover Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#6E8BFF]/5 to-[#9A6BFF]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                 </div>
+
+                 {/* Step Number Badge */}
+                 <div className="absolute top-6 left-6 w-10 h-10 rounded-full bg-[#1C1C24] border border-white/10 flex items-center justify-center text-sm font-bold text-white shadow-lg group-hover:bg-[#6E8BFF] group-hover:text-white transition-colors duration-300">
+                    {step.id}
+                 </div>
+
+                 {/* Text Content */}
+                 <div className="p-8 pt-0 bg-[#121218] relative z-20">
+                    <h3 className="text-xl font-semibold text-white mb-3 group-hover:text-[#9A6BFF] transition-colors">{step.title}</h3>
+                    <p className="text-gray-400 leading-relaxed text-sm">{step.desc}</p>
+                 </div>
               </div>
-              
-              <h3 className="text-xl font-semibold text-white mb-3">{step.title}</h3>
-              <p className="text-gray-400 leading-relaxed max-w-xs">{step.desc}</p>
             </motion.div>
           ))}
         </div>

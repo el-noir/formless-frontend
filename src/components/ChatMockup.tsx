@@ -88,7 +88,7 @@ export function ChatMockup() {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="text-white font-semibold text-sm">Formless AI</h3>
+              <h3 className="text-white font-semibold text-sm">FormAI Assistant</h3>
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]" />
                 <span className="text-xs text-gray-400 font-medium">{currentScenario.type}</span>

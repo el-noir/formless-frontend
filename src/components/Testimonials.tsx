@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
-import { Quote, Star } from 'lucide-react';
+import { Quote, Pause, Play } from 'lucide-react';
 
 const testimonials = [
   {
@@ -8,85 +8,107 @@ const testimonials = [
     author: "Sarah Chen",
     role: "Head of Growth",
     company: "TechFlow",
-    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&h=100&fit=crop&crop=faces"
+    image: "https://images.unsplash.com/photo-1765005204058-10418f5123c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMHdvbWFuJTIwY29ycG9yYXRlfGVufDF8fHx8MTc3MTIxODkxN3ww&ixlib=rb-4.1.0&q=80&w=1080"
   },
   {
     quote: "The AI extraction is magic. We used to spend hours cleaning data from Google Forms. Now it's instant and structured perfectly.",
     author: "Marcus Rodriguez",
     role: "Product Manager",
     company: "StartScale",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=faces"
+    image: "https://images.unsplash.com/photo-1769071166862-8cc3a6f2ac5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbiUyMHN0YXJ0dXB8ZW58MXx8fHwxNzcxMjY3MTM5fDA&ixlib=rb-4.1.0&q=80&w=1080"
   },
   {
     quote: "It feels like having a real person interview our candidates. The engagement is incredible compared to static forms.",
     author: "Elena Fisher",
     role: "Recruiting Lead",
     company: "HireFast",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=faces"
+    image: "https://images.unsplash.com/photo-1769636930016-5d9f0ca653aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMHdvbWFuJTIwY3JlYXRpdmV8ZW58MXx8fHwxNzcxMjU4NzYxfDA&ixlib=rb-4.1.0&q=80&w=1080"
   }
 ];
 
 export function Testimonials() {
   const [current, setCurrent] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
+    if (isPaused) return;
+    
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isPaused]);
 
   return (
-    <section className="py-20 md:py-32 relative overflow-hidden">
+    <section id="testimonials" className="py-24 md:py-32 relative overflow-hidden bg-[#0A0A0F]" aria-labelledby="testimonials-title">
+      {/* Background Elements */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#9A6BFF]/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#6E8BFF]/10 rounded-full blur-[100px] pointer-events-none" />
+
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Trusted by Innovators</h2>
+        <div className="text-center mb-20">
+          <h2 id="testimonials-title" className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Trusted by Innovators</h2>
+          <p className="text-gray-400 text-lg">Join thousands of teams building smarter forms.</p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="relative h-[400px] md:h-[300px] flex items-center justify-center">
+        <div className="max-w-5xl mx-auto">
+          <div className="relative min-h-[400px] flex items-center justify-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={current}
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                transition={{ duration: 0.5 }}
+                initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
                 className="absolute inset-0 flex flex-col items-center justify-center text-center"
               >
-                 <div className="w-16 h-16 rounded-full bg-[#1C1C24] border border-white/10 flex items-center justify-center mb-8 shadow-2xl">
+                 <div className="w-16 h-16 rounded-full bg-[#1C1C24] border border-white/10 flex items-center justify-center mb-10 shadow-2xl ring-1 ring-white/5">
                    <Quote className="w-6 h-6 text-[#9A6BFF]" />
                  </div>
                  
-                 <p className="text-2xl md:text-4xl font-medium text-white mb-8 leading-tight max-w-3xl">
+                 <p className="text-2xl md:text-4xl font-medium text-white mb-12 leading-tight max-w-4xl tracking-tight">
                    "{testimonials[current].quote}"
                  </p>
                  
-                 <div className="flex items-center gap-4">
-                    <img 
-                      src={testimonials[current].image} 
-                      alt={testimonials[current].author}
-                      className="w-12 h-12 rounded-full border border-white/10 object-cover"
-                    />
-                    <div className="text-left">
-                       <div className="text-white font-semibold">{testimonials[current].author}</div>
-                       <div className="text-sm text-gray-400">{testimonials[current].role} at {testimonials[current].company}</div>
+                 <div className="flex flex-col items-center gap-4">
+                    <div className="relative group">
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#9A6BFF] to-[#6E8BFF] opacity-50 blur-md group-hover:opacity-75 transition-opacity duration-500" />
+                      <img 
+                        src={testimonials[current].image} 
+                        alt={testimonials[current].author}
+                        className="relative w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-[#1C1C24] object-cover shadow-xl"
+                      />
+                    </div>
+                    <div className="text-center">
+                       <div className="text-white text-lg font-semibold mb-1">{testimonials[current].author}</div>
+                       <div className="text-sm text-gray-400 font-medium tracking-wide uppercase">{testimonials[current].role} • <span className="text-[#9A6BFF]">{testimonials[current].company}</span></div>
                     </div>
                  </div>
               </motion.div>
             </AnimatePresence>
           </div>
           
-          <div className="flex justify-center gap-2 mt-8">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrent(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === current ? 'w-8 bg-[#9A6BFF]' : 'bg-white/20 hover:bg-white/40'
-                }`}
-              />
-            ))}
+          <div className="flex justify-center items-center gap-6 mt-12">
+            <button
+              onClick={() => setIsPaused(!isPaused)}
+              className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]"
+              aria-label={isPaused ? 'Resume testimonial rotation' : 'Pause testimonial rotation'}
+            >
+              {isPaused ? <Play className="w-4 h-4 text-white" /> : <Pause className="w-4 h-4 text-white" />}
+            </button>
+            <div className="flex gap-3">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrent(index)}
+                  className={`h-1.5 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] ${
+                    index === current ? 'w-12 bg-white' : 'w-2 bg-white/20 hover:bg-white/40'
+                  }`}
+                  aria-label={`Go to testimonial ${index + 1} of ${testimonials.length}`}
+                  aria-current={index === current ? 'true' : 'false'}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

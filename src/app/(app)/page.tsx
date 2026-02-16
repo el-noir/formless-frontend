@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { Hero } from "@/components/Hero";
 import { Background } from "@/components/Background";
+import { SocialProof } from "@/components/SocialProof";
 import { BentoFeatures } from "@/components/BentoFeatures";
 import { Testimonials } from "@/components/Testimonials";
 import { Footer } from "@/components/Footer";
@@ -23,8 +24,9 @@ export default function AppPage() {
       `}</style>
             <Background />
             
-            <main>
+            <main id="main-content">
               <Hero />
+              <SocialProof />
               <Stats />
               <HowItWorks />
               <LivePreview />
