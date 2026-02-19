@@ -12,6 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { useAuth } from '@/hooks/useAuth';
 
 const navItems = [
   { name: 'Features', href: '#features' },
@@ -23,6 +24,13 @@ const navItems = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // Import useAuth hook
+  const { isAuthenticated, isLoading } = useAuth();
+  const { user, clearAuth } = require("@/stores/authStore").useAuthStore();
+  const handleLogout = () => {
+    clearAuth();
+    window.location.href = "/";
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -83,21 +91,38 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link 
-            href="/sign-in" 
-            className="text-sm font-medium text-white hover:text-gray-300 hidden sm:block focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F] rounded px-2 py-1"
-            aria-label="Sign in to your account"
-          >
-            Sign In
-          </Link>
-          <Link 
-            href="/sign-up" 
-            className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F]"
-            aria-label="Start free trial"
-          >
-            Start Free
-          </Link>
-
+          {/* Show profile and logout if authenticated */}
+          {isAuthenticated && !isLoading ? (
+            <>
+              <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg">
+                <span className="text-white font-medium">{user?.firstName} {user?.lastName}</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 rounded-full bg-[#6E8BFF] text-white font-semibold text-sm hover:bg-[#4B6BFF] transition-colors focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F]"
+                aria-label="Logout"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link 
+                href="/sign-in" 
+                className="text-sm font-medium text-white hover:text-gray-300 hidden sm:block focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F] rounded px-2 py-1"
+                aria-label="Sign in to your account"
+              >
+                Sign In
+              </Link>
+              <Link 
+                href="/sign-up" 
+                className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F]"
+                aria-label="Start free trial"
+              >
+                Start Free
+              </Link>
+            </>
+          )}
           {/* Mobile Menu Button */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
@@ -133,24 +158,40 @@ export function Navbar() {
                     {item.name}
                   </Link>
                 ))}
-                <div className="border-t border-white/10 pt-6 flex flex-col gap-4">
-                  <Link
-                    href="/sign-in"
-                    onClick={handleNavClick}
-                    className="text-lg font-medium text-gray-300 hover:text-white transition-colors focus:outline-none focus:text-white"
-                    aria-label="Sign in to your account"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/sign-up"
-                    onClick={handleNavClick}
-                    className="px-6 py-3 rounded-full bg-white text-black font-semibold text-center hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]"
-                    aria-label="Start free trial"
-                  >
-                    Start Free Trial
-                  </Link>
-                </div>
+                {/* Show profile and logout if authenticated */}
+                {isAuthenticated && !isLoading ? (
+                  <div className="border-t border-white/10 pt-6 flex flex-col gap-4">
+                    <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg">
+                      <span className="text-white font-medium">{user?.firstName} {user?.lastName}</span>
+                    </div>
+                    <button
+                      onClick={() => { handleNavClick(); handleLogout(); }}
+                      className="px-6 py-3 rounded-full bg-[#6E8BFF] text-white font-semibold text-center hover:bg-[#4B6BFF] transition-colors focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]"
+                      aria-label="Logout"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="border-t border-white/10 pt-6 flex flex-col gap-4">
+                    <Link
+                      href="/sign-in"
+                      onClick={handleNavClick}
+                      className="text-lg font-medium text-gray-300 hover:text-white transition-colors focus:outline-none focus:text-white"
+                      aria-label="Sign in to your account"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      href="/sign-up"
+                      onClick={handleNavClick}
+                      className="px-6 py-3 rounded-full bg-white text-black font-semibold text-center hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]"
+                      aria-label="Start free trial"
+                    >
+                      Start Free Trial
+                    </Link>
+                  </div>
+                )}
               </div>
             </SheetContent>
           </Sheet>
