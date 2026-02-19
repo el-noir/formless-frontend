@@ -48,22 +48,22 @@ function Dashboard() {
   };
 
   const importFromForms = async (form: any) => {
-    const formId: string = form.id || form.formId;
+    const formIdOrUrl: string = form.webViewLink || form.id || form.formId;
     const token = localStorage.getItem(STORAGE_KEY);
     if (!token) {
-      setImportError((prev) => ({ ...prev, [formId]: 'No Google access token found. Please reconnect.' }));
+      setImportError((prev) => ({ ...prev, [form.id]: 'No Google access token found. Please reconnect.' }));
       return;
     }
-    setImporting((prev) => ({ ...prev, [formId]: true }));
-    setImportError((prev) => ({ ...prev, [formId]: '' }));
+    setImporting((prev) => ({ ...prev, [form.id]: true }));
+    setImportError((prev) => ({ ...prev, [form.id]: '' }));
     try {
-      await importForm(formId, token);
-      setImported((prev) => ({ ...prev, [formId]: true }));
+      await importForm(formIdOrUrl, token);
+      setImported((prev) => ({ ...prev, [form.id]: true }));
     } catch (err: any) {
       const msg = err?.response?.data?.message || err?.message || 'Import failed';
-      setImportError((prev) => ({ ...prev, [formId]: msg }));
+      setImportError((prev) => ({ ...prev, [form.id]: msg }));
     } finally {
-      setImporting((prev) => ({ ...prev, [formId]: false }));
+      setImporting((prev) => ({ ...prev, [form.id]: false }));
     }
   };
 
