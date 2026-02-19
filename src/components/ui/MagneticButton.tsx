@@ -41,7 +41,6 @@ export function MagneticButton({ children, className, onClick, disabled }: Magne
       onMouseLeave={reset}
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
-      onClick={onClick}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
