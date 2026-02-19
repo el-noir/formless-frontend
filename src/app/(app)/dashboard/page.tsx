@@ -1,17 +1,56 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
 import { Background } from "@/components/Background";
 import { Loader2 } from "lucide-react";
+import { MagneticButton } from "@/components/ui/MagneticButton";
+import { getOAuthUrl, getForms } from "@/lib/api/oAuthForm";
+
+const STORAGE_KEY = "google_access_token";
 
 function Dashboard() {
   const { isLoading } = useRequireAuth();
   const { user } = useAuthStore();
 
-  // Show loading while checking authentication
+  const [forms, setForms] = useState<any[] | null>(null);
+  const [loadingForms, setLoadingForms] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const connectGoogleForm = async () => {
+    try {
+      const url = await getOAuthUrl();
+      window.location.href = url;
+    } catch (err) {
+      console.error("Error getting OAuth URL:", err);
+      alert("Failed to connect Google Form. Please try again.");
+    }
+  };
+
+  const fetchForms = async (token: string) => {
+    setLoadingForms(true);
+    setError(null);
+    try {
+      const data = await getForms(token);
+      setForms(data.forms || data || []);
+    } catch (err: any) {
+      console.error("Error fetching forms:", err);
+      setError(err?.message || "Failed to fetch forms");
+    } finally {
+      setLoadingForms(false);
+    }
+  };
+
+  // On mount: check localStorage for a stored accessToken and auto-fetch forms
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      fetchForms(stored);
+    }
+  }, []);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
@@ -28,50 +67,31 @@ function Dashboard() {
     <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 pb-12 relative">
       <Background />
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
-        <motion.div
-          className="mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h1 className="text-4xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-gray-400">
-            Welcome back{user?.firstName ? `, ${user.firstName}` : ' to Formless AI'}
-          </p>
-        </motion.div>
+        <h1 className="text-3xl font-bold text-white mb-6">Welcome, {user?.name || 'user'}!</h1>
+        <p className="text-gray-400 mb-4">Your connected Google Forms will appear here.</p>
 
-        {/* Content */}
-        <motion.div
-          className="bg-[#1C1C24] rounded-2xl p-8 shadow-xl border border-white/10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <div className="text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center">
-              <svg
-                className="w-8 h-8 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-white mb-2">
-              Your Dashboard
-            </h2>
-            <p className="text-gray-400 max-w-md mx-auto">
-              Start building intelligent forms with AI-powered conversations
-            </p>
+        {loadingForms ? (
+          <div className="text-gray-400">Fetching forms...</div>
+        ) : error ? (
+          <div className="text-red-400">{error}</div>
+        ) : forms && forms.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {forms.map((f: any) => (
+              <div key={f.formId || f.id || f.name} className="bg-[#0f0f14] p-4 rounded-md border border-gray-800">
+                <h3 className="text-white font-medium">{f.title || f.name}</h3>
+                <p className="text-sm text-gray-400">{f.formId || f.id}</p>
+              </div>
+            ))}
           </div>
-        </motion.div>
+        ) : (
+          <div className="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center text-gray-500">
+            No forms connected yet. Click the button below to connect your first Google Form.
+          </div>
+        )}
+
+        <MagneticButton onClick={connectGoogleForm} className="mt-4 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white font-bold py-2 px-4 rounded transition duration-200">
+          Connect Google Form
+        </MagneticButton>
       </div>
     </div>
   );

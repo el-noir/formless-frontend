@@ -4,7 +4,7 @@ import { RegisterDto, RegisterUserResponse, LoginDto, LoginResponse } from "@/ap
 import { useAuthStore } from "@/stores/authStore";
 
 // Configure base URL for API calls
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -108,7 +108,7 @@ export function isAuthenticated(): boolean {
  * Initiate Google OAuth login
  */
 export function loginWithGoogle(): void {
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
   window.location.href = `${API_BASE_URL}/auth/google`;
 }
 
