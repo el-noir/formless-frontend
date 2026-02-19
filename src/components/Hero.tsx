@@ -24,7 +24,7 @@ export function Hero() {
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-[#9A6BFF] font-medium backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-[#9A6BFF] animate-pulse" />
-            AI-Powered Forms V2.0
+            Launching Soon
           </div>
           
           <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tight leading-[0.95] text-white">
