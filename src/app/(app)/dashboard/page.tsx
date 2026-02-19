@@ -7,7 +7,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { Background } from "@/components/Background";
 import { Loader2 } from "lucide-react";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { getOAuthUrl, getForms } from "@/lib/api/oAuthForm";
+import { getOAuthUrl, getForms, importForm } from "@/lib/api/oAuthForm";
 
 const STORAGE_KEY = "google_access_token";
 
@@ -18,6 +18,9 @@ function Dashboard() {
   const [forms, setForms] = useState<any[] | null>(null);
   const [loadingForms, setLoadingForms] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [importing, setImporting] = useState<Record<string, boolean>>({});
+  const [imported, setImported] = useState<Record<string, boolean>>({});
+  const [importError, setImportError] = useState<Record<string, string>>({});
 
   const connectGoogleForm = async () => {
     try {
@@ -28,6 +31,7 @@ function Dashboard() {
       alert("Failed to connect Google Form. Please try again.");
     }
   };
+
 
   const fetchForms = async (token: string) => {
     setLoadingForms(true);
@@ -40,6 +44,26 @@ function Dashboard() {
       setError(err?.message || "Failed to fetch forms");
     } finally {
       setLoadingForms(false);
+    }
+  };
+
+  const importFromForms = async (form: any) => {
+    const formId: string = form.id || form.formId;
+    const token = localStorage.getItem(STORAGE_KEY);
+    if (!token) {
+      setImportError((prev) => ({ ...prev, [formId]: 'No Google access token found. Please reconnect.' }));
+      return;
+    }
+    setImporting((prev) => ({ ...prev, [formId]: true }));
+    setImportError((prev) => ({ ...prev, [formId]: '' }));
+    try {
+      await importForm(formId, token);
+      setImported((prev) => ({ ...prev, [formId]: true }));
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.message || 'Import failed';
+      setImportError((prev) => ({ ...prev, [formId]: msg }));
+    } finally {
+      setImporting((prev) => ({ ...prev, [formId]: false }));
     }
   };
 
@@ -80,6 +104,22 @@ function Dashboard() {
               <div key={f.formId || f.id || f.name} className="bg-[#0f0f14] p-4 rounded-md border border-gray-800">
                 <h3 className="text-white font-medium">{f.title || f.name}</h3>
                 <p className="text-sm text-gray-400">{f.formId || f.id}</p>
+                {importError[f.id || f.formId] && (
+                  <p className="text-xs text-red-400 mt-1">{importError[f.id || f.formId]}</p>
+                )}
+                <MagneticButton
+                  onClick={() => importFromForms(f)}
+                  disabled={importing[f.id || f.formId] || imported[f.id || f.formId]}
+                  className={`mt-2 text-sm py-1 px-3 rounded transition-colors ${
+                    imported[f.id || f.formId]
+                      ? 'bg-green-600 text-white cursor-default'
+                      : 'bg-[#6E8BFF] hover:bg-[#5a72e0] text-white'
+                  }`}
+                >
+                  {importing[f.id || f.formId] ? (
+                    <span className="flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> Importing…</span>
+                  ) : imported[f.id || f.formId] ? 'Imported ✓' : 'Import'}
+                </MagneticButton>
               </div>
             ))}
           </div>

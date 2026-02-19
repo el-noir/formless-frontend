@@ -61,3 +61,31 @@ export async function getForms(accessToken: string) {
         throw error;
     }
 }
+
+/**
+ * Import a Google Form into the user's library.
+ * Backend: POST /forms/import
+ */
+export async function importForm(formIdOrUrl: string, accessToken: string) {
+    try {
+        const response = await axios.post(
+            `${API_BASE_URL}/forms/import`,
+            { formIdOrUrl, accessToken },
+            { headers: { 'Content-Type': 'application/json', ...getAuthHeaders() } },
+        );
+        return response.data as {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                title: string;
+                description: string;
+                sourceUrl: string;
+                questionCount: number;
+                status: string;
+            };
+        };
+    } catch (error) {
+        throw error;
+    }
+}
