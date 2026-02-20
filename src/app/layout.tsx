@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Navbar } from "@/components/Navbar";
+import { Background } from "@/components/Background";
 
 export const metadata: Metadata = {
   title: "FormAI - Turn Forms Into AI Conversations | No-Code Form Builder",
@@ -71,7 +73,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        {children}
+        <div className="relative min-h-screen bg-[#0B0B0F] text-white selection:bg-[#9A6BFF] selection:text-white overflow-x-hidden">
+          <style>{`
+                h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
+                body { font-family: 'Inter', sans-serif; }
+                html { scroll-behavior: smooth; }
+              `}</style>
+          <Background />
+          <Navbar />
+          <div className="pt-20">
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );

@@ -19,6 +19,7 @@ const navItems = [
   { name: 'How It Works', href: '#how-it-works' },
   { name: 'Testimonials', href: '#testimonials' },
   { name: 'Integrations', href: '#integrations' },
+  { name: "Case Studies", href: "/case-studies" }
 ];
 
 export function Navbar() {
@@ -46,9 +47,8 @@ export function Navbar() {
 
   return (
     <motion.nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-[#0B0B0F]/80 backdrop-blur-md border-b border-white/5' : 'bg-transparent border-transparent'
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-[#0B0B0F]/80 backdrop-blur-md border-b border-white/5' : 'bg-transparent border-transparent'
+        }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
@@ -64,15 +64,15 @@ export function Navbar() {
       </a>
 
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F] rounded-lg"
           aria-label="FormAI home"
         >
-           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform" aria-hidden="true">
-             F
-           </div>
-           <span className="text-xl font-bold text-white tracking-tight">FormAI</span>
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform" aria-hidden="true">
+            F
+          </div>
+          <span className="text-xl font-bold text-white tracking-tight">FormAI</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -107,15 +107,15 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Link 
-                href="/sign-in" 
+              <Link
+                href="/sign-in"
                 className="text-sm font-medium text-white hover:text-gray-300 hidden sm:block focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F] rounded px-2 py-1"
                 aria-label="Sign in to your account"
               >
                 Sign In
               </Link>
-              <Link 
-                href="/sign-up" 
+              <Link
+                href="/sign-up"
                 className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F]"
                 aria-label="Start free trial"
               >
@@ -135,8 +135,8 @@ export function Navbar() {
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </SheetTrigger>
-            <SheetContent 
-              side="right" 
+            <SheetContent
+              side="right"
               className="bg-[#0B0B0F] border-l border-white/10 w-[300px]"
               id="mobile-menu"
             >

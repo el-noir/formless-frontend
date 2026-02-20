@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from 'motion/react';
 
 export function Background() {
@@ -20,7 +22,7 @@ export function Background() {
         }}
         className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[#6E8BFF] rounded-full blur-[120px] opacity-20"
       />
-      
+
       <motion.div
         animate={{
           x: [0, -100, 0],
@@ -49,7 +51,7 @@ export function Background() {
         className="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-[#F4E7B8] rounded-full blur-[140px] opacity-10"
       />
 
-       <motion.div
+      <motion.div
         animate={{
           x: [0, -70, 0],
           y: [0, -120, 0],
@@ -62,7 +64,7 @@ export function Background() {
         }}
         className="absolute bottom-[20%] right-[30%] w-[300px] h-[300px] bg-[#6E8BFF] rounded-full blur-[100px] opacity-15"
       />
-      
+
       {/* Vignette */}
       <div className="absolute inset-0 bg-radial-[circle_at_center,transparent_0%,#0B0B0F_90%] pointer-events-none" />
     </div>
