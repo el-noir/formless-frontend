@@ -12,26 +12,23 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
+  withCredentials: true, // Ensures httpOnly cookies are sent/received on every request
 });
 
 /**
  * Register a new user
- * @param data - User registration data
- * @returns User data with authentication tokens
  */
 export async function registerUser(data: RegisterDto): Promise<RegisterUserResponse> {
   try {
     const response = await api.post<RegisterUserResponse>('/auth/register', data);
-    
-    // Update Zustand store with auth data
-    if (response.data.user && response.data.accessToken && response.data.refreshToken) {
+
+    // Only store user + access token. Refresh token is set as an httpOnly cookie by the server.
+    if (response.data.user && response.data.accessToken) {
       useAuthStore.getState().setAuth(response.data.user, {
         accessToken: response.data.accessToken,
-        refreshToken: response.data.refreshToken,
       });
     }
-    
+
     return response.data;
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
@@ -44,21 +41,18 @@ export async function registerUser(data: RegisterDto): Promise<RegisterUserRespo
 
 /**
  * Login user
- * @param data - User login credentials
- * @returns User data with authentication tokens
  */
 export async function loginUser(data: LoginDto): Promise<LoginResponse> {
   try {
     const response = await api.post<LoginResponse>('/auth/login', data);
-    
-    // Update Zustand store with auth data
-    if (response.data.user && response.data.accessToken && response.data.refreshToken) {
+
+    // Only store user + access token. Refresh token is set as an httpOnly cookie by the server.
+    if (response.data.user && response.data.accessToken) {
       useAuthStore.getState().setAuth(response.data.user, {
         accessToken: response.data.accessToken,
-        refreshToken: response.data.refreshToken,
       });
     }
-    
+
     return response.data;
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
@@ -70,10 +64,16 @@ export async function loginUser(data: LoginDto): Promise<LoginResponse> {
 }
 
 /**
- * Logout user
+ * Logout user — clears local auth state AND tells the server to clear the httpOnly cookie
  */
-export function logoutUser(): void {
-  useAuthStore.getState().clearAuth();
+export async function logoutUser(): Promise<void> {
+  try {
+    await api.post('/auth/logout');
+  } catch {
+    // Even if the server call fails, clear local state
+  } finally {
+    useAuthStore.getState().clearAuth();
+  }
 }
 
 /**
@@ -81,13 +81,6 @@ export function logoutUser(): void {
  */
 export function getAccessToken(): string | null {
   return useAuthStore.getState().accessToken;
-}
-
-/**
- * Get stored refresh token
- */
-export function getRefreshToken(): string | null {
-  return useAuthStore.getState().refreshToken;
 }
 
 /**
@@ -108,7 +101,6 @@ export function isAuthenticated(): boolean {
  * Initiate Google OAuth login
  */
 export function loginWithGoogle(): void {
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
   window.location.href = `${API_BASE_URL}/auth/google`;
 }
 

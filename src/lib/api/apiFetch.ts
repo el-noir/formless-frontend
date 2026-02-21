@@ -1,11 +1,16 @@
 /**
  * apiFetch — Authenticated fetch wrapper with automatic token refresh.
  *
- * How it works:
- * 1. Attaches the current access token to every request.
- * 2. If a 401 is returned, it tries to refresh using the stored refresh token.
- * 3. On successful refresh, the new tokens are saved and the original request is retried.
- * 4. If the refresh also fails (e.g. refresh token expired), the user is logged out.
+ * Security model:
+ * - Access token: stored in Zustand/localStorage, sent in Authorization header
+ * - Refresh token: stored in an httpOnly cookie (set/read by server only, never accessible to JS)
+ *
+ * How refresh works:
+ * 1. If an API call returns 401, call POST /auth/refresh
+ * 2. The browser sends the httpOnly refresh cookie automatically (credentials: 'include')
+ * 3. The server validates the cookie, rotates the refresh token, returns a new access token
+ * 4. The new access token is saved and the original request is retried
+ * 5. If refresh fails → clear auth + redirect to /sign-in
  */
 
 import { useAuthStore } from "@/stores/authStore";
@@ -15,21 +20,14 @@ let isRefreshing = false;
 let refreshQueue: Array<(token: string) => void> = [];
 
 async function attemptTokenRefresh(): Promise<string | null> {
-    const { refreshToken, setTokens, clearAuth } = useAuthStore.getState();
-
-    if (!refreshToken) {
-        clearAuth();
-        window.location.href = "/sign-in";
-        return null;
-    }
+    const { setAccessToken, clearAuth } = useAuthStore.getState();
 
     try {
+        // The httpOnly refresh token cookie is sent automatically via credentials: 'include'
         const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
             method: "POST",
-            headers: {
-                "Authorization": `Bearer ${refreshToken}`,
-                "Content-Type": "application/json",
-            },
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
         });
 
         if (!res.ok) {
@@ -39,11 +37,7 @@ async function attemptTokenRefresh(): Promise<string | null> {
         }
 
         const data = await res.json();
-        setTokens({
-            accessToken: data.accessToken,
-            refreshToken: data.refreshToken,
-        });
-
+        setAccessToken(data.accessToken);
         return data.accessToken;
     } catch {
         clearAuth();
@@ -70,26 +64,24 @@ export async function apiFetch(
     const res = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
         headers,
+        credentials: "include", // Always include cookies (for the refresh token cookie)
     });
 
-    // If not 401, return the response as-is
+    // Not a 401 — return as-is
     if (res.status !== 401) {
         return res;
     }
 
-    // --- 401 handling: attempt token refresh ---
+    // --- 401: attempt silent token refresh ---
 
     if (isRefreshing) {
-        // Another request is already refreshing; queue this one
+        // Queue this request while another refresh is in progress
         return new Promise((resolve) => {
             refreshQueue.push(async (newToken: string) => {
-                const retryHeaders = {
-                    ...headers,
-                    Authorization: `Bearer ${newToken}`,
-                };
                 const retried = await fetch(`${API_BASE_URL}${endpoint}`, {
                     ...options,
-                    headers: retryHeaders,
+                    headers: { ...headers, Authorization: `Bearer ${newToken}` },
+                    credentials: "include",
                 });
                 resolve(retried);
             });
@@ -101,22 +93,17 @@ export async function apiFetch(
     isRefreshing = false;
 
     if (!newToken) {
-        // Refresh failed — return the original 401 response
-        return res;
+        return res; // Return original 401 if refresh failed
     }
 
-    // Flush the queue with the new token
+    // Flush queued requests with the new token
     refreshQueue.forEach((cb) => cb(newToken));
     refreshQueue = [];
 
-    // Retry the original request with the new token
-    const retryHeaders = {
-        ...headers,
-        Authorization: `Bearer ${newToken}`,
-    };
-
+    // Retry the original request
     return fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
-        headers: retryHeaders,
+        headers: { ...headers, Authorization: `Bearer ${newToken}` },
+        credentials: "include",
     });
 }

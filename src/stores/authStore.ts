@@ -7,14 +7,13 @@ interface AuthState {
   // State
   user: User | null;
   accessToken: string | null;
-  refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 
   // Actions
-  setAuth: (user: User, tokens: AuthTokens) => void;
+  setAuth: (user: User, tokens: Pick<AuthTokens, 'accessToken'>) => void;
   updateUser: (user: Partial<User>) => void;
-  setTokens: (tokens: AuthTokens) => void;
+  setAccessToken: (accessToken: string) => void;
   clearAuth: () => void;
   setLoading: (loading: boolean) => void;
   initialize: () => void;
@@ -26,7 +25,6 @@ export const useAuthStore = create<AuthState>()(
       // Initial state
       user: null,
       accessToken: null,
-      refreshToken: null,
       isAuthenticated: false,
       isLoading: true,
 
@@ -35,7 +33,6 @@ export const useAuthStore = create<AuthState>()(
         set({
           user,
           accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
           isAuthenticated: true,
           isLoading: false,
         });
@@ -51,12 +48,9 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      // Update tokens (refresh token flow)
-      setTokens: (tokens) => {
-        set({
-          accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
-        });
+      // Update access token only (from refresh)
+      setAccessToken: (accessToken) => {
+        set({ accessToken });
       },
 
       // Clear auth state (logout)
@@ -64,7 +58,6 @@ export const useAuthStore = create<AuthState>()(
         set({
           user: null,
           accessToken: null,
-          refreshToken: null,
           isAuthenticated: false,
           isLoading: false,
         });
@@ -78,7 +71,6 @@ export const useAuthStore = create<AuthState>()(
       // Initialize auth state from storage
       initialize: () => {
         const state = get();
-        // After rehydration, check if we have valid tokens
         if (state.accessToken && state.user) {
           set({ isAuthenticated: true, isLoading: false });
         } else {
@@ -89,13 +81,13 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'auth-storage',
       storage: createJSONStorage(() => localStorage),
+      // NOTE: refreshToken is intentionally NOT persisted here.
+      // The refresh token lives exclusively in an httpOnly cookie managed by the server.
       partialize: (state) => ({
         user: state.user,
         accessToken: state.accessToken,
-        refreshToken: state.refreshToken,
       }),
       onRehydrateStorage: () => (state) => {
-        // After rehydration, mark loading as false
         if (state) {
           state.isLoading = false;
           state.isAuthenticated = !!(state.accessToken && state.user);
