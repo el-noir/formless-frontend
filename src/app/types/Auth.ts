@@ -3,6 +3,16 @@ export interface RegisterDto {
   password: string;
   firstName: string;
   lastName: string;
+  organizationName: string;
+  organizationEmail?: string;
+  organizationPhone?: string;
+  organizationAddress?: string;
+  organizationCity?: string;
+  organizationState?: string;
+  organizationZip?: string;
+  organizationCountry?: string;
+  organizationWebsite?: string;
+  organizationDescription?: string;
 }
 
 export interface User {
