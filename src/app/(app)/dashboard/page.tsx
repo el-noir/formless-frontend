@@ -91,7 +91,7 @@ function Dashboard() {
     <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 pb-12 relative">
       <Background />
       <div className="max-w-7xl mx-auto relative z-10">
-        <h1 className="text-3xl font-bold text-white mb-6">Welcome, { 'user'}!</h1>
+        <h1 className="text-3xl font-bold text-white mb-6">Welcome, {'user'}!</h1>
         <p className="text-gray-400 mb-4">Your connected Google Forms will appear here.</p>
 
         {loadingForms ? (
@@ -110,11 +110,10 @@ function Dashboard() {
                 <MagneticButton
                   onClick={() => importFromForms(f)}
                   disabled={importing[f.id || f.formId] || imported[f.id || f.formId]}
-                  className={`mt-2 text-sm py-1 px-3 rounded transition-colors ${
-                    imported[f.id || f.formId]
+                  className={`mt-2 text-sm py-1 px-3 rounded transition-colors ${imported[f.id || f.formId]
                       ? 'bg-green-600 text-white cursor-default'
                       : 'bg-[#6E8BFF] hover:bg-[#5a72e0] text-white'
-                  }`}
+                    }`}
                 >
                   {importing[f.id || f.formId] ? (
                     <span className="flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> Importing…</span>
@@ -129,8 +128,8 @@ function Dashboard() {
           </div>
         )}
 
-        <MagneticButton onClick={connectGoogleForm} className="mt-4 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white font-bold py-2 px-4 rounded transition duration-200">
-          Connect Google Form
+        <MagneticButton onClick={() => window.location.href = '/integrations'} className="mt-4 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white font-bold py-2 px-4 rounded transition duration-200">
+          Manage Integrations
         </MagneticButton>
       </div>
     </div>
