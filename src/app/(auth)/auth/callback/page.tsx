@@ -13,10 +13,9 @@ function AuthCallbackContent() {
 
   useEffect(() => {
     const accessToken = searchParams.get("accessToken");
-    const refreshToken = searchParams.get("refreshToken");
+    // refreshToken is no longer in the URL — it's set as an httpOnly cookie by the server
 
-    if (!accessToken || !refreshToken) {
-      // If no tokens, redirect to sign-in with error
+    if (!accessToken) {
       router.push("/sign-in?error=auth_failed");
       return;
     }
@@ -37,10 +36,7 @@ function AuthCallbackContent() {
         const userData = await response.json();
 
         // Store auth data in Zustand
-        setAuth(userData, {
-          accessToken,
-          refreshToken,
-        });
+        setAuth(userData, { accessToken });
 
         // Redirect to dashboard
         router.push("/dashboard");
