@@ -7,73 +7,43 @@ import { useAuthStore } from "@/stores/authStore";
 import { Background } from "@/components/Background";
 import { Loader2 } from "lucide-react";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { getOAuthUrl, getForms, importForm } from "@/lib/api/oAuthForm";
-
-const STORAGE_KEY = "google_access_token";
+import { getGoogleForms } from "@/lib/api/integrations";
 
 function Dashboard() {
   const { isLoading } = useRequireAuth();
-  const { user } = useAuthStore();
+  const { user, accessToken } = useAuthStore();
 
   const [forms, setForms] = useState<any[] | null>(null);
   const [loadingForms, setLoadingForms] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [importing, setImporting] = useState<Record<string, boolean>>({});
-  const [imported, setImported] = useState<Record<string, boolean>>({});
-  const [importError, setImportError] = useState<Record<string, string>>({});
 
-  const connectGoogleForm = async () => {
-    try {
-      const url = await getOAuthUrl();
-      window.location.href = url;
-    } catch (err) {
-      console.error("Error getting OAuth URL:", err);
-      alert("Failed to connect Google Form. Please try again.");
-    }
-  };
-
-
-  const fetchForms = async (token: string) => {
+  const fetchForms = async () => {
     setLoadingForms(true);
     setError(null);
     try {
-      const data = await getForms(token);
-      setForms(data.forms || data || []);
+      const data = await getGoogleForms();
+      setForms(data);
     } catch (err: any) {
       console.error("Error fetching forms:", err);
-      setError(err?.message || "Failed to fetch forms");
+      // If 401/404, it just means they haven't connected yet
+      const status = Number(err?.status || err?.statusCode);
+      if (status === 401 || status === 404) {
+        setForms([]);
+      } else {
+        setError(err?.message || "Failed to fetch forms");
+      }
     } finally {
       setLoadingForms(false);
     }
   };
 
-  const importFromForms = async (form: any) => {
-    const formIdOrUrl: string = form.webViewLink || form.id || form.formId;
-    const token = localStorage.getItem(STORAGE_KEY);
-    if (!token) {
-      setImportError((prev) => ({ ...prev, [form.id]: 'No Google access token found. Please reconnect.' }));
-      return;
-    }
-    setImporting((prev) => ({ ...prev, [form.id]: true }));
-    setImportError((prev) => ({ ...prev, [form.id]: '' }));
-    try {
-      await importForm(formIdOrUrl, token);
-      setImported((prev) => ({ ...prev, [form.id]: true }));
-    } catch (err: any) {
-      const msg = err?.response?.data?.message || err?.message || 'Import failed';
-      setImportError((prev) => ({ ...prev, [form.id]: msg }));
-    } finally {
-      setImporting((prev) => ({ ...prev, [form.id]: false }));
-    }
-  };
-
-  // On mount: check localStorage for a stored accessToken and auto-fetch forms
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      fetchForms(stored);
+    if (accessToken) {
+      fetchForms();
     }
-  }, []);
+  }, [accessToken]);
+
+
 
   if (isLoading) {
     return (
@@ -104,20 +74,11 @@ function Dashboard() {
               <div key={f.formId || f.id || f.name} className="bg-[#0f0f14] p-4 rounded-md border border-gray-800">
                 <h3 className="text-white font-medium">{f.title || f.name}</h3>
                 <p className="text-sm text-gray-400">{f.formId || f.id}</p>
-                {importError[f.id || f.formId] && (
-                  <p className="text-xs text-red-400 mt-1">{importError[f.id || f.formId]}</p>
-                )}
                 <MagneticButton
-                  onClick={() => importFromForms(f)}
-                  disabled={importing[f.id || f.formId] || imported[f.id || f.formId]}
-                  className={`mt-2 text-sm py-1 px-3 rounded transition-colors ${imported[f.id || f.formId]
-                      ? 'bg-green-600 text-white cursor-default'
-                      : 'bg-[#6E8BFF] hover:bg-[#5a72e0] text-white'
-                    }`}
+                  onClick={() => window.location.href = '/integrations/google-forms'}
+                  className="mt-4 bg-white/10 hover:bg-white/20 text-white text-sm py-1.5 px-3 rounded transition-colors"
                 >
-                  {importing[f.id || f.formId] ? (
-                    <span className="flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> Importing…</span>
-                  ) : imported[f.id || f.formId] ? 'Imported ✓' : 'Import'}
+                  Configure Sync
                 </MagneticButton>
               </div>
             ))}
