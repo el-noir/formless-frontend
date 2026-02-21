@@ -22,6 +22,12 @@ const navItems = [
   { name: "Case Studies", href: "/case-studies" }
 ];
 
+const authNavItems = [
+  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'My Forms', href: '/forms' },
+  { name: 'Integrations', href: '/integrations' }
+];
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -77,7 +83,7 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
+          {(isAuthenticated && !isLoading ? authNavItems : navItems).map((item) => (
             <Link
               key={item.name}
               href={item.href}
@@ -147,7 +153,7 @@ export function Navbar() {
                 </SheetDescription>
               </SheetHeader>
               <div className="flex flex-col gap-6 mt-8">
-                {navItems.map((item) => (
+                {(isAuthenticated && !isLoading ? authNavItems : navItems).map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
