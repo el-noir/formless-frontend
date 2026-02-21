@@ -1,17 +1,7 @@
-import { API_BASE_URL } from "./config";
-import { useAuthStore } from "@/stores/authStore";
-
-const getAuthHeaders = () => {
-    const token = useAuthStore.getState().accessToken;
-    return {
-        Authorization: `Bearer ${token}`,
-    };
-};
+import { apiFetch } from "./apiFetch";
 
 export const getForms = async () => {
-    const response = await fetch(`${API_BASE_URL}/forms`, {
-        headers: getAuthHeaders(),
-    });
+    const response = await apiFetch('/forms');
     if (!response.ok) {
         throw new Error("Failed to fetch forms");
     }
@@ -20,9 +10,7 @@ export const getForms = async () => {
 };
 
 export const getForm = async (id: string) => {
-    const response = await fetch(`${API_BASE_URL}/forms/${id}`, {
-        headers: getAuthHeaders(),
-    });
+    const response = await apiFetch(`/forms/${id}`);
     if (!response.ok) {
         throw new Error("Failed to fetch form details");
     }
@@ -31,10 +19,7 @@ export const getForm = async (id: string) => {
 };
 
 export const deleteForm = async (id: string) => {
-    const response = await fetch(`${API_BASE_URL}/forms/${id}`, {
-        method: 'DELETE',
-        headers: getAuthHeaders(),
-    });
+    const response = await apiFetch(`/forms/${id}`, { method: 'DELETE' });
     if (!response.ok) {
         throw new Error("Failed to delete form");
     }
