@@ -9,6 +9,19 @@ import { useAuthStore } from "@/stores/authStore";
 import { getForm } from "@/lib/api/forms";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 
+const FIELD_TYPE_STYLES: Record<string, string> = {
+    MULTIPLE_CHOICE: 'bg-purple-500/10 text-purple-300 border-purple-500/20',
+    CHECKBOXES: 'bg-blue-500/10 text-blue-300 border-blue-500/20',
+    LINEAR_SCALE: 'bg-yellow-500/10 text-yellow-300 border-yellow-500/20',
+    DATE: 'bg-green-500/10 text-green-300 border-green-500/20',
+    TIME: 'bg-teal-500/10 text-teal-300 border-teal-500/20',
+    FILE_UPLOAD: 'bg-red-500/10 text-red-300 border-red-500/20',
+    MULTIPLE_CHOICE_GRID: 'bg-orange-500/10 text-orange-300 border-orange-500/20',
+    CHECKBOX_GRID: 'bg-pink-500/10 text-pink-300 border-pink-500/20',
+    SHORT_TEXT: 'bg-gray-800 text-gray-400 border-gray-700',
+    LONG_TEXT: 'bg-gray-800 text-gray-400 border-gray-700',
+};
+
 export default function FormViewerPage() {
     const { id } = useParams() as { id: string };
     const router = useRouter();
@@ -17,7 +30,6 @@ export default function FormViewerPage() {
     const [form, setForm] = useState<any>(null);
     const [loadingForm, setLoadingForm] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
     const [activeTab, setActiveTab] = useState<'fields' | 'settings'>('fields');
 
     const fetchFormData = async () => {
@@ -68,6 +80,9 @@ export default function FormViewerPage() {
             </div>
         );
     }
+
+    const fields: any[] = form.fields || [];
+    const questionCount = fields.filter((f: any) => f.type !== 'SECTION_HEADER').length;
 
     return (
         <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 pb-12 relative">
@@ -135,33 +150,59 @@ export default function FormViewerPage() {
 
                 {/* Fields Tab */}
                 {activeTab === 'fields' && (
-                    <div className="space-y-6">
+                    <div>
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-xl font-semibold text-white">Form Structure</h2>
                             <span className="text-gray-400 bg-gray-900 px-3 py-1 rounded-full text-sm font-medium">
-                                {form.metadata?.questionCount || 0} Questions
+                                {questionCount} Questions
                             </span>
                         </div>
 
-                        {(form.metadata?.questionCount > 0) ? (
-                            <div className="space-y-4">
-                                {/* Note: In a real app we would map form.schema.fields here. 
-                    Since getForm currently only returns high-level details, we'll show a placeholder.
-                    If we update the backend getForm to populate the form schema fields, we'd render them like this:
-                */}
-                                <div className="bg-[#0f0f14] border border-gray-800/60 rounded-xl p-8 text-center text-gray-400">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-[#6E8BFF]/20 to-[#9A6BFF]/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#6E8BFF]/30">
-                                        <MessageSquare className="w-8 h-8 text-[#6E8BFF]" />
-                                    </div>
-                                    <h3 className="text-lg font-medium text-white mb-2">Structure Imported</h3>
-                                    <p className="max-w-md mx-auto">
-                                        The schema containing {form.metadata?.questionCount} fields has been securely mapped. You can now use FormAI Agents to dynamically converse with your users using this structure.
-                                    </p>
-                                </div>
+                        {fields.length > 0 ? (
+                            <div className="space-y-3">
+                                {fields.map((field: any, i: number) =>
+                                    field.type === 'SECTION_HEADER' ? (
+                                        <div key={field.id || i} className="border-t border-gray-800 pt-5 mt-6 first:border-0 first:mt-0 first:pt-0">
+                                            <h3 className="text-sm font-semibold text-[#6E8BFF] uppercase tracking-widest">{field.label}</h3>
+                                            {field.description && <p className="text-xs text-gray-500 mt-1">{field.description}</p>}
+                                        </div>
+                                    ) : (
+                                        <div key={field.id || i} className="bg-[#0f0f14] border border-gray-800 rounded-xl p-4 hover:border-gray-700 transition-colors">
+                                            <div className="flex items-start justify-between gap-4">
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                                                        <span className="text-sm font-medium text-white">{field.label}</span>
+                                                        {field.required && (
+                                                            <span className="text-red-400 text-xs font-bold" title="Required">*</span>
+                                                        )}
+                                                    </div>
+                                                    {field.description && (
+                                                        <p className="text-sm text-gray-500 mb-2">{field.description}</p>
+                                                    )}
+                                                    {field.options && field.options.length > 0 && (
+                                                        <div className="flex flex-wrap gap-1.5 mt-2">
+                                                            {field.options.map((opt: any, j: number) => (
+                                                                <span key={j} className="bg-gray-900 text-gray-300 text-xs px-2 py-1 rounded border border-gray-800">
+                                                                    {opt.label}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="shrink-0">
+                                                    <span className={`text-xs px-2 py-1 rounded font-mono uppercase tracking-wide border ${FIELD_TYPE_STYLES[field.type] || 'bg-gray-800 text-gray-400 border-gray-700'}`}>
+                                                        {field.type.replace(/_/g, ' ')}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                )}
                             </div>
                         ) : (
-                            <div className="bg-[#0f0f14] border border-gray-800 rounded-xl p-8 text-center text-gray-500">
-                                No fields detected in this form.
+                            <div className="bg-[#0f0f14] border border-gray-800 rounded-xl p-10 text-center text-gray-500">
+                                <MessageSquare className="w-10 h-10 mx-auto mb-3 opacity-40" />
+                                <p>No fields detected. Try re-importing the form.</p>
                             </div>
                         )}
                     </div>
@@ -174,22 +215,32 @@ export default function FormViewerPage() {
                             <h3 className="text-lg font-medium text-white mb-4">Form Metadata</h3>
                             <dl className="space-y-4">
                                 <div>
-                                    <dt className="text-sm text-gray-500 mb-1">Source ID</dt>
-                                    <dd className="font-mono text-xs text-gray-300 bg-gray-900 p-2 rounded border border-gray-800 overflow-x-auto">
-                                        {form.sourceUrl ? new URL(form.sourceUrl).pathname.split('/').slice(-2, -1)[0] : 'N/A'}
+                                    <dt className="text-sm text-gray-500 mb-1">Source URL</dt>
+                                    <dd className="font-mono text-xs text-gray-300 bg-gray-900 p-2 rounded border border-gray-800 overflow-x-auto break-all">
+                                        {form.sourceUrl || 'N/A'}
                                     </dd>
                                 </div>
                                 <div>
-                                    <dt className="text-sm text-gray-500 mb-1">Time Estimate</dt>
+                                    <dt className="text-sm text-gray-500 mb-1">Estimated Completion</dt>
                                     <dd className="text-white bg-gray-900/50 inline-block px-3 py-1 rounded font-medium border border-gray-800/50">
                                         ~{form.metadata?.estimatedCompletionCompletionMinutes || 0} min
                                     </dd>
                                 </div>
                                 <div>
                                     <dt className="text-sm text-gray-500 mb-1">Accepting Responses</dt>
-                                    <dd className="text-white">
-                                        {form.metadata?.acceptingResponses ? 'Yes' : 'No'}
-                                    </dd>
+                                    <dd className="text-white">{form.metadata?.acceptingResponses ? 'Yes' : 'No'}</dd>
+                                </div>
+                                <div>
+                                    <dt className="text-sm text-gray-500 mb-1">Requires Login</dt>
+                                    <dd className="text-white">{form.metadata?.requiresLogin ? 'Yes' : 'No'}</dd>
+                                </div>
+                                <div>
+                                    <dt className="text-sm text-gray-500 mb-1">Has File Upload</dt>
+                                    <dd className="text-white">{form.metadata?.hasFileUpload ? 'Yes' : 'No'}</dd>
+                                </div>
+                                <div>
+                                    <dt className="text-sm text-gray-500 mb-1">Last Synced</dt>
+                                    <dd className="text-white text-sm">{form.lastSynced ? new Date(form.lastSynced).toLocaleString() : 'Never'}</dd>
                                 </div>
                             </dl>
                         </div>
