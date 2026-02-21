@@ -24,6 +24,7 @@ const navItems = [
 
 const authNavItems = [
   { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Organizations', href: '/organizations' },
   { name: 'My Forms', href: '/forms' },
   { name: 'Integrations', href: '/integrations' }
 ];
