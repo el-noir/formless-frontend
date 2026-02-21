@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { watchGoogleForm } from "@/lib/api/integrations";
+import { importGoogleForm } from "@/lib/api/integrations";
 import { Loader2, X, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -21,21 +21,15 @@ export function MappingModal({ isOpen, onClose, form }: MappingModalProps) {
             setSaving(true);
             setError(null);
 
-            // We no longer send 'fieldMappings' because we just want to ingest all fields directly
-            const mappingData = {
-                name: form.name,
-                fieldMappings: {}, // Keep empty or remove entirely if backend allows
-            };
-
-            await watchGoogleForm(form.id, mappingData);
+            await importGoogleForm(form.id);
             setSuccess(true);
             setTimeout(() => {
                 onClose();
-            }, 2000);
+            }, 2500);
 
         } catch (err: any) {
             console.error("Save error:", err);
-            setError(err.message || err.response?.data?.message || err.statusText || "Failed to setup form sync.");
+            setError(err.message || err.response?.data?.message || err.statusText || "Failed to import form.");
         } finally {
             setSaving(false);
         }

@@ -71,14 +71,19 @@ function Dashboard() {
         ) : forms && forms.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {forms.map((f: any) => (
-              <div key={f.formId || f.id || f.name} className="bg-[#0f0f14] p-4 rounded-md border border-gray-800">
-                <h3 className="text-white font-medium">{f.title || f.name}</h3>
+              <div key={f.formId || f.id || f.name} className="relative bg-[#0f0f14] p-4 rounded-md border border-gray-800">
+                {f.isSynced && (
+                  <div className="absolute top-4 right-4 bg-green-500/10 text-green-400 text-xs px-2 py-1 rounded border border-green-500/20 font-medium">
+                    Active Sync
+                  </div>
+                )}
+                <h3 className="text-white font-medium pr-24">{f.title || f.name}</h3>
                 <p className="text-sm text-gray-400">{f.formId || f.id}</p>
                 <MagneticButton
                   onClick={() => window.location.href = '/integrations/google-forms'}
-                  className="mt-4 bg-white/10 hover:bg-white/20 text-white text-sm py-1.5 px-3 rounded transition-colors"
+                  className={`mt-4 text-sm py-1.5 px-3 rounded transition-colors ${f.isSynced ? 'bg-white/5 hover:bg-white/10 text-gray-300' : 'bg-[#6E8BFF] hover:bg-[#5a72e0] text-white'}`}
                 >
-                  Configure Sync
+                  {f.isSynced ? 'Manage Sync' : 'Configure Sync'}
                 </MagneticButton>
               </div>
             ))}

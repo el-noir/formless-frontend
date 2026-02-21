@@ -53,3 +53,25 @@ export const watchGoogleForm = async (formId: string, mappingData: any) => {
 
     return response.json();
 };
+
+export const importGoogleForm = async (formId: string) => {
+    const response = await fetch(`${API_BASE_URL}/forms/import`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders(),
+        },
+        body: JSON.stringify({ formIdOrUrl: formId })
+    });
+
+    if (!response.ok) {
+        let errorMsg = "Failed to import form";
+        try {
+            const errorData = await response.json();
+            errorMsg = errorData.message || errorMsg;
+        } catch (e) { }
+        throw new Error(errorMsg);
+    }
+
+    return response.json();
+};

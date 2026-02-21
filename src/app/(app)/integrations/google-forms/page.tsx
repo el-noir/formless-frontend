@@ -135,18 +135,23 @@ export default function GoogleFormsHub() {
                         {forms.map((form) => (
                             <div
                                 key={form.id}
-                                className="bg-[#1C1C24] border border-white/10 rounded-2xl p-6 flex flex-col hover:border-white/30 transition-colors"
+                                className="relative bg-[#1C1C24] border border-white/10 rounded-2xl p-6 flex flex-col hover:border-white/30 transition-colors"
                             >
-                                <div className="flex-grow">
+                                {form.isSynced && (
+                                    <div className="absolute top-4 right-4 bg-green-500/10 text-green-400 text-xs px-2 py-1 rounded border border-green-500/20 font-medium">
+                                        Active Sync
+                                    </div>
+                                )}
+                                <div className="flex-grow pr-16">
                                     <h3 className="text-lg font-bold text-white mb-1 line-clamp-1">{form.name}</h3>
                                     <p className="text-xs text-gray-500 mb-6 font-mono">{form.id}</p>
                                 </div>
 
                                 <button
                                     onClick={() => setSelectedForm(form)}
-                                    className="w-full py-2.5 bg-white/5 hover:bg-white/10 text-white font-medium rounded-lg border border-white/10 transition-colors"
+                                    className={`w-full py-2.5 font-medium rounded-lg border transition-colors ${form.isSynced ? 'bg-white/5 hover:bg-white/10 text-gray-300 border-white/5' : 'bg-white/10 hover:bg-white/20 text-white border-white/10'}`}
                                 >
-                                    Setup Integration
+                                    {form.isSynced ? 'Manage Integration' : 'Setup Integration'}
                                 </button>
                             </div>
                         ))}
