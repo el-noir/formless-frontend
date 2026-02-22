@@ -90,17 +90,17 @@ export default function PublicChatPage() {
 
             if (result.state === 'READY_TO_SUBMIT' || result.state === 'COMPLETED') {
                 setProgress(100);
-            } else if (result.nextMessage?.metadata?.progress) {
-                setProgress(result.nextMessage.metadata.progress);
+            } else if (result.reply?.metadata?.progress) {
+                setProgress(result.reply.metadata.progress);
             }
 
-            if (result.nextMessage) {
+            if (result.reply) {
                 setMessages(prev => [...prev, {
                     role: 'assistant',
-                    content: result.nextMessage.content,
+                    content: result.reply.content,
                     state: result.state,
-                    progress: result.nextMessage.metadata?.progress,
-                    timestamp: result.nextMessage.timestamp
+                    progress: result.reply.metadata?.progress,
+                    timestamp: result.reply.timestamp
                 }]);
             }
 
