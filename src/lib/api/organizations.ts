@@ -129,3 +129,14 @@ export const deleteOrgForm = async (orgId: string, formId: string) => {
     if (!res.ok) throw new Error('Failed to delete form');
     return res.json();
 };
+
+export const generateChatLink = async (orgId: string, formId: string) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/chat-link`, {
+        method: 'POST',
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to generate chat link');
+    }
+    return res.json();
+};

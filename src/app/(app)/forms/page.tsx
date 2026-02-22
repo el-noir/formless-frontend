@@ -15,6 +15,7 @@ export default function FormsPage() {
     const { accessToken } = useAuthStore();
     const { currentOrgId, getCurrentOrg, isAdminOfCurrentOrg } = useOrgStore();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [forms, setForms] = useState<any[]>([]);
     const [loadingForms, setLoadingForms] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -43,6 +44,32 @@ export default function FormsPage() {
         } catch {
             alert("Failed to delete form");
         }
+    };
+
+    const [shareModalOpen, setShareModalOpen] = useState(false);
+    const [shareLink, setShareLink] = useState('');
+    const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+
+    const handleShare = async (formId: string) => {
+        if (!currentOrgId) return;
+        setIsGeneratingLink(true);
+        try {
+            const { generateChatLink } = await import('@/lib/api/organizations');
+            const data = await generateChatLink(currentOrgId, formId);
+            const fullUrl = `${window.location.origin}${data.data.url}`;
+            setShareLink(fullUrl);
+            setShareModalOpen(true);
+        } catch (err: unknown) {
+            const msg = err instanceof Error ? err.message : "Failed to generate link";
+            alert(msg);
+        } finally {
+            setIsGeneratingLink(false);
+        }
+    };
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(shareLink);
+        alert("Copied to clipboard!");
     };
 
     if (isLoading || loadingForms) {
@@ -147,24 +174,20 @@ export default function FormsPage() {
                                                 : 'Never synced'}
                                         </span>
                                     </div>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                        <button
+                                            onClick={() => handleShare(form.id)}
+                                            disabled={isGeneratingLink}
+                                            className="flex-1 bg-[#6E8BFF]/10 hover:bg-[#6E8BFF]/20 text-[#6E8BFF] text-sm py-2 px-4 rounded-lg text-center transition-colors disabled:opacity-50"
+                                        >
+                                            Share AI Chat
+                                        </button>
                                         <Link
                                             href={`/organizations/${currentOrgId}/forms/${form.id}`}
-                                            className="flex-1 bg-white/5 hover:bg-white/10 text-white text-sm py-2 px-4 rounded-lg text-center transition-colors"
+                                            className="px-3 py-2 bg-white/5 hover:bg-white/10 text-white text-sm rounded-lg text-center transition-colors"
                                         >
                                             View
                                         </Link>
-                                        {form.sourceUrl && (
-                                            <a
-                                                href={form.sourceUrl}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="p-2 bg-white/5 hover:bg-white/10 text-gray-400 rounded-lg transition-colors"
-                                                title="Open source form"
-                                            >
-                                                <ExternalLink className="w-4 h-4" />
-                                            </a>
-                                        )}
                                         {isAdmin && (
                                             <button
                                                 onClick={() => handleDelete(form.id)}
@@ -201,6 +224,41 @@ export default function FormsPage() {
                     </div>
                 )}
             </div>
+
+            {/* Share Modal */}
+            {shareModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                    <div className="bg-[#0f0f14] border border-gray-800 rounded-xl p-6 w-full max-w-md">
+                        <h3 className="text-xl font-semibold text-white mb-4">Share AI Chat</h3>
+                        <p className="text-gray-400 text-sm mb-4">
+                            Anyone with this link can interact with the AI to complete this form. They do not need an account.
+                        </p>
+                        <div className="flex gap-2 mb-6">
+                            <input
+                                type="text"
+                                readOnly
+                                value={shareLink}
+                                className="flex-1 bg-black/50 border border-gray-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#6E8BFF]"
+                                onClick={(e) => e.currentTarget.select()}
+                            />
+                            <button
+                                onClick={copyToClipboard}
+                                className="bg-[#6E8BFF] hover:bg-[#5a72e0] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                            >
+                                Copy
+                            </button>
+                        </div>
+                        <div className="flex justify-end">
+                            <button
+                                onClick={() => setShareModalOpen(false)}
+                                className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
