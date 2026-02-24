@@ -6,8 +6,8 @@ import Image from 'next/image';
 const companies = [
   { name: 'Stripe', logo: 'https://cdn.simpleicons.org/stripe/white' },
   { name: 'Notion', logo: 'https://cdn.simpleicons.org/notion/white' },
-  { name: 'Salesforce', logo: 'https://cdn.simpleicons.org/salesforce/white' },
-  { name: 'Slack', logo: 'https://cdn.simpleicons.org/slack/white' },
+  { name: 'Vercel', logo: 'https://cdn.simpleicons.org/vercel/white' },
+  { name: 'Figma', logo: 'https://cdn.simpleicons.org/figma/white' },
   { name: 'Shopify', logo: 'https://cdn.simpleicons.org/shopify/white' },
   { name: 'HubSpot', logo: 'https://cdn.simpleicons.org/hubspot/white' },
 ];
@@ -51,6 +51,7 @@ export function SocialProof() {
                 height={40}
                 className="h-8 md:h-10 w-auto opacity-40 group-hover:opacity-100 transition-opacity duration-300 filter grayscale group-hover:grayscale-0"
                 loading="lazy"
+                unoptimized
               />
             </motion.div>
           ))}
