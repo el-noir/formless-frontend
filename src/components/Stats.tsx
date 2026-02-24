@@ -4,23 +4,21 @@ import { useEffect, useRef, useState } from 'react';
 function Counter({ value, suffix = '' }: { value: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [target, setTarget] = useState(0);
-  
-  const springValue = useSpring(target, { stiffness: 40, damping: 15, mass: 1 });
+  const springValue = useSpring(0, { stiffness: 40, damping: 15, mass: 1 });
   const displayValue = useTransform(springValue, (current) => Math.round(current));
 
   useEffect(() => {
     if (isInView) {
-      setTarget(value);
+      springValue.set(value);
     }
-  }, [isInView, value]);
+  }, [isInView, value, springValue]);
 
   return (
     <div className="flex flex-col items-center justify-center">
-       <span ref={ref} className="text-4xl md:text-5xl font-bold text-white tracking-tight flex items-center">
-         <motion.span>{displayValue}</motion.span>
-         <span>{suffix}</span>
-       </span>
+      <span ref={ref} className="text-4xl md:text-5xl font-bold text-white tracking-tight flex items-center">
+        <motion.span>{displayValue}</motion.span>
+        <span>{suffix}</span>
+      </span>
     </div>
   );
 }

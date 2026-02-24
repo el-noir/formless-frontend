@@ -12,20 +12,16 @@ import { useAuthStore } from "@/stores/authStore";
 export function useAuth(redirectTo?: string) {
   const router = useRouter();
   const { isAuthenticated, isLoading: storeLoading } = useAuthStore();
-  const [isChecking, setIsChecking] = useState(true);
+
+  const isRedirecting = !storeLoading && isAuthenticated && !!redirectTo;
 
   useEffect(() => {
-    // Wait for store to rehydrate
-    if (!storeLoading) {
-      if (isAuthenticated && redirectTo) {
-        router.push(redirectTo);
-      } else {
-        setIsChecking(false);
-      }
+    if (isRedirecting && redirectTo) {
+      router.push(redirectTo);
     }
-  }, [isAuthenticated, storeLoading, redirectTo, router]);
+  }, [isRedirecting, redirectTo, router]);
 
-  return { isAuthenticated, isLoading: storeLoading || isChecking };
+  return { isAuthenticated, isLoading: storeLoading || isRedirecting };
 }
 
 /**
@@ -36,18 +32,14 @@ export function useAuth(redirectTo?: string) {
 export function useRequireAuth(redirectTo: string = "/sign-in") {
   const router = useRouter();
   const { isAuthenticated, isLoading: storeLoading } = useAuthStore();
-  const [isChecking, setIsChecking] = useState(true);
+
+  const isRedirecting = !storeLoading && !isAuthenticated;
 
   useEffect(() => {
-    // Wait for store to rehydrate
-    if (!storeLoading) {
-      if (!isAuthenticated) {
-        router.push(redirectTo);
-      } else {
-        setIsChecking(false);
-      }
+    if (isRedirecting) {
+      router.push(redirectTo);
     }
-  }, [isAuthenticated, storeLoading, redirectTo, router]);
+  }, [isRedirecting, redirectTo, router]);
 
-  return { isAuthenticated, isLoading: storeLoading || isChecking };
+  return { isAuthenticated, isLoading: storeLoading || isRedirecting };
 }
