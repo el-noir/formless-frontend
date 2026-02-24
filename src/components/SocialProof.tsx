@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
+import Image from 'next/image';
 
 const companies = [
   { name: 'Stripe', logo: 'https://cdn.simpleicons.org/stripe/white' },
@@ -13,7 +14,7 @@ const companies = [
 
 export function SocialProof() {
   return (
-    <section 
+    <section
       className="py-16 bg-[#0A0A0F] border-y border-white/5"
       aria-label="Trusted by leading companies"
     >
@@ -43,9 +44,11 @@ export function SocialProof() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="flex items-center justify-center group"
             >
-              <img
+              <Image
                 src={company.logo}
                 alt={`${company.name} logo`}
+                width={120}
+                height={40}
                 className="h-8 md:h-10 w-auto opacity-40 group-hover:opacity-100 transition-opacity duration-300 filter grayscale group-hover:grayscale-0"
                 loading="lazy"
               />

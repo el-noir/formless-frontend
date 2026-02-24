@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
 import { Quote, Pause, Play } from 'lucide-react';
+import Image from 'next/image';
 
 const testimonials = [
   {
@@ -32,7 +33,7 @@ export function Testimonials() {
 
   useEffect(() => {
     if (isPaused) return;
-    
+
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % testimonials.length);
     }, 6000);
@@ -62,32 +63,34 @@ export function Testimonials() {
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="absolute inset-0 flex flex-col items-center justify-center text-center"
               >
-                 <div className="w-16 h-16 rounded-full bg-[#1C1C24] border border-white/10 flex items-center justify-center mb-10 shadow-2xl ring-1 ring-white/5">
-                   <Quote className="w-6 h-6 text-[#9A6BFF]" />
-                 </div>
-                 
-                 <p className="text-2xl md:text-4xl font-medium text-white mb-12 leading-tight max-w-4xl tracking-tight">
-                   "{testimonials[current].quote}"
-                 </p>
-                 
-                 <div className="flex flex-col items-center gap-4">
-                    <div className="relative group">
-                      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#9A6BFF] to-[#6E8BFF] opacity-50 blur-md group-hover:opacity-75 transition-opacity duration-500" />
-                      <img 
-                        src={testimonials[current].image} 
-                        alt={testimonials[current].author}
-                        className="relative w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-[#1C1C24] object-cover shadow-xl"
-                      />
-                    </div>
-                    <div className="text-center">
-                       <div className="text-white text-lg font-semibold mb-1">{testimonials[current].author}</div>
-                       <div className="text-sm text-gray-400 font-medium tracking-wide uppercase">{testimonials[current].role} • <span className="text-[#9A6BFF]">{testimonials[current].company}</span></div>
-                    </div>
-                 </div>
+                <div className="w-16 h-16 rounded-full bg-[#1C1C24] border border-white/10 flex items-center justify-center mb-10 shadow-2xl ring-1 ring-white/5">
+                  <Quote className="w-6 h-6 text-[#9A6BFF]" />
+                </div>
+
+                <p className="text-2xl md:text-4xl font-medium text-white mb-12 leading-tight max-w-4xl tracking-tight">
+                  "{testimonials[current].quote}"
+                </p>
+
+                <div className="flex flex-col items-center gap-4">
+                  <div className="relative group">
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#9A6BFF] to-[#6E8BFF] opacity-50 blur-md group-hover:opacity-75 transition-opacity duration-500" />
+                    <Image
+                      src={testimonials[current].image}
+                      alt={testimonials[current].author}
+                      width={80}
+                      height={80}
+                      className="relative w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-[#1C1C24] object-cover shadow-xl"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <div className="text-white text-lg font-semibold mb-1">{testimonials[current].author}</div>
+                    <div className="text-sm text-gray-400 font-medium tracking-wide uppercase">{testimonials[current].role} • <span className="text-[#9A6BFF]">{testimonials[current].company}</span></div>
+                  </div>
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>
-          
+
           <div className="flex justify-center items-center gap-6 mt-12">
             <button
               onClick={() => setIsPaused(!isPaused)}
@@ -101,9 +104,8 @@ export function Testimonials() {
                 <button
                   key={index}
                   onClick={() => setCurrent(index)}
-                  className={`h-1.5 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] ${
-                    index === current ? 'w-12 bg-white' : 'w-2 bg-white/20 hover:bg-white/40'
-                  }`}
+                  className={`h-1.5 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] ${index === current ? 'w-12 bg-white' : 'w-2 bg-white/20 hover:bg-white/40'
+                    }`}
                   aria-label={`Go to testimonial ${index + 1} of ${testimonials.length}`}
                   aria-current={index === current ? 'true' : 'false'}
                 />

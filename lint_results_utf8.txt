@@ -1,0 +1,212 @@
+﻿
+D:\startup\formless\formless-frontend\src\app\(app)\dashboard\page.tsx
+   4:10  warning  'motion' is defined but never used         @typescript-eslint/no-unused-vars
+  14:11  warning  'user' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  16:38  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  26:19  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  73:28  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\app\(app)\forms\[id]\page.tsx
+   30:38  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+   41:23  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+   53:8   warning  React Hook useEffect has a missing dependency: 'fetchFormData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   84:19  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+   85:45  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  163:53  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  184:86  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\app\(app)\forms\page.tsx
+  5:43  warning  'ExternalLink' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\startup\formless\formless-frontend\src\app\(app)\integrations\google-forms\page.tsx
+   14:40  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   18:54  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   32:23  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   70:23  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  123:38  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  123:81  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\startup\formless\formless-frontend\src\app\(app)\integrations\page.tsx
+  7:10  warning  'Settings' is defined but never used  @typescript-eslint/no-unused-vars
+  7:31  warning  'Mail' is defined but never used      @typescript-eslint/no-unused-vars
+
+D:\startup\formless\formless-frontend\src\app\(app)\organizations\[id]\forms\[formId]\page.tsx
+    7:14  warning  'ArrowLeft' is defined but never used     @typescript-eslint/no-unused-vars
+   33:38  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   45:25  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   84:46  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  142:67  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  162:48  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  187:82  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\app\(app)\organizations\[id]\import\page.tsx
+  21:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  40:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  60:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\app\(app)\organizations\[id]\page.tsx
+    9:15  warning  'ChevronDown' is defined but never used       @typescript-eslint/no-unused-vars
+   16:33  warning  'changeMemberRole' is defined but never used  @typescript-eslint/no-unused-vars
+   36:36  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+   37:40  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+   38:44  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+   62:25  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+   82:21  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+   94:21  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  102:21  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\app\(app)\organizations\new\page.tsx
+  56:21  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  91:74  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\startup\formless\formless-frontend\src\app\(app)\organizations\page.tsx
+  23:11  warning  'router' is assigned a value but never used                                                                          @typescript-eslint/no-unused-vars
+  27:38  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  37:47  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  44:25  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  50:8   warning  React Hook useEffect has a missing dependency: 'setOrganizations'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\startup\formless\formless-frontend\src\app\(app)\page.tsx
+  3:10  warning  'motion' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\startup\formless\formless-frontend\src\app\(app)\start-free\page.tsx
+  26:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  56:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  85:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\app\(auth)\sign-in\page.tsx
+   49:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  295:22  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\startup\formless\formless-frontend\src\app\(auth)\sign-up\page.tsx
+  40:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\app\google\callback\page.tsx
+  20:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\startup\formless\formless-frontend\src\app\google\callback\page.tsx:20:7
+  18 |
+  19 |     if (!code) {
+> 20 |       setError('No authorization code found in the URL.');
+     |       ^^^^^^^^ Avoid calling setState() directly within an effect
+  21 |       return;
+  22 |     }
+  23 |  react-hooks/set-state-in-effect
+  38:21  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\app\types\StartFree.ts
+  5:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\components\Footer.tsx
+  1:10  warning  'motion' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\startup\formless\formless-frontend\src\components\LivePreview.tsx
+  69:20  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  69:72  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+D:\startup\formless\formless-frontend\src\components\Navbar.tsx
+  37:31  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\startup\formless\formless-frontend\src\components\Stats.tsx
+  14:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\startup\formless\formless-frontend\src\components\Stats.tsx:14:7
+  12 |   useEffect(() => {
+  13 |     if (isInView) {
+> 14 |       setTarget(value);
+     |       ^^^^^^^^^ Avoid calling setState() directly within an effect
+  15 |     }
+  16 |   }, [isInView, value]);
+  17 |  react-hooks/set-state-in-effect
+
+D:\startup\formless\formless-frontend\src\components\Testimonials.tsx
+  71:19  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  71:49  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+D:\startup\formless\formless-frontend\src\components\integrations\MappingModal.tsx
+  11:11  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  30:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\components\ui\MagneticButton.tsx
+  1:45  warning  'useTransform' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\startup\formless\formless-frontend\src\components\ui\TiltCard.tsx
+  1:10  warning  'motion' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\startup\formless\formless-frontend\src\components\ui\sidebar.tsx
+  611:26  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+D:\startup\formless\formless-frontend\src\components\ui\sidebar.tsx:611:26
+  609 |   // Random width between 50 to 90%.
+  610 |   const width = React.useMemo(() => {
+> 611 |     return `${Math.floor(Math.random() * 40) + 50}%`;
+      |                          ^^^^^^^^^^^^^ Cannot call impure function
+  612 |   }, []);
+  613 |
+  614 |   return (  react-hooks/purity
+
+D:\startup\formless\formless-frontend\src\hooks\useAuth.ts
+  23:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\startup\formless\formless-frontend\src\hooks\useAuth.ts:23:9
+  21 |         router.push(redirectTo);
+  22 |       } else {
+> 23 |         setIsChecking(false);
+     |         ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  24 |       }
+  25 |     }
+  26 |   }, [isAuthenticated, storeLoading, redirectTo, router]);  react-hooks/set-state-in-effect
+  47:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\startup\formless\formless-frontend\src\hooks\useAuth.ts:47:9
+  45 |         router.push(redirectTo);
+  46 |       } else {
+> 47 |         setIsChecking(false);
+     |         ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  48 |       }
+  49 |     }
+  50 |   }, [isAuthenticated, storeLoading, redirectTo, router]);  react-hooks/set-state-in-effect
+
+D:\startup\formless\formless-frontend\src\lib\api\auth.ts
+  33:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\lib\api\chat.ts
+  12:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\startup\formless\formless-frontend\src\lib\api\integrations.ts
+  30:68  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  55:18  warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+
+D:\startup\formless\formless-frontend\src\lib\api\organizations.ts
+  40:78  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Γ£û 78 problems (62 errors, 16 warnings)
+

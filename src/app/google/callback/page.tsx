@@ -13,17 +13,20 @@ export default function GoogleCallbackPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let mounted = true;
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
 
     if (!code) {
-      setError('No authorization code found in the URL.');
+      if (mounted) setError('No authorization code found in the URL.');
       return;
     }
 
     (async () => {
       try {
         const result = await handleGoogleCallback(code);
+
+        if (!mounted) return;
 
         if (!result.success) {
           setError(result.message || 'Authentication failed.');
@@ -36,10 +39,12 @@ export default function GoogleCallbackPage() {
         // Redirect to dashboard
         router.replace('/dashboard');
       } catch (err: any) {
+        if (!mounted) return;
         console.error('Google callback error:', err);
         setError(err?.message || 'An error occurred during authentication.');
       }
     })();
+    return () => { mounted = false; };
   }, [router]);
 
   return (
