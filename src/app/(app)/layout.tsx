@@ -1,8 +1,6 @@
 "use client";
 
 import { Navbar } from "@/components/Navbar";
-import { Toaster } from "@/components/ui/sonner";
-
 export default function AppLayout({
   children,
 }: {
@@ -12,7 +10,6 @@ export default function AppLayout({
     <>
       <Navbar />
       {children}
-        <Toaster />
     </>
   );
 }

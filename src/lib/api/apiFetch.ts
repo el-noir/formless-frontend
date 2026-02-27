@@ -67,43 +67,49 @@ export async function apiFetch(
         credentials: "include", // Always include cookies (for the refresh token cookie)
     });
 
-    // Not a 401 — return as-is
-    if (res.status !== 401) {
-        return res;
-    }
-
-    // --- 401: attempt silent token refresh ---
-
-    if (isRefreshing) {
-        // Queue this request while another refresh is in progress
-        return new Promise((resolve) => {
-            refreshQueue.push(async (newToken: string) => {
-                const retried = await fetch(`${API_BASE_URL}${endpoint}`, {
-                    ...options,
-                    headers: { ...headers, Authorization: `Bearer ${newToken}` },
-                    credentials: "include",
+    // 401 Unauthorized — attempt silent token refresh
+    if (res.status === 401 && accessToken) {
+        if (isRefreshing) {
+            // Queue this request while another refresh is in progress
+            return new Promise((resolve) => {
+                refreshQueue.push(async (newToken: string) => {
+                    const retried = await fetch(`${API_BASE_URL}${endpoint}`, {
+                        ...options,
+                        headers: { ...headers, Authorization: `Bearer ${newToken}` },
+                        credentials: "include",
+                    });
+                    resolve(retried);
                 });
-                resolve(retried);
             });
-        });
+        }
+
+        isRefreshing = true;
+        const newToken = await attemptTokenRefresh();
+        isRefreshing = false;
+
+        if (newToken) {
+            // Flush queued requests
+            refreshQueue.forEach((cb) => cb(newToken));
+            refreshQueue = [];
+
+            // Retry original request
+            return fetch(`${API_BASE_URL}${endpoint}`, {
+                ...options,
+                headers: { ...headers, Authorization: `Bearer ${newToken}` },
+                credentials: "include",
+            });
+        }
     }
 
-    isRefreshing = true;
-    const newToken = await attemptTokenRefresh();
-    isRefreshing = false;
+    // Handle other errors or valid responses
+    if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        const message = errorData.message || res.statusText || "An unexpected error occurred.";
 
-    if (!newToken) {
-        return res; // Return original 401 if refresh failed
+        // Enhance the response object with a standard error message property if possible
+        // or just throw here? Throwing is often cleaner for the UI to catch.
+        throw new Error(message);
     }
 
-    // Flush queued requests with the new token
-    refreshQueue.forEach((cb) => cb(newToken));
-    refreshQueue = [];
-
-    // Retry the original request
-    return fetch(`${API_BASE_URL}${endpoint}`, {
-        ...options,
-        headers: { ...headers, Authorization: `Bearer ${newToken}` },
-        credentials: "include",
-    });
+    return res;
 }
