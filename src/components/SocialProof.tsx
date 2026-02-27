@@ -50,8 +50,6 @@ export function SocialProof() {
                 width={120}
                 height={40}
                 className="h-8 md:h-10 w-auto opacity-40 group-hover:opacity-100 transition-opacity duration-300 filter grayscale group-hover:grayscale-0"
-                loading="lazy"
-                unoptimized
               />
             </motion.div>
           ))}

@@ -1,7 +1,19 @@
 import type { Metadata } from "next";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
-import { Background } from "@/components/Background";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "FormAI - Turn Forms Into AI Conversations | No-Code Form Builder",
@@ -71,15 +83,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased">
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} scroll-smooth`}>
+      <body className={`${inter.className} antialiased`}>
         <div className="relative min-h-screen bg-[#0B0B0F] text-white selection:bg-[#9A6BFF] selection:text-white overflow-x-hidden">
-          <style>{`
-                h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
-                body { font-family: 'Inter', sans-serif; }
-                html { scroll-behavior: smooth; }
-              `}</style>
-          <Background />
           <Navbar />
           <div className="pt-20">
             {children}
