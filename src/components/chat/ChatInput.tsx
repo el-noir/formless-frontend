@@ -4,7 +4,7 @@ import { Send, CheckCircle, Loader2 } from 'lucide-react';
 interface ChatInputProps {
     input: string;
     setInput: (value: string) => void;
-    handleSend: (e?: React.FormEvent) => void;
+    handleSend: (e?: React.FormEvent, msg?: string) => void;
     isSubmitting: boolean;
     isTyping: boolean;
     chatState: string;
@@ -33,6 +33,29 @@ export function ChatInput({
                     <div className="bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-xl flex items-center justify-center gap-3">
                         <CheckCircle className="w-6 h-6" />
                         <p className="font-semibold">Form submitted successfully. You can close this window.</p>
+                    </div>
+                ) : chatState === 'CONFIRMING' ? (
+                    <div className="flex flex-col gap-3">
+                        <button
+                            onClick={() => handleSend(undefined, 'submit')}
+                            disabled={isSubmitting || isTyping}
+                            className="w-full bg-[#6E8BFF] hover:bg-[#5a72e0] text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 group animate-in fade-in slide-in-from-bottom-2 duration-300"
+                        >
+                            {isSubmitting ? (
+                                <Loader2 className="w-6 h-6 animate-spin" />
+                            ) : (
+                                <>
+                                    <CheckCircle className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                                    <span>Submit Final Response</span>
+                                </>
+                            )}
+                        </button>
+                        <button
+                            onClick={() => textareaRef.current?.focus()}
+                            className="text-sm text-gray-400 hover:text-white transition-colors"
+                        >
+                            Or type something to change an answer
+                        </button>
                     </div>
                 ) : (
                     <form

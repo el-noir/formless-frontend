@@ -6,4 +6,9 @@ export interface Message {
     timestamp?: string;
     progress?: number;
     state?: string;
+    fieldSummaries?: Array<{
+        label: string;
+        value: string;
+        fieldId: string;
+    }>;
 }

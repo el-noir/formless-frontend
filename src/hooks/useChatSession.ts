@@ -72,11 +72,11 @@ export function useChatSession(token: string) {
         }
     };
 
-    const handleSend = async (e?: React.FormEvent) => {
+    const handleSend = async (e?: React.FormEvent, messageOverride?: string) => {
         e?.preventDefault();
-        if (!input.trim() || !sessionId || isSubmitting) return;
+        const userMsg = (messageOverride || input).trim();
+        if (!userMsg || !sessionId || isSubmitting) return;
 
-        const userMsg = input.trim();
         setInput('');
         setMessages((prev) => [
             ...prev,
@@ -104,6 +104,7 @@ export function useChatSession(token: string) {
                         state: result.state,
                         progress: result.reply.metadata?.progress,
                         timestamp: result.reply.timestamp,
+                        fieldSummaries: result.reply.metadata?.fieldSummaries,
                     },
                 ]);
             }
@@ -152,6 +153,6 @@ export function useChatSession(token: string) {
         isSubmitting,
         messagesEndRef,
         handleStart,
-        handleSend,
+        handleSend: (e?: React.FormEvent, msg?: string) => handleSend(e, msg),
     };
 }

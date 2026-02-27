@@ -140,3 +140,9 @@ export const generateChatLink = async (orgId: string, formId: string) => {
     }
     return res.json();
 };
+export const getFormResponses = async (orgId: string, formId: string) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/responses`);
+    if (!res.ok) throw new Error('Failed to fetch form responses');
+    const data = await res.json();
+    return data.data;
+};

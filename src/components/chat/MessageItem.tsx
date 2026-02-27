@@ -7,9 +7,10 @@ import { Message } from './types';
 
 interface MessageItemProps {
     message: Message;
+    state?: string;
 }
 
-export function MessageItem({ message }: MessageItemProps) {
+export function MessageItem({ message, state }: MessageItemProps) {
     const isUser = message.role === 'user';
 
     return (
@@ -29,6 +30,28 @@ export function MessageItem({ message }: MessageItemProps) {
                     </div>
                 ) : (
                     <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                )}
+                {message.fieldSummaries && message.fieldSummaries.length > 0 && (
+                    <div className="mt-4 border border-gray-800 rounded-lg overflow-hidden bg-black/20">
+                        <table className="w-full text-xs text-left border-collapse">
+                            <thead>
+                                <tr className="border-b border-gray-800 bg-black/40">
+                                    <th className="px-3 py-2 font-semibold text-gray-400">Field</th>
+                                    <th className="px-3 py-2 font-semibold text-gray-400">Your Answer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {message.fieldSummaries.map((s, idx) => (
+                                    <tr key={s.fieldId || idx} className="border-b border-gray-800/50 last:border-0 hover:bg-white/5 transition-colors">
+                                        <td className="px-3 py-2 text-gray-300 font-medium">{s.label}</td>
+                                        <td className="px-3 py-2 text-gray-400 italic">
+                                            {Array.isArray(s.value) ? s.value.join(', ') : s.value || <span className="text-gray-600 opacity-50">skipped</span>}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
                 {message.timestamp && (
                     <p className={cn(

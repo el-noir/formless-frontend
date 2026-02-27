@@ -9,7 +9,8 @@ import {
 } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
-import { getOrgForm } from "@/lib/api/organizations";
+import { getOrgForm, getFormResponses } from "@/lib/api/organizations";
+import { ResponsesList } from "@/components/forms/ResponsesList";
 
 const FIELD_TYPE_STYLES: Record<string, string> = {
     MULTIPLE_CHOICE: 'bg-purple-500/10 text-purple-300 border-purple-500/20',
@@ -31,9 +32,11 @@ export default function OrgFormViewerPage() {
     const { accessToken } = useAuthStore();
 
     const [form, setForm] = useState<any>(null);
+    const [responses, setResponses] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [responsesLoading, setResponsesLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<'fields' | 'details'>('fields');
+    const [activeTab, setActiveTab] = useState<'fields' | 'responses' | 'details'>('fields');
 
     useEffect(() => {
         if (!accessToken || !orgId || !formId) return;
@@ -49,6 +52,22 @@ export default function OrgFormViewerPage() {
             }
         })();
     }, [accessToken, orgId, formId]);
+
+    useEffect(() => {
+        if (activeTab === 'responses' && orgId && formId && responses.length === 0) {
+            (async () => {
+                setResponsesLoading(true);
+                try {
+                    const data = await getFormResponses(orgId, formId);
+                    setResponses(data);
+                } catch (e: any) {
+                    console.error('Failed to load responses:', e);
+                } finally {
+                    setResponsesLoading(false);
+                }
+            })();
+        }
+    }, [activeTab, orgId, formId, responses.length]);
 
     if (isLoading || loading) {
         return (
@@ -135,6 +154,7 @@ export default function OrgFormViewerPage() {
                 <div className="flex space-x-1 border-b border-gray-800 mb-6">
                     {[
                         { id: 'fields', label: `Fields (${fields.length})` },
+                        { id: 'responses', label: `Responses (${form.submissionCount ?? 0})` },
                         { id: 'details', label: 'Details' },
                     ].map((tab) => (
                         <button
@@ -198,6 +218,11 @@ export default function OrgFormViewerPage() {
                             })
                         )}
                     </div>
+                )}
+
+                {/* Responses Tab */}
+                {activeTab === 'responses' && (
+                    <ResponsesList responses={responses} loading={responsesLoading} />
                 )}
 
                 {/* Details Tab */}
