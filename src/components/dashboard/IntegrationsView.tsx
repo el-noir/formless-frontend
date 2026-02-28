@@ -4,17 +4,24 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { RefreshCw } from "lucide-react";
+import { DashboardBreadcrumbs } from "./DashboardBreadcrumbs";
+import { useOrgStore } from "@/stores/orgStore";
 
 export function IntegrationsView() {
     const router = useRouter();
+    const { currentOrgId } = useOrgStore();
 
     const handleConnectGoogleForms = () => {
-        // We can navigate to the sub-dashboard for Google Forms (this page can stay separate or be made inline later)
-        router.push("/integrations/google-forms");
+        if (!currentOrgId) return;
+        router.push(`/dashboard/${currentOrgId}/forms/import`);
     };
 
     return (
         <div className="w-full h-full flex flex-col">
+            <DashboardBreadcrumbs
+                backHref={`/dashboard/${currentOrgId}`}
+                backLabel="Back to Overview"
+            />
             <h1 className="text-3xl font-semibold tracking-tight text-white mb-2">Integrations</h1>
             <p className="text-gray-500 mb-8 font-medium">Connect Formless with your favorite tools</p>
 

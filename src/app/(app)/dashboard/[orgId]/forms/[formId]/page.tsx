@@ -10,6 +10,7 @@ import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
 import { getOrgForm, getFormResponses } from "@/lib/api/organizations";
 import { ResponsesList } from "@/components/forms/ResponsesList";
+import { DashboardBreadcrumbs } from "@/components/dashboard/DashboardBreadcrumbs";
 
 const FIELD_TYPE_STYLES: Record<string, string> = {
     MULTIPLE_CHOICE: 'bg-purple-500/10 text-purple-300 border-purple-500/20',
@@ -25,7 +26,7 @@ const FIELD_TYPE_STYLES: Record<string, string> = {
 };
 
 export default function OrgFormViewerPage() {
-    const { id: orgId, formId } = useParams() as { id: string; formId: string };
+    const { orgId, formId } = useParams() as { orgId: string; formId: string };
     const router = useRouter();
     const { isLoading } = useRequireAuth();
     const { accessToken } = useAuthStore();
@@ -86,10 +87,10 @@ export default function OrgFormViewerPage() {
                     <AlertCircle className="w-10 h-10 text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-400 mb-4">{error || 'Form not found'}</p>
                     <button
-                        onClick={() => router.push(`/dashboard/organizations/${orgId}`)}
+                        onClick={() => router.push(`/dashboard/${orgId}/forms`)}
                         className="text-[#9A6BFF] hover:underline text-sm"
                     >
-                        ← Back to organization
+                        ← Back to forms
                     </button>
                 </div>
             </div>
@@ -103,18 +104,10 @@ export default function OrgFormViewerPage() {
         <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
             <div className="max-w-4xl">
 
-                {/* Breadcrumb */}
-                <div className="flex items-center gap-1.5 text-sm text-gray-500 mb-6">
-                    <button onClick={() => router.push('/dashboard/organizations')} className="hover:text-gray-300 transition-colors">
-                        Organizations
-                    </button>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                    <button onClick={() => router.push(`/dashboard/organizations/${orgId}`)} className="hover:text-gray-300 transition-colors">
-                        Forms
-                    </button>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                    <span className="text-gray-300 truncate max-w-[200px]">{form.title}</span>
-                </div>
+                <DashboardBreadcrumbs
+                    backHref={`/dashboard/${orgId}/forms`}
+                    backLabel="Back to Forms"
+                />
 
                 {/* Header */}
                 <div className="flex items-start justify-between mb-8 gap-4">

@@ -5,6 +5,7 @@ import {
     Loader2, FileText, Search, Check, AlertCircle,
     ExternalLink, Plus
 } from "lucide-react";
+import { DashboardBreadcrumbs } from "./DashboardBreadcrumbs";
 import { getGoogleForms } from "@/lib/api/integrations";
 import { importOrgForm } from "@/lib/api/organizations";
 import Link from "next/link";
@@ -64,6 +65,10 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
 
     return (
         <div className="w-full h-full flex flex-col max-w-4xl">
+            <DashboardBreadcrumbs
+                backHref={`/dashboard/${currentOrgId}/forms`}
+                backLabel="Back to Forms"
+            />
             {/* Header */}
             <div className="mb-6">
                 <h1 className="text-3xl font-semibold tracking-tight text-white mb-2">Import a Google Form</h1>

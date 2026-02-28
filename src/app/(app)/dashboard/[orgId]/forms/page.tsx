@@ -8,6 +8,7 @@ import { useOrgStore } from "@/stores/orgStore";
 import { getOrgForms, deleteOrgForm } from "@/lib/api/organizations";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
+import { DashboardBreadcrumbs } from "@/components/dashboard/DashboardBreadcrumbs";
 
 export default function FormsPage() {
     const { isLoading } = useRequireAuth();
@@ -108,6 +109,10 @@ export default function FormsPage() {
     return (
         <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
             <div className="max-w-7xl">
+                <DashboardBreadcrumbs
+                    backHref={`/dashboard/${currentOrgId}`}
+                    backLabel="Back to Overview"
+                />
 
                 {/* Header */}
                 <div className="flex justify-between items-start mb-8">
@@ -122,7 +127,7 @@ export default function FormsPage() {
                     </div>
                     {isAdmin && (
                         <Link
-                            href="/dashboard/forms/import"
+                            href={`/dashboard/${currentOrgId}/forms/import`}
                             className="flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
                         >
                             <Plus className="w-4 h-4" /> Import Form
@@ -179,7 +184,7 @@ export default function FormsPage() {
                                             Share AI Chat
                                         </button>
                                         <Link
-                                            href={`/dashboard/organizations/${currentOrgId}/forms/${form.id}`}
+                                            href={`/dashboard/${currentOrgId}/forms/${form.id}`}
                                             className="px-3 py-2 bg-white/5 hover:bg-white/10 text-white text-sm rounded-lg text-center transition-colors"
                                         >
                                             View
@@ -211,7 +216,7 @@ export default function FormsPage() {
                         </p>
                         {isAdmin && (
                             <Link
-                                href="/dashboard/forms/import"
+                                href={`/dashboard/${currentOrgId}/forms/import`}
                                 className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2 px-6 rounded-lg transition-colors"
                             >
                                 <Plus className="w-4 h-4" /> Import Google Form
