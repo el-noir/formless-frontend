@@ -52,7 +52,7 @@ export default function NewOrganizationPage() {
             });
             setCurrentOrg(org.id);
 
-            router.push(`/organizations/${org.id}`);
+            router.push(`/dashboard/organizations/${org.id}`);
         } catch (e: any) {
             setError(e.message || 'Failed to create organization');
         } finally {
@@ -75,7 +75,7 @@ export default function NewOrganizationPage() {
             <div className="max-w-2xl mx-auto relative z-10">
 
                 <button
-                    onClick={() => router.push('/organizations')}
+                    onClick={() => router.push('/dashboard/organizations')}
                     className="flex items-center text-gray-400 hover:text-white transition-colors mb-8 text-sm"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" /> Back to organizations

@@ -89,7 +89,7 @@ export default function OrgFormViewerPage() {
                     <AlertCircle className="w-10 h-10 text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-400 mb-4">{error || 'Form not found'}</p>
                     <button
-                        onClick={() => router.push(`/organizations/${orgId}`)}
+                        onClick={() => router.push(`/dashboard/organizations/${orgId}`)}
                         className="text-[#9A6BFF] hover:underline text-sm"
                     >
                         ← Back to organization
@@ -109,11 +109,11 @@ export default function OrgFormViewerPage() {
 
                 {/* Breadcrumb */}
                 <div className="flex items-center gap-1.5 text-sm text-gray-500 mb-6">
-                    <button onClick={() => router.push('/organizations')} className="hover:text-gray-300 transition-colors">
+                    <button onClick={() => router.push('/dashboard/organizations')} className="hover:text-gray-300 transition-colors">
                         Organizations
                     </button>
                     <ChevronRight className="w-3.5 h-3.5" />
-                    <button onClick={() => router.push(`/organizations/${orgId}`)} className="hover:text-gray-300 transition-colors">
+                    <button onClick={() => router.push(`/dashboard/organizations/${orgId}`)} className="hover:text-gray-300 transition-colors">
                         Forms
                     </button>
                     <ChevronRight className="w-3.5 h-3.5" />

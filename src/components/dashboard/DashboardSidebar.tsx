@@ -6,21 +6,20 @@ import { LayoutDashboard, FormInput, Inbox, Blocks, Settings } from "lucide-reac
 import { Suspense } from "react";
 
 function SidebarLinks() {
-    const searchParams = useSearchParams();
-    const currentView = searchParams.get('view') || 'overview';
+    const pathname = usePathname();
 
     const links = [
-        { name: "Overview", href: "/dashboard", view: "overview", icon: LayoutDashboard },
-        { name: "Forms", href: "/dashboard?view=forms", view: "forms", icon: FormInput },
-        { name: "Submissions", href: "/dashboard?view=submissions", view: "submissions", icon: Inbox },
-        { name: "Integrations", href: "/dashboard?view=integrations", view: "integrations", icon: Blocks },
-        { name: "Settings", href: "/dashboard?view=settings", view: "settings", icon: Settings },
+        { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
+        { name: "Forms", href: "/dashboard/forms", icon: FormInput },
+        { name: "Submissions", href: "/dashboard/submissions", icon: Inbox },
+        { name: "Integrations", href: "/dashboard/integrations", icon: Blocks },
+        { name: "Settings", href: "/dashboard/settings", icon: Settings },
     ];
 
     return (
         <nav className="flex-1 py-6 px-4 space-y-1">
             {links.map((link) => {
-                const isActive = currentView === link.view;
+                const isActive = pathname === link.href;
                 const Icon = link.icon;
 
                 return (

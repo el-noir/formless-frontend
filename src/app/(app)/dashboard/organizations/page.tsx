@@ -73,7 +73,7 @@ export default function OrganizationsPage() {
                         <p className="text-gray-400">Manage your teams and their form libraries</p>
                     </div>
                     <Link
-                        href="/organizations/new"
+                        href="/dashboard/organizations/new"
                         className="flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
                     >
                         <Plus className="w-4 h-4" /> New Organization
@@ -139,7 +139,7 @@ export default function OrganizationsPage() {
                                                 </button>
                                             )}
                                             <Link
-                                                href={`/organizations/${org.id}`}
+                                                href={`/dashboard/organizations/${org.id}`}
                                                 className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
                                             >
                                                 <ChevronRight className="w-4 h-4" />
@@ -160,7 +160,7 @@ export default function OrganizationsPage() {
                             Create your first organization to start managing forms and collaborating with your team.
                         </p>
                         <Link
-                            href="/organizations/new"
+                            href="/dashboard/organizations/new"
                             className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-6 rounded-lg transition-colors"
                         >
                             <Plus className="w-4 h-4" /> Create Organization

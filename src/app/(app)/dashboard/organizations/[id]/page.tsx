@@ -122,7 +122,7 @@ export default function OrganizationDetailPage() {
                     <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-6 rounded-xl mb-6">
                         <p>{error || 'Organization not found'}</p>
                     </div>
-                    <button onClick={() => router.push('/organizations')} className="text-[#9A6BFF] hover:underline">
+                    <button onClick={() => router.push('/dashboard/organizations')} className="text-[#9A6BFF] hover:underline">
                         ← Back to organizations
                     </button>
                 </div>
@@ -146,7 +146,7 @@ export default function OrganizationDetailPage() {
                 {/* Header */}
                 <div className="mb-8">
                     <button
-                        onClick={() => router.push('/organizations')}
+                        onClick={() => router.push('/dashboard/organizations')}
                         className="flex items-center text-gray-400 hover:text-white transition-colors mb-5 text-sm"
                     >
                         <ArrowLeft className="w-4 h-4 mr-2" /> All organizations
@@ -185,7 +185,7 @@ export default function OrganizationDetailPage() {
 
                         {isAdmin && (
                             <Link
-                                href={`/organizations/${orgId}/import`}
+                                href="/dashboard/forms/import"
                                 className="flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
                             >
                                 <Plus className="w-4 h-4" /> Import Form
@@ -236,7 +236,7 @@ export default function OrganizationDetailPage() {
                                         <p className="text-gray-500 text-xs mb-3 flex-grow">{form.questionCount} questions</p>
                                         <div className="flex items-center gap-2 mt-auto">
                                             <Link
-                                                href={`/organizations/${orgId}/forms/${form.id}`}
+                                                href={`/dashboard/organizations/${orgId}/forms/${form.id}`}
                                                 className="flex-1 text-center text-sm bg-white/5 hover:bg-white/10 text-white py-2 px-3 rounded-lg transition-colors"
                                             >
                                                 View
@@ -265,7 +265,7 @@ export default function OrganizationDetailPage() {
                                 <h3 className="text-white font-medium mb-2">No forms yet</h3>
                                 <p className="text-gray-500 text-sm mb-5">Import a Google Form into this organization to get started.</p>
                                 {isAdmin && (
-                                    <Link href={`/organizations/${orgId}/import`}
+                                    <Link href="/dashboard/forms/import"
                                         className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors">
                                         <Plus className="w-4 h-4" /> Import Form
                                     </Link>

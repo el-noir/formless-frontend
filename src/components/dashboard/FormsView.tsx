@@ -94,7 +94,7 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
                     <AlertCircle className="w-10 h-10 text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-400 text-sm mb-5">{fetchError}</p>
                     <a
-                        href="/dashboard?view=integrations"
+                        href="/dashboard/integrations"
                         className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors"
                     >
                         Connect Google Account

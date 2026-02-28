@@ -98,7 +98,7 @@ export default function FormsPage() {
                         Forms are owned by organizations. Create or join an organization first, then import your Google Forms into it.
                     </p>
                     <Link
-                        href="/organizations"
+                        href="/dashboard/organizations"
                         className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-6 rounded-lg transition-colors"
                     >
                         Go to Organizations
@@ -121,12 +121,12 @@ export default function FormsPage() {
                             <Building2 className="w-3.5 h-3.5" />
                             <span>{currentOrg.name}</span>
                             <span>·</span>
-                            <Link href="/organizations" className="hover:text-gray-300 transition-colors">Switch org</Link>
+                            <Link href="/dashboard/organizations" className="hover:text-gray-300 transition-colors">Switch org</Link>
                         </div>
                     </div>
                     {isAdmin && (
                         <Link
-                            href={`/organizations/${currentOrgId}/import`}
+                            href="/dashboard/forms/import"
                             className="flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
                         >
                             <Plus className="w-4 h-4" /> Import Form
@@ -183,7 +183,7 @@ export default function FormsPage() {
                                             Share AI Chat
                                         </button>
                                         <Link
-                                            href={`/organizations/${currentOrgId}/forms/${form.id}`}
+                                            href={`/dashboard/organizations/${currentOrgId}/forms/${form.id}`}
                                             className="px-3 py-2 bg-white/5 hover:bg-white/10 text-white text-sm rounded-lg text-center transition-colors"
                                         >
                                             View
@@ -215,7 +215,7 @@ export default function FormsPage() {
                         </p>
                         {isAdmin && (
                             <Link
-                                href={`/organizations/${currentOrgId}/import`}
+                                href="/dashboard/forms/import"
                                 className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2 px-6 rounded-lg transition-colors"
                             >
                                 <Plus className="w-4 h-4" /> Import Google Form

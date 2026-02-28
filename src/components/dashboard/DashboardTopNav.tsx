@@ -81,7 +81,7 @@ export function DashboardTopNav() {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator className="bg-gray-800" />
                         <DropdownMenuItem
-                            onClick={() => router.push('/dashboard?view=settings')}
+                            onClick={() => router.push('/dashboard/settings')}
                             className="flex items-center gap-2 focus:bg-white/[0.05] focus:text-white cursor-pointer"
                         >
                             <SettingsIcon className="w-4 h-4 text-gray-500" />

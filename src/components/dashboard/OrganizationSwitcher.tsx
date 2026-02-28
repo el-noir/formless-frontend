@@ -68,7 +68,7 @@ export function OrganizationSwitcher() {
     // If no orgs, just show a create button state directly
     if (organizations.length === 0) {
         return (
-            <Link href="/organizations/new">
+            <Link href="/dashboard/organizations/new">
                 <button className="flex items-center gap-2 bg-[#1C1C22] hover:bg-[#252530] text-gray-200 text-sm font-medium px-4 py-2 rounded-lg border border-gray-800 transition-colors shadow-sm">
                     <Plus className="w-4 h-4 text-[#9A6BFF]" />
                     Create Organization
@@ -119,7 +119,7 @@ export function OrganizationSwitcher() {
 
                 <DropdownMenuItem asChild>
                     <Link
-                        href="/organizations/new"
+                        href="/dashboard/organizations/new"
                         className="flex items-center gap-2 px-2 py-2 cursor-pointer text-gray-300 focus:bg-white/[0.04] focus:text-white rounded-md group"
                     >
                         <div className="w-6 h-6 rounded flex items-center justify-center shrink-0 bg-transparent border border-dashed border-gray-600 group-hover:border-gray-400 transition-colors">
