@@ -38,7 +38,7 @@ export function ChatMockup() {
 
   useEffect(() => {
     let messageTimer: NodeJS.Timeout;
-    
+
     // Reset state when scenario changes
     setStep(0);
 
@@ -68,44 +68,37 @@ export function ChatMockup() {
 
   return (
     <div className="relative w-full max-w-[480px] mx-auto perspective-[1000px]">
-      {/* Glow Effect */}
-      <motion.div
-        animate={{ opacity: [0.3, 0.6, 0.3], scale: [0.95, 1.05, 0.95] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -inset-10 bg-gradient-to-tr from-[#6E8BFF]/30 via-[#9A6BFF]/30 to-[#F4E7B8]/20 rounded-[40px] blur-3xl -z-10"
-      />
-
       <motion.div
         initial={{ rotateX: 10, y: 100, opacity: 0 }}
         animate={{ rotateX: 0, y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 50, damping: 20 }}
-        className="relative bg-[#121218]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl overflow-hidden min-h-[400px]"
+        className="relative bg-[#0B0B0F] border border-gray-800 rounded-xl p-6 shadow-sm overflow-hidden min-h-[400px] mb-8 lg:mb-0"
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+        <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center shadow-lg shadow-[#6E8BFF]/20">
+            <div className="w-10 h-10 rounded-md bg-[#9A6BFF] flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
               <h3 className="text-white font-semibold text-sm">FormAI Assistant</h3>
               <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-xs text-gray-400 font-medium">{currentScenario.type}</span>
               </div>
             </div>
           </div>
-          <div className="flex gap-2">
-            <div className="w-2 h-2 rounded-full bg-white/20" />
-            <div className="w-2 h-2 rounded-full bg-white/20" />
-            <div className="w-2 h-2 rounded-full bg-white/20" />
+          <div className="flex gap-2 opacity-50">
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-600" />
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-600" />
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-600" />
           </div>
         </div>
 
         {/* Messages */}
         <div className="space-y-4">
           <AnimatePresence mode="wait">
-             {currentScenario.messages.map((msg, index) => (
+            {currentScenario.messages.map((msg, index) => (
               (step > index) && (
                 <motion.div
                   key={`${scenarioIndex}-${index}`}
@@ -115,17 +108,15 @@ export function ChatMockup() {
                   transition={{ duration: 0.4, ease: "easeOut" }}
                   className={`flex items-end gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
                 >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                    msg.role === 'ai' ? 'bg-[#1C1C24] border border-white/10' : 'bg-white text-black shadow-lg shadow-white/10'
-                  }`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'ai' ? 'bg-[#111116] border border-gray-800' : 'bg-white text-black shadow-sm'
+                    }`}>
                     {msg.role === 'ai' ? <Bot className="w-4 h-4 text-[#9A6BFF]" /> : <User className="w-4 h-4" />}
                   </div>
-                  
-                  <div className={`px-4 py-3 rounded-2xl max-w-[80%] text-sm leading-relaxed shadow-lg ${
-                    msg.role === 'ai' 
-                      ? 'bg-[#1C1C24] text-gray-200 border border-white/5 rounded-bl-none' 
-                      : 'bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] text-white rounded-br-none shadow-[#6E8BFF]/20'
-                  }`}>
+
+                  <div className={`px-4 py-3 rounded-2xl max-w-[80%] text-sm leading-relaxed shadow-none ${msg.role === 'ai'
+                      ? 'bg-[#111116] text-gray-200 border border-gray-800 rounded-bl-none'
+                      : 'bg-[#9A6BFF] text-white rounded-br-none border border-[#8555e8]'
+                    }`}>
                     {msg.content}
                   </div>
                 </motion.div>
@@ -135,26 +126,26 @@ export function ChatMockup() {
 
           {/* Typing Indicator */}
           {step < 4 && (
-             <motion.div
-               initial={{ opacity: 0 }}
-               animate={{ opacity: 1 }}
-               exit={{ opacity: 0 }}
-               className="flex items-center gap-3"
-             >
-                <div className="w-8 h-8 rounded-full bg-[#1C1C24] border border-white/10 flex items-center justify-center shrink-0">
-                  <Bot className="w-4 h-4 text-[#9A6BFF]" />
-                </div>
-                <div className="px-4 py-3 rounded-2xl bg-[#1C1C24] border border-white/5 rounded-bl-none flex gap-1 items-center h-[46px]">
-                  {[0, 1, 2].map((i) => (
-                    <motion.div
-                      key={i}
-                      animate={{ y: [0, -4, 0], opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
-                      className="w-1.5 h-1.5 rounded-full bg-gray-400"
-                    />
-                  ))}
-                </div>
-             </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex items-center gap-3"
+            >
+              <div className="w-8 h-8 rounded-full bg-[#111116] border border-gray-800 flex items-center justify-center shrink-0">
+                <Bot className="w-4 h-4 text-[#9A6BFF]" />
+              </div>
+              <div className="px-4 py-3 rounded-2xl bg-[#111116] border border-gray-800 rounded-bl-none flex gap-1 items-center h-[46px]">
+                {[0, 1, 2].map((i) => (
+                  <motion.div
+                    key={i}
+                    animate={{ y: [0, -4, 0], opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
+                    className="w-1.5 h-1.5 rounded-full bg-gray-400"
+                  />
+                ))}
+              </div>
+            </motion.div>
           )}
         </div>
       </motion.div>
