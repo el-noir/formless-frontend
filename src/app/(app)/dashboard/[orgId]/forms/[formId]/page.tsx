@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import {
     Loader2, ExternalLink, FileText,
-    ChevronRight, AlertCircle
+    AlertCircle, Sparkles
 } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
@@ -126,17 +127,26 @@ export default function OrgFormViewerPage() {
                             </span>
                         </div>
                     </div>
-                    {form.publicUrl && (
-                        <a
-                            href={form.publicUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="flex items-center gap-2 bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 text-gray-300 hover:text-white text-xs font-medium px-4 py-2 rounded-md transition-colors shrink-0"
+                    <div className="flex items-center gap-2">
+                        <Link
+                            href={`/dashboard/${orgId}/forms/${formId}/builder`}
+                            className="flex items-center gap-1.5 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-xs font-medium px-4 py-2 rounded-md transition-colors shrink-0"
                         >
-                            <ExternalLink className="w-3.5 h-3.5" />
-                            Open Form
-                        </a>
-                    )}
+                            <Sparkles className="w-3.5 h-3.5" />
+                            Configure AI Chat
+                        </Link>
+                        {form.publicUrl && (
+                            <a
+                                href={form.publicUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex items-center gap-2 bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 text-gray-300 hover:text-white text-xs font-medium px-4 py-2 rounded-md transition-colors shrink-0"
+                            >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                                Open Form
+                            </a>
+                        )}
+                    </div>
                 </div>
 
                 {/* Tabs */}
