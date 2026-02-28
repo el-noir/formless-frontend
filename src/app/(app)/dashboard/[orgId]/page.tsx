@@ -97,24 +97,21 @@ function DashboardContent() {
         </div>
       </div>
 
-      <div className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-6 flex flex-col md:flex-row items-center justify-between gap-6 relative shadow-sm">
+      <div className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-5 flex flex-col md:flex-row items-center justify-between gap-4 relative shadow-sm">
         <div className="flex items-start gap-4 z-10">
-          <div className="p-2.5 bg-[#1C1C22] border border-gray-800 text-gray-300 rounded-md">
-            <Wand2 className="w-5 h-5" />
+          <div className="p-2.5 bg-[#1C1C22] border border-gray-800 text-gray-400 rounded-md shrink-0">
+            <Wand2 className="w-4 h-4" />
           </div>
           <div>
-            <h4 className="text-gray-200 font-medium text-sm mb-1">Formless AI Concierge</h4>
+            <h4 className="text-gray-200 font-medium text-sm mb-0.5">Formless AI Concierge</h4>
             <p className="text-gray-500 text-xs max-w-xl">Generate highly optimized, conversion-focused forms automatically by describing your use case.</p>
           </div>
         </div>
-        <Link href={`/dashboard/${orgId}/forms`}>
-          <button className="text-xs flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors border border-gray-800 hover:border-gray-700 bg-[#1C1C22] px-2 py-1 rounded">
-            <Plus className="w-3.5 h-3.5" />
-            New
-          </button>
-        </Link>
-        <button className="shrink-0 bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 text-gray-300 font-medium text-xs py-2 px-5 rounded transition-all shadow-sm z-10 w-full md:w-auto">
-          Try AI generation
+        <button
+          onClick={() => router.push(`/dashboard/${orgId}/forms`)}
+          className="shrink-0 bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white font-medium text-xs py-2 px-5 rounded-md transition-all shadow-sm z-10 w-full md:w-auto"
+        >
+          Go to Forms
         </button>
       </div>
     </div>

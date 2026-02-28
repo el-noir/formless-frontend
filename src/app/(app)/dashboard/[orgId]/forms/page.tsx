@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Loader2, Plus, FileText, Trash2, Building2, Share2, ExternalLink, Clock } from "lucide-react";
+import { Loader2, Plus, FileText, Trash2, Building2, Wand2, ExternalLink, Clock } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
 import { useOrgStore } from "@/stores/orgStore";
@@ -171,14 +171,12 @@ export default function FormsPage() {
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
-                                    <button
-                                        onClick={() => handleShare(form.id)}
-                                        disabled={isGeneratingLink}
-                                        title="Share AI Chat"
-                                        className="flex items-center gap-1.5 flex-1 justify-center text-xs text-gray-400 hover:text-white bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 py-1.5 px-2 rounded transition-colors disabled:opacity-50"
+                                    <Link
+                                        href={`/dashboard/${currentOrgId}/forms/${form.id}/builder`}
+                                        className="flex items-center gap-1.5 flex-1 justify-center text-xs text-gray-400 hover:text-white bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 py-1.5 px-2 rounded transition-colors"
                                     >
-                                        <Share2 className="w-3 h-3" /> Share
-                                    </button>
+                                        <Wand2 className="w-3 h-3" /> Configure
+                                    </Link>
                                     <Link
                                         href={`/dashboard/${currentOrgId}/forms/${form.id}`}
                                         className="flex items-center gap-1.5 flex-1 justify-center text-xs text-gray-400 hover:text-white bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 py-1.5 px-2 rounded transition-colors"

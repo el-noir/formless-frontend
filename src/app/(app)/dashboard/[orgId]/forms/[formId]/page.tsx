@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
     Loader2, ExternalLink, FileText,
-    AlertCircle, Sparkles
+    AlertCircle, Wand2
 } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
@@ -132,7 +132,7 @@ export default function OrgFormViewerPage() {
                             href={`/dashboard/${orgId}/forms/${formId}/builder`}
                             className="flex items-center gap-1.5 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-xs font-medium px-4 py-2 rounded-md transition-colors shrink-0"
                         >
-                            <Sparkles className="w-3.5 h-3.5" />
+                            <Wand2 className="w-3.5 h-3.5" />
                             Configure AI Chat
                         </Link>
                         {form.publicUrl && (

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { MoreHorizontal, Plus, Database, ExternalLink, Share2, Trash2 } from "lucide-react";
+import { MoreHorizontal, Plus, Database, ExternalLink, Wand2, Trash2 } from "lucide-react";
 import Link from "next/link";
 import {
     DropdownMenu,
@@ -27,9 +27,6 @@ export function FormsListWidget({
     isAdmin: boolean;
     setForms: React.Dispatch<React.SetStateAction<any[] | null>>;
 }) {
-    const [shareModalOpen, setShareModalOpen] = useState(false);
-    const [shareLink, setShareLink] = useState('');
-    const [isGeneratingLink, setIsGeneratingLink] = useState(false);
     const params = useParams();
     const router = useRouter();
     const orgId = params.orgId as string;
@@ -64,27 +61,6 @@ export function FormsListWidget({
         }
     };
 
-    const handleShare = async (formId: string) => {
-        if (!currentOrgId) return;
-        setIsGeneratingLink(true);
-        try {
-            const { generateChatLink } = await import('@/lib/api/organizations');
-            const data = await generateChatLink(currentOrgId, formId);
-            const fullUrl = `${window.location.origin}${data.data.url}`;
-            setShareLink(fullUrl);
-            setShareModalOpen(true);
-        } catch (err: any) {
-            const msg = err instanceof Error ? err.message : "Failed to generate link";
-            alert(msg);
-        } finally {
-            setIsGeneratingLink(false);
-        }
-    };
-
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(shareLink);
-        alert("Copied to clipboard!");
-    };
 
     return (
         <div className="bg-[#0B0B0F] border border-gray-800/80 rounded-md flex flex-col h-full shadow-sm overflow-hidden relative min-h-[400px]">
@@ -157,20 +133,21 @@ export function FormsListWidget({
                                             <DropdownMenuContent align="end" className="w-[180px] bg-[#111116] border-gray-800 z-[100]">
                                                 <DropdownMenuItem asChild>
                                                     <Link
-                                                        href={`/dashboard/${orgId}/organizations/${currentOrgId}/forms/${f.id}`}
+                                                        href={`/dashboard/${orgId}/forms/${f.id}`}
                                                         className="flex items-center gap-2 text-sm text-gray-300 hover:text-white hover:bg-white/[0.04] cursor-pointer"
                                                     >
                                                         <ExternalLink className="w-4 h-4" />
                                                         View Form
                                                     </Link>
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    className="flex items-center gap-2 text-sm text-gray-300 hover:text-white hover:bg-white/[0.04] cursor-pointer"
-                                                    onClick={() => handleShare(f.id)}
-                                                    disabled={isGeneratingLink}
-                                                >
-                                                    <Share2 className="w-4 h-4 text-[#9A6BFF]" />
-                                                    <span className="text-[#9A6BFF]">Share AI Chat</span>
+                                                <DropdownMenuItem asChild>
+                                                    <Link
+                                                        href={`/dashboard/${orgId}/forms/${f.id}/builder`}
+                                                        className="flex items-center gap-2 text-sm text-gray-300 hover:text-white hover:bg-white/[0.04] cursor-pointer"
+                                                    >
+                                                        <Wand2 className="w-4 h-4" />
+                                                        Configure AI Chat
+                                                    </Link>
                                                 </DropdownMenuItem>
                                                 {isAdmin && (
                                                     <>
@@ -194,40 +171,6 @@ export function FormsListWidget({
                 </div>
             )}
 
-            {/* Share Modal integrated directly in widget */}
-            {shareModalOpen && (
-                <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm rounded-md">
-                    <div className="bg-[#0f0f14] border border-gray-800 rounded-xl p-6 w-full max-w-md shadow-2xl">
-                        <h3 className="text-xl font-semibold text-white mb-4">Share AI Chat</h3>
-                        <p className="text-gray-400 text-sm mb-4">
-                            Anyone with this link can interact with the AI to complete this form.
-                        </p>
-                        <div className="flex gap-2 mb-6">
-                            <input
-                                type="text"
-                                readOnly
-                                value={shareLink}
-                                className="flex-1 bg-[#111116] border border-gray-800 rounded-lg px-3 py-2 text-gray-200 text-sm focus:outline-none focus:border-[#9A6BFF]"
-                                onClick={(e) => e.currentTarget.select()}
-                            />
-                            <button
-                                onClick={copyToClipboard}
-                                className="bg-[#9A6BFF] hover:bg-[#8555e8] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                            >
-                                Copy
-                            </button>
-                        </div>
-                        <div className="flex justify-end">
-                            <button
-                                onClick={() => setShareModalOpen(false)}
-                                className="px-4 py-2 text-gray-400 hover:text-white text-sm font-medium transition-colors"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, Eye } from "lucide-react";
+import { ArrowLeft, Wand2, Eye } from "lucide-react";
 
 interface BuilderHeaderProps {
     formTitle: string;
@@ -38,7 +38,7 @@ export function BuilderHeader({
                 </Link>
                 <span className="text-gray-700 text-xs">|</span>
                 <div className="flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-[#9A6BFF]" />
+                    <Wand2 className="w-3.5 h-3.5 text-[#9A6BFF]" />
                     <span className="text-sm font-medium text-gray-200 max-w-[200px] truncate">{formTitle}</span>
                     <span className="text-[10px] font-semibold text-[#9A6BFF] bg-[#9A6BFF]/10 border border-[#9A6BFF]/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
                         AI Chat Builder
@@ -52,8 +52,8 @@ export function BuilderHeader({
                 <button
                     onClick={onTogglePreview}
                     className={`md:hidden flex items-center gap-1.5 text-xs px-3 py-1.5 rounded border transition-colors ${previewMode
-                            ? "bg-[#9A6BFF]/10 text-[#9A6BFF] border-[#9A6BFF]/20"
-                            : "text-gray-400 border-gray-800 hover:text-white"
+                        ? "bg-[#9A6BFF]/10 text-[#9A6BFF] border-[#9A6BFF]/20"
+                        : "text-gray-400 border-gray-800 hover:text-white"
                         }`}
                 >
                     <Eye className="w-3.5 h-3.5" /> Preview
