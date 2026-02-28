@@ -100,7 +100,7 @@ export default function OrgSettingsPage() {
     ] as const;
 
     const currentUserRole = members.find(
-        (m) => (m.userId ?? m.user?._id ?? m._id) === user?.id
+        (m) => (m.userId ?? m.user?._id ?? m._id) === user?._id
     )?.role ?? "member";
 
     const isOwnerOrAdmin = currentUserRole === "owner" || currentUserRole === "admin";
@@ -128,8 +128,8 @@ export default function OrgSettingsPage() {
                                 key={id}
                                 onClick={() => setActiveSection(id)}
                                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${activeSection === id
-                                        ? "bg-[#1C1C22] text-white font-medium"
-                                        : "text-gray-500 hover:text-white hover:bg-white/[0.02]"
+                                    ? "bg-[#1C1C22] text-white font-medium"
+                                    : "text-gray-500 hover:text-white hover:bg-white/[0.02]"
                                     }`}
                             >
                                 <Icon className="w-4 h-4 shrink-0" />
@@ -195,7 +195,7 @@ export default function OrgSettingsPage() {
                                 {isOwnerOrAdmin && (
                                     <div className="px-5 py-4 border-t border-gray-800/80 flex items-center justify-between">
                                         <span className={`text-xs transition-all ${saveStatus === "saved" ? "text-green-400" :
-                                                saveStatus === "error" ? "text-red-400" : "text-transparent"
+                                            saveStatus === "error" ? "text-red-400" : "text-transparent"
                                             }`}>
                                             {saveStatus === "saved" ? "✓ Saved" : saveStatus === "error" ? "Save failed" : "."}
                                         </span>
@@ -244,7 +244,7 @@ export default function OrgSettingsPage() {
                                             const role = member.role ?? "member";
                                             const roleCfg = ROLE_CONFIG[role] ?? ROLE_CONFIG.member;
                                             const RoleIcon = roleCfg.icon;
-                                            const isCurrentUser = memberId === user?.id;
+                                            const isCurrentUser = memberId === user?._id;
                                             const canRemove = isOwnerOrAdmin && !isCurrentUser && role !== "owner";
 
                                             return (
