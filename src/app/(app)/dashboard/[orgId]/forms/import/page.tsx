@@ -55,8 +55,13 @@ export default function ImportFormPage() {
         setImporting((prev) => ({ ...prev, [formId]: 'loading' }));
         setImportErrors((prev) => ({ ...prev, [formId]: '' }));
         try {
-            await importOrgForm(orgId, formId);
+            const result = await importOrgForm(orgId, formId);
             setImporting((prev) => ({ ...prev, [formId]: 'done' }));
+            // Redirect to the AI Chat Builder for the newly imported form
+            const newId = result?.data?.id ?? result?.id;
+            if (newId) {
+                setTimeout(() => router.push(`/dashboard/${orgId}/forms/${newId}/builder`), 800);
+            }
         } catch (e: any) {
             setImporting((prev) => ({ ...prev, [formId]: 'error' }));
             setImportErrors((prev) => ({ ...prev, [formId]: e.message || 'Import failed' }));
@@ -198,15 +203,11 @@ export default function ImportFormPage() {
                     </div>
                 )}
 
-                {/* Done CTA */}
+                {/* Done state: show builder redirect message */}
                 {Object.values(importing).some((s) => s === 'done') && (
-                    <div className="mt-6 text-center">
-                        <button
-                            onClick={() => router.push(`/dashboard/${orgId}/forms`)}
-                            className="text-sm text-[#9A6BFF] hover:underline"
-                        >
-                            ← Back to view imported forms
-                        </button>
+                    <div className="mt-6 p-4 bg-[#9A6BFF]/5 border border-[#9A6BFF]/20 rounded-xl text-center">
+                        <p className="text-sm text-[#9A6BFF] font-medium mb-1">✓ Form imported</p>
+                        <p className="text-xs text-gray-500">Redirecting to AI Chat Builder...</p>
                     </div>
                 )}
             </div>

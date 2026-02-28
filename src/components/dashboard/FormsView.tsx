@@ -9,8 +9,10 @@ import { DashboardBreadcrumbs } from "./DashboardBreadcrumbs";
 import { getGoogleForms } from "@/lib/api/integrations";
 import { importOrgForm } from "@/lib/api/organizations";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function FormsView({ currentOrgId }: { currentOrgId: string }) {
+    const router = useRouter();
     const [forms, setForms] = useState<any[]>([]);
     const [loadingForms, setLoadingForms] = useState(true);
     const [fetchError, setFetchError] = useState<string | null>(null);
@@ -50,8 +52,12 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
         setImporting((prev) => ({ ...prev, [formId]: 'loading' }));
         setImportErrors((prev) => ({ ...prev, [formId]: '' }));
         try {
-            await importOrgForm(currentOrgId, formId);
+            const result = await importOrgForm(currentOrgId, formId);
             setImporting((prev) => ({ ...prev, [formId]: 'done' }));
+            const newId = result?.data?.id ?? result?.id;
+            if (newId) {
+                setTimeout(() => router.push(`/dashboard/${currentOrgId}/forms/${newId}/builder`), 800);
+            }
         } catch (e: any) {
             setImporting((prev) => ({ ...prev, [formId]: 'error' }));
             setImportErrors((prev) => ({ ...prev, [formId]: e.message || 'Import failed' }));

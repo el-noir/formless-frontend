@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
     Loader2, ExternalLink, FileText,
-    AlertCircle, Wand2
+    AlertCircle, Wand2, MessageSquare, CheckCircle2, TrendingDown, Clock
 } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
@@ -101,6 +101,19 @@ export default function OrgFormViewerPage() {
     const fields = form.fields || [];
     const questionFields = fields.filter((f: any) => f.type !== 'SECTION_HEADER');
 
+    // Computed stats
+    const conversations = form.conversationCount ?? 0;
+    const submissions = form.submissionCount ?? 0;
+    const completionRate = conversations > 0 ? Math.round((submissions / conversations) * 100) : 0;
+    const dropOffRate = 100 - completionRate;
+    const estMinutes = form.metadata?.estimatedCompletionMinutes ?? Math.ceil(questionFields.length * 0.5);
+
+    const stats = [
+        { label: 'Conversations', value: conversations, icon: MessageSquare, color: 'text-[#9A6BFF]', bg: 'bg-[#9A6BFF]/10' },
+        { label: 'Submissions', value: submissions, icon: CheckCircle2, color: 'text-green-400', bg: 'bg-green-500/10' },
+        { label: 'Completion Rate', value: `${completionRate}%`, icon: TrendingDown, color: completionRate >= 70 ? 'text-green-400' : completionRate >= 40 ? 'text-yellow-400' : 'text-red-400', bg: completionRate >= 70 ? 'bg-green-500/10' : completionRate >= 40 ? 'bg-yellow-500/10' : 'bg-red-500/10' },
+        { label: 'Est. Time', value: `~${estMinutes}m`, icon: Clock, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+    ];
     return (
         <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
             <div className="max-w-4xl">
@@ -147,6 +160,21 @@ export default function OrgFormViewerPage() {
                             </a>
                         )}
                     </div>
+                </div>
+
+                {/* Stats Strip */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+                    {stats.map(({ label, value, icon: Icon, color, bg }) => (
+                        <div key={label} className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-4 flex items-center gap-3 shadow-sm">
+                            <div className={`${bg} p-2 rounded-md shrink-0`}>
+                                <Icon className={`w-4 h-4 ${color}`} />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-white font-semibold text-base leading-tight">{value}</p>
+                                <p className="text-gray-500 text-[10px] mt-0.5">{label}</p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
                 {/* Tabs */}
