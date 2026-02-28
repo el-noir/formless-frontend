@@ -113,7 +113,7 @@ export function Navbar() {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 rounded-full bg-brand-purple text-white font-semibold text-sm hover:bg-[#4B6BFF] transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-brand-dark"
+                  className="px-4 py-2 rounded-full bg-brand-purple text-white font-semibold text-sm hover:bg-[#8B5CF6] transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-brand-dark"
                   aria-label="Logout"
                 >
                   Logout

@@ -239,7 +239,7 @@ function StartFreePage() {
                 <button
                   type="submit"
                   disabled={!inputValue.trim() || sendingMsg || isComplete}
-                  className="absolute right-3 p-2.5 md:p-3 bg-gradient-to-br from-[#9A6BFF] to-[#5a76e8] text-white rounded-xl hover:shadow-[0_0_15px_rgba(110,139,255,0.4)] transition-all disabled:opacity-50 disabled:hover:shadow-none disabled:active:scale-100 active:scale-95 flex items-center justify-center"
+                  className="absolute right-3 p-2.5 md:p-3 bg-gradient-to-br from-brand-purple to-[#8B5CF6] text-white rounded-xl hover:shadow-[0_0_15px_theme(colors.brand.purple/40)] transition-all disabled:opacity-50 disabled:hover:shadow-none disabled:active:scale-100 active:scale-95 flex items-center justify-center"
                 >
                   <Send className="w-5 h-5 ml-0.5" />
                 </button>
