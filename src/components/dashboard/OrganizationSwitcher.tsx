@@ -27,6 +27,7 @@ export function OrganizationSwitcher() {
     } = useOrgStore();
 
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
     const currentOrg = getCurrentOrg();
 
     useEffect(() => {
@@ -101,7 +102,10 @@ export function OrganizationSwitcher() {
                             ? "bg-[#1C1C22] text-white"
                             : "text-gray-300 focus:bg-white/[0.04] focus:text-white"
                             }`}
-                        onClick={() => setCurrentOrg(org.id)}
+                        onClick={() => {
+                            setCurrentOrg(org.id);
+                            router.push(`/dashboard/${org.id}`);
+                        }}
                     >
                         <div className={`w-6 h-6 rounded flex items-center justify-center shrink-0 ${String(currentOrgId) === String(org.id) ? "bg-[#9A6BFF] text-white" : "bg-[#1C1C22] border border-gray-800 text-gray-400"}`}>
                             {org.name.charAt(0).toUpperCase()}

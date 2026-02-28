@@ -61,6 +61,18 @@ export async function apiFetch(
         headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
+    // Automatically include Organization ID if we are in an organization context
+    // This allows routes that use OrgMemberGuard to work without explicit orgId in the path/query
+    try {
+        const { useOrgStore } = await import("@/stores/orgStore");
+        const { currentOrgId } = useOrgStore.getState();
+        if (currentOrgId && !headers["x-organization-id"]) {
+            headers["x-organization-id"] = currentOrgId;
+        }
+    } catch (e) {
+        // Ignore errors if store is not accessible (e.g. during very early boot)
+    }
+
     const res = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
         headers,

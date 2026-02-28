@@ -1,19 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { LayoutDashboard, FormInput, Inbox, Blocks, Settings } from "lucide-react";
 import { Suspense } from "react";
 
 function SidebarLinks() {
     const pathname = usePathname();
+    const params = useParams();
+    const orgId = params.orgId as string;
 
     const links = [
-        { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
-        { name: "Forms", href: "/dashboard/forms", icon: FormInput },
-        { name: "Submissions", href: "/dashboard/submissions", icon: Inbox },
-        { name: "Integrations", href: "/dashboard/integrations", icon: Blocks },
-        { name: "Settings", href: "/dashboard/settings", icon: Settings },
+        { name: "Overview", href: `/dashboard/${orgId}`, icon: LayoutDashboard },
+        { name: "Forms", href: `/dashboard/${orgId}/forms`, icon: FormInput },
+        { name: "Submissions", href: `/dashboard/${orgId}/submissions`, icon: Inbox },
+        { name: "Integrations", href: `/dashboard/${orgId}/integrations`, icon: Blocks },
+        { name: "Settings", href: `/dashboard/${orgId}/settings`, icon: Settings },
     ];
 
     return (

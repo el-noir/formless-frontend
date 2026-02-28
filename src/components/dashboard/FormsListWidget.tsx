@@ -10,6 +10,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useParams, useRouter } from "next/navigation";
 
 export function FormsListWidget({
     forms,
@@ -29,6 +30,9 @@ export function FormsListWidget({
     const [shareModalOpen, setShareModalOpen] = useState(false);
     const [shareLink, setShareLink] = useState('');
     const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+    const params = useParams();
+    const router = useRouter();
+    const orgId = params.orgId as string;
 
     if (isLoading) {
         return (
@@ -88,7 +92,7 @@ export function FormsListWidget({
                 <h3 className="text-gray-200 font-medium text-sm">Active Forms</h3>
 
                 <div className="flex items-center gap-2">
-                    <Link href="/dashboard/forms/import">
+                    <Link href={`/dashboard/${orgId}/forms/import`}>
                         <button className="text-xs flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors border border-gray-800 hover:border-gray-700 bg-[#1C1C22] px-2 py-1 rounded">
                             <Plus className="w-3.5 h-3.5" />
                             New
@@ -102,7 +106,7 @@ export function FormsListWidget({
                     <Database className="w-6 h-6 text-gray-600 mb-3" />
                     <h4 className="text-gray-300 font-medium text-sm mb-1">No forms connected</h4>
                     <p className="text-gray-500 text-xs max-w-[200px] mx-auto mb-4">Import a Google Form to get started.</p>
-                    <Link href="/dashboard/forms/import">
+                    <Link href={`/dashboard/${orgId}/forms/import`}>
                         <button className="bg-[#1C1C22] hover:bg-white-[0.02] border border-gray-800 text-gray-300 py-1.5 px-4 rounded-md text-sm transition-colors">
                             Import Form
                         </button>
@@ -153,7 +157,7 @@ export function FormsListWidget({
                                             <DropdownMenuContent align="end" className="w-[180px] bg-[#111116] border-gray-800 z-[100]">
                                                 <DropdownMenuItem asChild>
                                                     <Link
-                                                        href={`/dashboard/organizations/${currentOrgId}/forms/${f.id}`}
+                                                        href={`/dashboard/${orgId}/organizations/${currentOrgId}/forms/${f.id}`}
                                                         className="flex items-center gap-2 text-sm text-gray-300 hover:text-white hover:bg-white/[0.04] cursor-pointer"
                                                     >
                                                         <ExternalLink className="w-4 h-4" />

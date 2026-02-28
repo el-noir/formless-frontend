@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { getGoogleForms } from "@/lib/api/integrations";
 import { importOrgForm } from "@/lib/api/organizations";
+import Link from "next/link";
 
 export function FormsView({ currentOrgId }: { currentOrgId: string }) {
     const [forms, setForms] = useState<any[]>([]);
@@ -27,7 +28,7 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
             setLoadingForms(true);
             setFetchError(null);
             try {
-                const data = await getGoogleForms();
+                const data = await getGoogleForms(currentOrgId);
                 const list = Array.isArray(data) ? data : (data.files || data.forms || []);
                 setForms(list);
             } catch (e: any) {
@@ -93,12 +94,12 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
                 <div className="bg-[#111116] border border-gray-800 rounded-2xl p-8 text-center max-w-xl">
                     <AlertCircle className="w-10 h-10 text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-400 text-sm mb-5">{fetchError}</p>
-                    <a
-                        href="/dashboard/integrations"
+                    <Link
+                        href={`/dashboard/${currentOrgId}/integrations`}
                         className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors"
                     >
                         Connect Google Account
-                    </a>
+                    </Link>
                 </div>
             ) : filtered.length === 0 ? (
                 <div className="border border-dashed border-gray-800 bg-[#0B0B0F] rounded-xl p-12 text-center max-w-xl">

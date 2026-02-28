@@ -5,8 +5,10 @@ export const getIntegrationsGoogleAuthUrl = () => {
     return `${API_BASE_URL}/integrations/google/auth`;
 };
 
-export const getGoogleForms = async () => {
-    const response = await apiFetch('/integrations/google/forms');
+export const getGoogleForms = async (orgId?: string) => {
+    const response = await apiFetch('/integrations/google/forms', {
+        headers: orgId ? { 'x-organization-id': orgId } : {}
+    });
 
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -16,8 +18,10 @@ export const getGoogleForms = async () => {
     return response.json();
 };
 
-export const getGoogleFormSchema = async (formId: string) => {
-    const response = await apiFetch(`/integrations/google/forms/${formId}/schema`);
+export const getGoogleFormSchema = async (formId: string, orgId?: string) => {
+    const response = await apiFetch(`/integrations/google/forms/${formId}/schema`, {
+        headers: orgId ? { 'x-organization-id': orgId } : {}
+    });
 
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -27,10 +31,11 @@ export const getGoogleFormSchema = async (formId: string) => {
     return response.json();
 };
 
-export const watchGoogleForm = async (formId: string, mappingData: any) => {
+export const watchGoogleForm = async (formId: string, mappingData: any, orgId?: string) => {
     const response = await apiFetch(`/integrations/google/forms/${formId}/watch`, {
         method: 'POST',
-        body: JSON.stringify(mappingData)
+        body: JSON.stringify(mappingData),
+        headers: orgId ? { 'x-organization-id': orgId } : {}
     });
 
     if (!response.ok) {
