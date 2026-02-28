@@ -7,7 +7,7 @@ export function Footer() {
             <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-brand-purple to-brand-purple flex items-center justify-center text-white font-bold text-xs" aria-hidden="true">
               FI
             </div>
-            <span className="text-white font-semibold">FormAI</span>
+            <span className="text-white font-semibold">Formless</span>
           </a>
           <p>
             Transforming data collection with intelligent conversations.
@@ -45,7 +45,7 @@ export function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p>© 2026 FormAI Inc. All rights reserved.</p>
+        <p>© 2026 Formless Inc. All rights reserved.</p>
         <div className="flex gap-6">
           <a href="#" className="hover:text-white transition-colors">Twitter</a>
           <a href="#" className="hover:text-white transition-colors">GitHub</a>

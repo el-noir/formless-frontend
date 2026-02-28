@@ -85,7 +85,7 @@ export function ChatMockup() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="text-white font-semibold text-sm">FormAI Assistant</h3>
+                <h3 className="text-white font-semibold text-sm">Formless Assistant</h3>
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                   <span className="text-xs text-gray-400 font-medium">{currentScenario.type}</span>
@@ -158,7 +158,7 @@ export function ChatMockup() {
             <div className="relative flex items-center">
               <input
                 type="text"
-                placeholder="Message FormAI..."
+                placeholder="Message Formless..."
                 className="w-full bg-brand-surface border border-white/10 rounded-full px-5 py-3.5 pr-12 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-brand-purple/50 transition-colors shadow-inner"
                 disabled
               />

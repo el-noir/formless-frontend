@@ -81,12 +81,12 @@ export function Navbar() {
           <Link
             href="/"
             className="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-brand-dark rounded-lg"
-            aria-label="FormAI home"
+            aria-label="Formless home"
           >
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-purple to-brand-purple flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform" aria-hidden="true">
               F
             </div>
-            <span className="text-xl font-bold text-white tracking-tight">FormAI</span>
+            <span className="text-xl font-bold text-white tracking-tight">Formless</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -157,7 +157,7 @@ export function Navbar() {
                 <SheetHeader>
                   <SheetTitle className="text-white text-left">Navigation</SheetTitle>
                   <SheetDescription className="text-gray-400 text-left">
-                    Explore FormAI features and resources
+                    Explore Formless features and resources
                   </SheetDescription>
                 </SheetHeader>
                 <div className="flex flex-col gap-6 mt-8">

@@ -13,13 +13,13 @@ export function Integrations() {
   return (
     <section id="integrations" className="py-24 relative overflow-hidden" aria-labelledby="integrations-title">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none" />
-      
+
       <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
         <h2 id="integrations-title" className="text-3xl md:text-5xl font-bold text-white mb-6">Seamless Integrations</h2>
         <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-16">
-          Connect FormAI with the tools you already use. No code required.
+          Connect Formless with the tools you already use. No code required.
         </p>
-        
+
         <div className="flex flex-wrap justify-center gap-4 md:gap-8">
           {integrations.map((item, index) => (
             <motion.div
@@ -38,7 +38,7 @@ export function Integrations() {
                 <span className="block text-white font-semibold text-lg mb-1">{item.name}</span>
                 <span className="block text-xs text-gray-500 group-hover:text-gray-400 transition-colors">{item.desc}</span>
               </div>
-              
+
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
             </motion.div>
           ))}

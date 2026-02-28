@@ -25,16 +25,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!form) {
         return {
-            title: 'Form Not Found | FormAI',
+            title: 'Form Not Found | Formless',
             description: 'The requested form could not be found or is inactive.',
         };
     }
 
     return {
-        title: `${form.title} | FormAI Chat`,
+        title: `${form.title} | Formless Chat`,
         description: form.description || 'Complete this form via an intelligent AI conversation.',
         openGraph: {
-            title: `${form.title} | FormAI`,
+            title: `${form.title} | Formless`,
             description: form.description,
             type: 'website',
         },

@@ -84,7 +84,7 @@ function SignInContent() {
                 Welcome back
               </h1>
               <p className="text-gray-400 text-lg">
-                Continue building with <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-purple to-brand-gold font-medium">FormAI</span>
+                Continue building with <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-purple to-brand-gold font-medium">Formless</span>
               </p>
             </div>
             <ChatMockup />

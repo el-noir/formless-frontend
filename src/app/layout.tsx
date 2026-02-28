@@ -16,7 +16,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "FormAI - Turn Forms Into AI Conversations | No-Code Form Builder",
+  title: "Formless - Turn Forms Into AI Conversations | No-Code Form Builder",
   description: "Transform static Google Forms into intelligent AI-driven chat experiences that collect structured data automatically. No coding required. Trusted by 2,000+ companies.",
   keywords: [
     "AI forms",
@@ -30,34 +30,34 @@ export const metadata: Metadata = {
     "form automation",
     "customer surveys"
   ],
-  authors: [{ name: "FormAI Team" }],
-  creator: "FormAI",
-  publisher: "FormAI Inc.",
-  metadataBase: new URL('https://formai.app'),
+  authors: [{ name: "Formless Team" }],
+  creator: "Formless",
+  publisher: "Formless Inc.",
+  metadataBase: new URL('https://Formless.app'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://formai.app',
-    title: 'FormAI - Turn Forms Into AI Conversations',
+    url: 'https://Formless.app',
+    title: 'Formless - Turn Forms Into AI Conversations',
     description: 'Transform static Google Forms into intelligent AI-driven chat experiences. No coding required. Trusted by 2,000+ companies.',
-    siteName: 'FormAI',
+    siteName: 'Formless',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'FormAI - AI-Powered Conversational Forms',
+        alt: 'Formless - AI-Powered Conversational Forms',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FormAI - Turn Forms Into AI Conversations',
+    title: 'Formless - Turn Forms Into AI Conversations',
     description: 'Transform static Google Forms into intelligent AI-driven chat experiences. No coding required.',
-    creator: '@formai',
+    creator: '@Formless',
     images: ['/og-image.jpg'],
   },
   robots: {

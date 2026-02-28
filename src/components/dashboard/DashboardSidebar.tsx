@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { LayoutDashboard, FormInput, Inbox, Blocks, Settings } from "lucide-react";
+import { Suspense } from "react";
 
-export function DashboardSidebar() {
-    const pathname = usePathname();
+function SidebarLinks() {
+    const searchParams = useSearchParams();
+    const currentView = searchParams.get('view') || 'overview';
 
     const links = [
         { name: "Overview", href: "/dashboard", view: "overview", icon: LayoutDashboard },
@@ -16,6 +18,32 @@ export function DashboardSidebar() {
     ];
 
     return (
+        <nav className="flex-1 py-6 px-4 space-y-1">
+            {links.map((link) => {
+                const isActive = currentView === link.view;
+                const Icon = link.icon;
+
+                return (
+                    <Link
+                        key={link.name}
+                        href={link.href}
+                        className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors duration-150 ${isActive
+                            ? "bg-[#1C1C22] text-white font-medium"
+                            : "text-gray-400 hover:text-white hover:bg-white/[0.02]"
+                            }`}
+                    >
+                        <Icon className={`w-4 h-4 shrink-0 col-span-1 ${isActive ? "text-white" : "text-gray-500"}`} />
+                        {link.name}
+                    </Link>
+                );
+            })}
+        </nav>
+    );
+}
+
+export function DashboardSidebar() {
+
+    return (
         <aside className="w-64 flex-shrink-0 bg-[#0B0B0F] border-r border-gray-800/80 hidden md:flex flex-col">
             <div className="h-16 flex items-center px-6 border-b border-gray-800/80">
                 <span className="text-white font-semibold flex items-center gap-1.5 tracking-tight">
@@ -24,27 +52,9 @@ export function DashboardSidebar() {
                 </span>
             </div>
 
-            <nav className="flex-1 py-6 px-4 space-y-1">
-                {links.map((link) => {
-                    const currentView = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('view') || 'overview' : 'overview';
-                    const isActive = currentView === link.view;
-                    const Icon = link.icon;
-
-                    return (
-                        <Link
-                            key={link.name}
-                            href={link.href}
-                            className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors duration-150 ${isActive
-                                ? "bg-[#1C1C22] text-white font-medium"
-                                : "text-gray-400 hover:text-white hover:bg-white-[0.02]"
-                                }`}
-                        >
-                            <Icon className={`w-4 h-4 shrink-0 col-span-1 ${isActive ? "text-white" : "text-gray-500"}`} />
-                            {link.name}
-                        </Link>
-                    );
-                })}
-            </nav>
+            <Suspense fallback={<nav className="flex-1 py-6 px-4 space-y-1" />}>
+                <SidebarLinks />
+            </Suspense>
 
             <div className="p-4 border-t border-gray-800/80">
                 <div className="bg-[#111116] rounded-md p-4 text-sm border border-gray-800">

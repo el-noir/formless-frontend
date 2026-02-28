@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 const testimonials = [
   {
-    quote: "FormAI transformed how we qualify leads. The conversational approach increased our conversion rate by 35% in just two weeks.",
+    quote: "Formless transformed how we qualify leads. The conversational approach increased our conversion rate by 35% in just two weeks.",
     author: "Sarah Chen",
     role: "Head of Growth",
     company: "TechFlow",

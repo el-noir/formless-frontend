@@ -31,7 +31,7 @@ export function SocialProof() {
             Trusted by Industry Leaders
           </p>
           <h2 className="text-2xl md:text-3xl font-bold text-white">
-            Join 2,000+ companies using FormAI
+            Join 2,000+ companies using Formless
           </h2>
         </motion.div>
 
