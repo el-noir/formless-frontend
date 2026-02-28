@@ -86,21 +86,23 @@ export default function ImportFormPage() {
                 />
 
                 {/* Header */}
-                <div className="mb-6">
-                    <h1 className="text-2xl font-bold text-white mb-1">Import a Google Form</h1>
-                    <p className="text-gray-400 text-sm">Select a form from your Google account to import into this organization</p>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h2 className="text-xl font-semibold text-gray-100 tracking-tight mb-1">Import a Google Form</h2>
+                        <p className="text-gray-500 text-sm">Select a form from your Google account to add to this organization</p>
+                    </div>
                 </div>
 
                 {/* Search */}
                 {forms.length > 0 && (
                     <div className="relative mb-6">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" />
                         <input
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Search forms..."
-                            className="w-full bg-[#0f0f14] border border-gray-800 rounded-xl pl-11 pr-4 py-3 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-[#9A6BFF] transition-colors"
+                            className="w-full bg-[#111116] border border-gray-800 rounded-md pl-9 pr-4 py-2 text-white placeholder-gray-600 text-xs focus:outline-none focus:border-[#9A6BFF] transition-colors"
                         />
                     </div>
                 )}

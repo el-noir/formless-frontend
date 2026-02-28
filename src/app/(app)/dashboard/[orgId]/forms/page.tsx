@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Loader2, Plus, FileText, Trash2, Building2 } from "lucide-react";
+import { Loader2, Plus, FileText, Trash2, Building2, Share2, ExternalLink, Clock } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
 import { useOrgStore } from "@/stores/orgStore";
@@ -15,7 +15,6 @@ export default function FormsPage() {
     const { accessToken } = useAuthStore();
     const { currentOrgId, getCurrentOrg, isAdminOfCurrentOrg } = useOrgStore();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [forms, setForms] = useState<any[]>([]);
     const [loadingForms, setLoadingForms] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -75,29 +74,25 @@ export default function FormsPage() {
     if (isLoading || loadingForms) {
         return (
             <div className="flex items-center justify-center p-20">
-                <div className="text-center">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
-                    <p className="text-gray-400">Loading forms...</p>
-                </div>
+                <Loader2 className="w-6 h-6 animate-spin text-[#9A6BFF]" />
             </div>
         );
     }
 
-    // No active org — prompt to create or switch
     if (!currentOrgId || !currentOrg) {
         return (
             <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
-                <div className="max-w-xl mx-auto text-center py-16">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#9A6BFF]/10 to-[#9A6BFF]/10 rounded-full flex items-center justify-center mx-auto mb-5">
-                        <Building2 className="w-8 h-8 text-[#9A6BFF]" />
+                <div className="max-w-sm mx-auto text-center py-16">
+                    <div className="w-10 h-10 bg-[#1C1C22] border border-gray-800 rounded-md flex items-center justify-center mx-auto mb-4">
+                        <Building2 className="w-5 h-5 text-gray-500" />
                     </div>
-                    <h2 className="text-xl font-semibold text-white mb-2">No active organization</h2>
-                    <p className="text-gray-400 text-sm mb-6">
-                        Forms are owned by organizations. Create or join an organization first, then import your Google Forms into it.
+                    <h2 className="text-sm font-semibold text-gray-200 mb-1">No active organization</h2>
+                    <p className="text-gray-500 text-xs mb-5">
+                        Select or create an organization to manage forms.
                     </p>
                     <Link
                         href="/dashboard/organizations"
-                        className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-6 rounded-lg transition-colors"
+                        className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
                     >
                         Go to Organizations
                     </Link>
@@ -108,143 +103,143 @@ export default function FormsPage() {
 
     return (
         <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
-            <div className="max-w-7xl">
-                <DashboardBreadcrumbs
-                    backHref={`/dashboard/${currentOrgId}`}
-                    backLabel="Back to Overview"
-                />
+            <DashboardBreadcrumbs
+                backHref={`/dashboard/${currentOrgId}`}
+                backLabel="Back to Overview"
+            />
 
-                {/* Header */}
-                <div className="flex justify-between items-start mb-8">
-                    <div>
-                        <h1 className="text-3xl font-bold text-white mb-1">My Forms</h1>
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                            <Building2 className="w-3.5 h-3.5" />
-                            <span>{currentOrg.name}</span>
-                            <span>·</span>
-                            <Link href="/dashboard/organizations" className="hover:text-gray-300 transition-colors">Switch org</Link>
+            {/* Page Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h2 className="text-xl font-semibold text-gray-100 tracking-tight mb-1">Forms</h2>
+                    <p className="text-gray-500 text-sm flex items-center gap-1.5">
+                        <Building2 className="w-3.5 h-3.5" />
+                        {currentOrg.name}
+                        <span className="text-gray-700">·</span>
+                        <span>{forms.length} form{forms.length !== 1 ? 's' : ''}</span>
+                    </p>
+                </div>
+                {isAdmin && (
+                    <Link
+                        href={`/dashboard/${currentOrgId}/forms/import`}
+                        className="flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
+                    >
+                        <Plus className="w-4 h-4" /> Import Form
+                    </Link>
+                )}
+            </div>
+
+            {error && (
+                <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-md mb-6">
+                    {error}
+                </div>
+            )}
+
+            {forms.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {forms.map((form) => (
+                        <div
+                            key={form.id}
+                            className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-4 hover:border-gray-700/80 transition-colors flex flex-col shadow-sm group"
+                        >
+                            {/* Card top */}
+                            <div className="flex items-start justify-between mb-3">
+                                <div className="p-2 bg-[#1C1C22] border border-gray-800 rounded-md text-gray-400 group-hover:text-[#9A6BFF] transition-colors">
+                                    <FileText className="w-4 h-4" />
+                                </div>
+                                {form.status === 'ACTIVE' && (
+                                    <span className="text-[10px] font-semibold uppercase tracking-wider bg-green-500/10 border border-green-500/20 text-green-400 px-2 py-0.5 rounded-full">
+                                        Active
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Title & meta */}
+                            <h3 className="text-sm font-medium text-white mb-1 line-clamp-1">{form.title}</h3>
+                            <p className="text-xs text-gray-500 mb-3 line-clamp-1">
+                                {form.questionCount ?? 0} questions
+                            </p>
+
+                            {/* Divider + actions */}
+                            <div className="border-t border-gray-800/80 pt-3 mt-auto">
+                                <div className="flex items-center gap-1.5 mb-2 text-[10px] text-gray-600">
+                                    <Clock className="w-3 h-3" />
+                                    <span>
+                                        {form.lastSynced
+                                            ? formatDistanceToNow(new Date(form.lastSynced), { addSuffix: true })
+                                            : 'Never synced'}
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                    <button
+                                        onClick={() => handleShare(form.id)}
+                                        disabled={isGeneratingLink}
+                                        title="Share AI Chat"
+                                        className="flex items-center gap-1.5 flex-1 justify-center text-xs text-gray-400 hover:text-white bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 py-1.5 px-2 rounded transition-colors disabled:opacity-50"
+                                    >
+                                        <Share2 className="w-3 h-3" /> Share
+                                    </button>
+                                    <Link
+                                        href={`/dashboard/${currentOrgId}/forms/${form.id}`}
+                                        className="flex items-center gap-1.5 flex-1 justify-center text-xs text-gray-400 hover:text-white bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 py-1.5 px-2 rounded transition-colors"
+                                    >
+                                        <ExternalLink className="w-3 h-3" /> View
+                                    </Link>
+                                    {isAdmin && (
+                                        <button
+                                            onClick={() => handleDelete(form.id)}
+                                            title="Delete form"
+                                            className="p-1.5 text-gray-600 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors border border-gray-800"
+                                        >
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
                         </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="border border-dashed border-gray-800 rounded-md p-12 text-center">
+                    <div className="w-10 h-10 bg-[#1C1C22] border border-gray-800 rounded-md flex items-center justify-center mx-auto mb-4">
+                        <FileText className="w-5 h-5 text-gray-600" />
                     </div>
+                    <h3 className="text-sm font-medium text-gray-200 mb-1">No forms yet</h3>
+                    <p className="text-gray-500 text-xs mb-5 max-w-xs mx-auto">
+                        {isAdmin
+                            ? "Import a Google Form to get started."
+                            : "No forms have been imported yet. Ask an admin to import one."}
+                    </p>
                     {isAdmin && (
                         <Link
                             href={`/dashboard/${currentOrgId}/forms/import`}
-                            className="flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
+                            className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
                         >
-                            <Plus className="w-4 h-4" /> Import Form
+                            <Plus className="w-4 h-4" /> Import Google Form
                         </Link>
                     )}
                 </div>
-
-                {/* Error */}
-                {error && (
-                    <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl mb-6">
-                        {error}
-                    </div>
-                )}
-
-                {/* Grid */}
-                {forms.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {forms.map((form) => (
-                            <div
-                                key={form.id}
-                                className="bg-[#0f0f14] border border-gray-800 rounded-xl p-5 hover:border-gray-700 transition-colors flex flex-col h-full group"
-                            >
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="p-2 bg-[#9A6BFF]/10 rounded-lg text-[#9A6BFF]">
-                                        <FileText className="w-6 h-6" />
-                                    </div>
-                                    {form.status === 'ACTIVE' && (
-                                        <span className="bg-green-500/10 border border-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full">
-                                            Active
-                                        </span>
-                                    )}
-                                </div>
-
-                                <h3 className="text-xl font-semibold text-white mb-2 line-clamp-1">{form.title}</h3>
-                                <p className="text-gray-400 text-sm mb-4 line-clamp-2 flex-grow">
-                                    {form.description || "No description provided."}
-                                </p>
-
-                                <div className="border-t border-gray-800 pt-4 mt-auto">
-                                    <div className="flex justify-between text-xs text-gray-500 mb-4">
-                                        <span>{form.questionCount ?? 0} Questions</span>
-                                        <span>
-                                            {form.lastSynced
-                                                ? formatDistanceToNow(new Date(form.lastSynced), { addSuffix: true })
-                                                : 'Never synced'}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2 flex-wrap">
-                                        <button
-                                            onClick={() => handleShare(form.id)}
-                                            disabled={isGeneratingLink}
-                                            className="flex-1 bg-[#9A6BFF]/10 hover:bg-[#9A6BFF]/20 text-[#9A6BFF] text-sm py-2 px-4 rounded-lg text-center transition-colors disabled:opacity-50"
-                                        >
-                                            Share AI Chat
-                                        </button>
-                                        <Link
-                                            href={`/dashboard/${currentOrgId}/forms/${form.id}`}
-                                            className="px-3 py-2 bg-white/5 hover:bg-white/10 text-white text-sm rounded-lg text-center transition-colors"
-                                        >
-                                            View
-                                        </Link>
-                                        {isAdmin && (
-                                            <button
-                                                onClick={() => handleDelete(form.id)}
-                                                className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
-                                                title="Delete form"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="border-2 border-dashed border-gray-800 rounded-xl p-12 text-center">
-                        <div className="w-16 h-16 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-500">
-                            <FileText className="w-8 h-8" />
-                        </div>
-                        <h3 className="text-xl font-medium text-white mb-2">No forms in this organization</h3>
-                        <p className="text-gray-400 mb-6 max-w-md mx-auto">
-                            {isAdmin
-                                ? "Import a Google Form to get started."
-                                : "No forms have been imported yet. Ask an admin to import one."}
-                        </p>
-                        {isAdmin && (
-                            <Link
-                                href={`/dashboard/${currentOrgId}/forms/import`}
-                                className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2 px-6 rounded-lg transition-colors"
-                            >
-                                <Plus className="w-4 h-4" /> Import Google Form
-                            </Link>
-                        )}
-                    </div>
-                )}
-            </div>
+            )}
 
             {/* Share Modal */}
             {shareModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    <div className="bg-[#0f0f14] border border-gray-800 rounded-xl p-6 w-full max-w-md">
-                        <h3 className="text-xl font-semibold text-white mb-4">Share AI Chat</h3>
-                        <p className="text-gray-400 text-sm mb-4">
-                            Anyone with this link can interact with the AI to complete this form. They do not need an account.
+                    <div className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-5 w-full max-w-md shadow-xl">
+                        <h3 className="text-sm font-semibold text-white mb-1">Share AI Chat</h3>
+                        <p className="text-gray-500 text-xs mb-4">
+                            Anyone with this link can interact with the AI to complete this form without an account.
                         </p>
-                        <div className="flex gap-2 mb-6">
+                        <div className="flex gap-2 mb-4">
                             <input
                                 type="text"
                                 readOnly
                                 value={shareLink}
-                                className="flex-1 bg-black/50 border border-gray-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#9A6BFF]"
+                                className="flex-1 bg-[#111116] border border-gray-800 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-[#9A6BFF]"
                                 onClick={(e) => e.currentTarget.select()}
                             />
                             <button
                                 onClick={copyToClipboard}
-                                className="bg-[#9A6BFF] hover:bg-[#5a72e0] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                className="bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-xs px-4 py-2 rounded font-medium transition-colors"
                             >
                                 Copy
                             </button>
@@ -252,7 +247,7 @@ export default function FormsPage() {
                         <div className="flex justify-end">
                             <button
                                 onClick={() => setShareModalOpen(false)}
-                                className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                                className="text-xs text-gray-500 hover:text-white transition-colors"
                             >
                                 Close
                             </button>

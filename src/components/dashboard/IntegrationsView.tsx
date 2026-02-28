@@ -2,8 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "motion/react";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Blocks, ArrowRight } from "lucide-react";
 import { DashboardBreadcrumbs } from "./DashboardBreadcrumbs";
 import { useOrgStore } from "@/stores/orgStore";
 
@@ -17,23 +16,26 @@ export function IntegrationsView() {
     };
 
     return (
-        <div className="w-full h-full flex flex-col">
+        <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
             <DashboardBreadcrumbs
                 backHref={`/dashboard/${currentOrgId}`}
                 backLabel="Back to Overview"
             />
-            <h1 className="text-3xl font-semibold tracking-tight text-white mb-2">Integrations</h1>
-            <p className="text-gray-500 mb-8 font-medium">Connect Formless with your favorite tools</p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                {/* Google Forms Card */}
-                <motion.div
-                    whileHover={{ scale: 1.01 }}
-                    className="bg-[#0B0B0F] border border-gray-800/60 hover:border-gray-700/80 rounded-2xl p-6 flex flex-col h-full shadow-lg transition-colors group"
-                >
-                    <div className="flex items-center gap-4 mb-5">
-                        <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-white/[0.05] group-hover:border-[#9A6BFF]/30 group-hover:bg-[#9A6BFF]/5 transition-colors flex items-center justify-center text-[#9A6BFF]">
-                            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Page Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h2 className="text-xl font-semibold text-gray-100 tracking-tight mb-1">Integrations</h2>
+                    <p className="text-gray-500 text-sm">Connect Formless with your favorite tools</p>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {/* Google Forms */}
+                <div className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-5 hover:border-gray-700/80 transition-colors flex flex-col shadow-sm group">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-[#1C1C22] border border-gray-800 rounded-md text-gray-400 group-hover:text-[#9A6BFF] transition-colors">
+                            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 <path d="M16 13H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -42,44 +44,67 @@ export function IntegrationsView() {
                             </svg>
                         </div>
                         <div>
-                            <h3 className="text-xl font-medium tracking-tight text-white group-hover:text-white transition-colors">Google Forms</h3>
-                            <p className="text-[11px] text-gray-500 font-semibold tracking-wider uppercase mt-0.5">Native</p>
+                            <h3 className="text-sm font-medium text-white">Google Forms</h3>
+                            <p className="text-[10px] text-gray-600 uppercase tracking-wider font-semibold mt-0.5">Native</p>
                         </div>
                     </div>
 
-                    <p className="text-gray-400 text-sm mb-8 flex-grow leading-relaxed">
+                    <p className="text-xs text-gray-500 mb-5 flex-grow leading-relaxed">
                         Sync your Google Forms submissions directly to Formless in real-time. Map fields seamlessly.
                     </p>
 
                     <button
                         onClick={handleConnectGoogleForms}
-                        className="w-full py-2.5 px-4 bg-white/[0.03] hover:bg-white/[0.08] text-white rounded-xl transition-all font-medium text-sm border border-white/[0.05]"
+                        className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-[#111116] hover:bg-[#1C1C22] text-gray-300 hover:text-white text-xs font-medium rounded border border-gray-800 transition-colors group/btn"
                     >
                         Configure
+                        <ArrowRight className="w-3 h-3 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
                     </button>
-                </motion.div>
+                </div>
 
-                {/* Webhooks Card (Coming Soon) */}
-                <motion.div
-                    className="bg-[#0B0B0F]/40 border border-gray-800/40 rounded-2xl p-6 flex flex-col h-full relative overflow-hidden group"
-                >
-                    <div className="absolute top-4 right-4 bg-white/[0.03] border border-white/[0.05] text-[10px] uppercase tracking-wider font-semibold text-gray-400 px-2.5 py-1 rounded-full">Coming Soon</div>
-                    <div className="flex items-center gap-4 mb-5 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-500">
-                        <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-center text-blue-400">
-                            <RefreshCw className="w-5 h-5" />
+                {/* Webhooks — Coming Soon */}
+                <div className="bg-[#0B0B0F]/60 border border-gray-800/40 rounded-md p-5 flex flex-col shadow-sm relative overflow-hidden">
+                    <div className="absolute top-3 right-3 bg-[#1C1C22] border border-gray-800 text-[10px] uppercase tracking-wider font-semibold text-gray-500 px-2 py-0.5 rounded-full">
+                        Soon
+                    </div>
+                    <div className="flex items-center gap-3 mb-4 opacity-40">
+                        <div className="p-2 bg-[#1C1C22] border border-gray-800 rounded-md text-blue-400">
+                            <RefreshCw className="w-4 h-4" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-medium tracking-tight text-white">Webhooks</h3>
-                            <p className="text-[11px] text-gray-500 font-semibold tracking-wider uppercase mt-0.5">Custom</p>
+                            <h3 className="text-sm font-medium text-white">Webhooks</h3>
+                            <p className="text-[10px] text-gray-600 uppercase tracking-wider font-semibold mt-0.5">Custom</p>
                         </div>
                     </div>
-                    <p className="text-gray-500 text-sm mb-8 flex-grow leading-relaxed opacity-60">
-                        Send form data to any external API endpoint automatically when a submission is received.
+                    <p className="text-xs text-gray-600 mb-5 flex-grow leading-relaxed">
+                        Send form data to any external API endpoint automatically on submission.
                     </p>
-                    <button disabled className="w-full py-2.5 px-4 bg-transparent text-gray-600 rounded-xl font-medium text-sm border border-gray-800/50 cursor-not-allowed">
+                    <button disabled className="w-full py-2 px-3 bg-transparent text-gray-700 text-xs font-medium rounded border border-gray-800/50 cursor-not-allowed">
                         Not Available
                     </button>
-                </motion.div>
+                </div>
+
+                {/* Zapier — Coming Soon */}
+                <div className="bg-[#0B0B0F]/60 border border-gray-800/40 rounded-md p-5 flex flex-col shadow-sm relative overflow-hidden">
+                    <div className="absolute top-3 right-3 bg-[#1C1C22] border border-gray-800 text-[10px] uppercase tracking-wider font-semibold text-gray-500 px-2 py-0.5 rounded-full">
+                        Soon
+                    </div>
+                    <div className="flex items-center gap-3 mb-4 opacity-40">
+                        <div className="p-2 bg-[#1C1C22] border border-gray-800 rounded-md text-orange-400">
+                            <Blocks className="w-4 h-4" />
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-medium text-white">Zapier</h3>
+                            <p className="text-[10px] text-gray-600 uppercase tracking-wider font-semibold mt-0.5">Automation</p>
+                        </div>
+                    </div>
+                    <p className="text-xs text-gray-600 mb-5 flex-grow leading-relaxed">
+                        Automate workflows by connecting Formless to thousands of apps through Zapier.
+                    </p>
+                    <button disabled className="w-full py-2 px-3 bg-transparent text-gray-700 text-xs font-medium rounded border border-gray-800/50 cursor-not-allowed">
+                        Not Available
+                    </button>
+                </div>
             </div>
         </div>
     );

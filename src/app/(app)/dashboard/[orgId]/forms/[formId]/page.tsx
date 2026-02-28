@@ -110,18 +110,18 @@ export default function OrgFormViewerPage() {
                 />
 
                 {/* Header */}
-                <div className="flex items-start justify-between mb-8 gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                     <div>
-                        <h1 className="text-2xl font-bold text-white mb-1">{form.title}</h1>
-                        {form.description && (
-                            <p className="text-gray-400 text-sm">{form.description}</p>
-                        )}
-                        <div className="flex items-center gap-4 mt-3 text-xs text-gray-600">
+                        <h2 className="text-xl font-semibold text-gray-100 tracking-tight mb-1">{form.title}</h2>
+                        <div className="flex items-center gap-3 text-xs text-gray-500">
+                            {form.description && <span>{form.description}</span>}
+                            {form.description && <span className="text-gray-700">·</span>}
                             <span>{questionFields.length} question{questionFields.length !== 1 ? 's' : ''}</span>
                             {form.metadata?.estimatedCompletionCompletionMinutes && (
-                                <span>~{form.metadata.estimatedCompletionCompletionMinutes} min</span>
+                                <><span className="text-gray-700">·</span><span>~{form.metadata.estimatedCompletionCompletionMinutes} min</span></>
                             )}
-                            <span className={`px-2 py-0.5 rounded-full border ${form.status === 'ACTIVE' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-gray-800 text-gray-500 border-gray-700'}`}>
+                            <span className={`px-2 py-0.5 rounded-full border text-[10px] font-semibold uppercase tracking-wider ${form.status === 'ACTIVE' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-gray-800 text-gray-500 border-gray-700'
+                                }`}>
                                 {form.status}
                             </span>
                         </div>
@@ -131,16 +131,16 @@ export default function OrgFormViewerPage() {
                             href={form.publicUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-gray-800 text-gray-300 text-sm px-4 py-2 rounded-lg transition-colors shrink-0"
+                            className="flex items-center gap-2 bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 text-gray-300 hover:text-white text-xs font-medium px-4 py-2 rounded-md transition-colors shrink-0"
                         >
-                            <ExternalLink className="w-4 h-4" />
+                            <ExternalLink className="w-3.5 h-3.5" />
                             Open Form
                         </a>
                     )}
                 </div>
 
                 {/* Tabs */}
-                <div className="flex space-x-1 border-b border-gray-800 mb-6">
+                <div className="flex space-x-1 border-b border-gray-800/80 mb-6">
                     {[
                         { id: 'fields', label: `Fields (${fields.length})` },
                         { id: 'responses', label: `Responses (${form.submissionCount ?? 0})` },
@@ -149,7 +149,7 @@ export default function OrgFormViewerPage() {
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
-                            className={`px-4 py-2.5 text-sm font-medium relative transition-colors ${activeTab === tab.id ? 'text-[#9A6BFF]' : 'text-gray-400 hover:text-gray-200'}`}
+                            className={`px-4 py-2.5 text-xs font-medium relative transition-colors ${activeTab === tab.id ? 'text-[#9A6BFF]' : 'text-gray-500 hover:text-gray-300'}`}
                         >
                             {tab.label}
                             {activeTab === tab.id && (
@@ -161,11 +161,13 @@ export default function OrgFormViewerPage() {
 
                 {/* Fields Tab */}
                 {activeTab === 'fields' && (
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                         {fields.length === 0 ? (
-                            <div className="border-2 border-dashed border-gray-800 rounded-xl p-10 text-center">
-                                <FileText className="w-8 h-8 text-gray-700 mx-auto mb-2" />
-                                <p className="text-gray-500 text-sm">No fields found for this form</p>
+                            <div className="border border-dashed border-gray-800 rounded-md p-10 text-center">
+                                <div className="w-8 h-8 bg-[#1C1C22] border border-gray-800 rounded-md flex items-center justify-center mx-auto mb-3">
+                                    <FileText className="w-4 h-4 text-gray-600" />
+                                </div>
+                                <p className="text-gray-500 text-xs">No fields found for this form</p>
                             </div>
                         ) : (
                             fields.map((field: any, i: number) => {
@@ -174,27 +176,27 @@ export default function OrgFormViewerPage() {
                                 return (
                                     <div
                                         key={field.id || i}
-                                        className={`bg-[#0f0f14] border border-gray-800 rounded-xl p-4 ${isSection ? 'opacity-70' : ''}`}
+                                        className={`bg-[#0B0B0F] border border-gray-800/80 rounded-md p-3 ${isSection ? 'opacity-60' : ''}`}
                                     >
                                         <div className="flex items-start gap-3">
-                                            <span className="text-xs text-gray-600 mt-0.5 w-5 shrink-0">{i + 1}.</span>
+                                            <span className="text-[10px] text-gray-600 mt-0.5 w-4 shrink-0 font-mono">{i + 1}.</span>
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2 flex-wrap mb-1">
-                                                    <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${style}`}>
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded border font-medium uppercase tracking-wide ${style}`}>
                                                         {field.type.replace(/_/g, ' ')}
                                                     </span>
                                                     {field.required && (
-                                                        <span className="text-xs text-red-400">Required</span>
+                                                        <span className="text-[10px] text-red-400 font-medium">Required</span>
                                                     )}
                                                 </div>
-                                                <p className="text-white text-sm font-medium mt-1">{field.label}</p>
+                                                <p className="text-white text-xs font-medium mt-1">{field.label}</p>
                                                 {field.description && (
-                                                    <p className="text-gray-500 text-xs mt-0.5">{field.description}</p>
+                                                    <p className="text-gray-500 text-[10px] mt-0.5">{field.description}</p>
                                                 )}
                                                 {field.options && field.options.length > 0 && (
-                                                    <div className="flex flex-wrap gap-1.5 mt-2">
+                                                    <div className="flex flex-wrap gap-1 mt-2">
                                                         {field.options.map((opt: any, j: number) => (
-                                                            <span key={j} className="text-xs bg-gray-900 border border-gray-800 text-gray-400 px-2 py-0.5 rounded">
+                                                            <span key={j} className="text-[10px] bg-[#111116] border border-gray-800 text-gray-400 px-1.5 py-0.5 rounded">
                                                                 {opt.label}
                                                             </span>
                                                         ))}
@@ -216,7 +218,7 @@ export default function OrgFormViewerPage() {
 
                 {/* Details Tab */}
                 {activeTab === 'details' && (
-                    <div className="bg-[#0f0f14] border border-gray-800 rounded-xl divide-y divide-gray-800">
+                    <div className="bg-[#0B0B0F] border border-gray-800/80 rounded-md divide-y divide-gray-800/80 shadow-sm">
                         {[
                             { label: 'Source', value: form.sourceUrl },
                             { label: 'Questions', value: form.metadata?.questionCount },
@@ -225,9 +227,9 @@ export default function OrgFormViewerPage() {
                             { label: 'Total Conversations', value: form.conversationCount ?? 0 },
                             { label: 'Total Submissions', value: form.submissionCount ?? 0 },
                         ].map(({ label, value }) => (
-                            <div key={label} className="flex items-center justify-between px-5 py-3">
-                                <span className="text-sm text-gray-500">{label}</span>
-                                <span className="text-sm text-white text-right max-w-[60%] truncate">{String(value ?? '—')}</span>
+                            <div key={label} className="flex items-center justify-between px-4 py-3">
+                                <span className="text-xs text-gray-500">{label}</span>
+                                <span className="text-xs text-white text-right max-w-[60%] truncate font-mono">{String(value ?? '—')}</span>
                             </div>
                         ))}
                     </div>
