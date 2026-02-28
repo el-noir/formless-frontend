@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { MessageSquare, Calendar, AlertCircle, ExternalLink } from "lucide-react";
+import { MessageSquare, Calendar, AlertCircle, ExternalLink, Download, Check } from "lucide-react";
+
+interface Answer {
+    label: string;
+    value: any;
+    entryId?: string;
+}
 
 interface Response {
     id: string;
     sessionId: string;
     status: string;
-    answers: any[];
+    answers: Answer[];
     submittedAt: string;
     error?: string;
     confirmationUrl?: string;
@@ -15,9 +21,60 @@ interface Response {
 interface ResponsesListProps {
     responses: Response[];
     loading: boolean;
+    formTitle?: string;
 }
 
-export const ResponsesList: React.FC<ResponsesListProps> = ({ responses, loading }) => {
+// Build and trigger a CSV download from responses
+function exportToCSV(responses: Response[], formTitle: string) {
+    if (responses.length === 0) return;
+
+    // Collect all unique answer labels as column headers
+    const labelSet = new Set<string>();
+    responses.forEach((r) => r.answers?.forEach((a) => labelSet.add(a.label)));
+    const labels = Array.from(labelSet);
+
+    const headers = ["Session ID", "Status", "Submitted At", ...labels];
+
+    const escapeCsvCell = (value: any): string => {
+        const str = Array.isArray(value) ? value.join("; ") : String(value ?? "");
+        // Wrap in quotes if it contains comma, newline, or quote
+        if (str.includes(",") || str.includes("\n") || str.includes('"')) {
+            return `"${str.replace(/"/g, '""')}"`;
+        }
+        return str;
+    };
+
+    const rows = responses.map((r) => {
+        const answerMap: Record<string, any> = {};
+        r.answers?.forEach((a) => { answerMap[a.label] = a.value; });
+
+        return [
+            r.sessionId,
+            r.status,
+            r.submittedAt ? new Date(r.submittedAt).toISOString() : "",
+            ...labels.map((label) => answerMap[label] ?? ""),
+        ].map(escapeCsvCell).join(",");
+    });
+
+    const csv = [headers.map(escapeCsvCell).join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${formTitle.replace(/[^a-zA-Z0-9-_ ]/g, "").trim() || "responses"}_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+export const ResponsesList: React.FC<ResponsesListProps> = ({ responses, loading, formTitle = "responses" }) => {
+    const [exported, setExported] = useState(false);
+
+    const handleExport = () => {
+        exportToCSV(responses, formTitle);
+        setExported(true);
+        setTimeout(() => setExported(false), 2500);
+    };
+
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500">
@@ -39,8 +96,32 @@ export const ResponsesList: React.FC<ResponsesListProps> = ({ responses, loading
         );
     }
 
+    const successCount = responses.filter((r) => r.status === "SUCCESS").length;
+
     return (
         <div className="space-y-4">
+            {/* Toolbar */}
+            <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-500">
+                    <span className="text-white font-medium">{responses.length}</span> total &nbsp;·&nbsp;
+                    <span className="text-green-400 font-medium">{successCount}</span> successful
+                </p>
+                <button
+                    onClick={handleExport}
+                    className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md border transition-all ${exported
+                            ? "bg-green-500/10 border-green-500/20 text-green-400"
+                            : "bg-[#111116] border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white"
+                        }`}
+                >
+                    {exported ? (
+                        <><Check className="w-3.5 h-3.5" /> Downloaded</>
+                    ) : (
+                        <><Download className="w-3.5 h-3.5" /> Export CSV</>
+                    )}
+                </button>
+            </div>
+
+            {/* Response cards */}
             {responses.map((resp) => (
                 <div
                     key={resp.id}
@@ -48,26 +129,28 @@ export const ResponsesList: React.FC<ResponsesListProps> = ({ responses, loading
                 >
                     <div className="p-4 border-b border-gray-800/50 flex items-center justify-between bg-white/[0.02]">
                         <div className="flex items-center gap-3">
-                            <div className={`p-1.5 rounded-lg ${resp.status === 'SUCCESS' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                            <div className={`p-1.5 rounded-lg ${resp.status === "SUCCESS" ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}>
                                 <Calendar className="w-4 h-4" />
                             </div>
                             <div>
                                 <p className="text-xs text-gray-500">
-                                    {formatDistanceToNow(new Date(resp.submittedAt), { addSuffix: true })}
+                                    {resp.submittedAt
+                                        ? formatDistanceToNow(new Date(resp.submittedAt), { addSuffix: true })
+                                        : "Unknown time"}
                                 </p>
                                 <p className="text-[10px] text-gray-600 font-mono uppercase tracking-wider">
-                                    Session: {resp.sessionId.split('-')[0]}...
+                                    Session: {resp.sessionId.split("-")[0]}...
                                 </p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${resp.status === 'SUCCESS'
-                                    ? 'bg-green-500/10 text-green-500 border border-green-500/20'
-                                    : 'bg-red-500/10 text-red-500 border border-red-500/20'
-                                }`}>
-                                {resp.status}
-                            </span>
-                        </div>
+                        <span
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${resp.status === "SUCCESS"
+                                    ? "bg-green-500/10 text-green-500 border border-green-500/20"
+                                    : "bg-red-500/10 text-red-500 border border-red-500/20"
+                                }`}
+                        >
+                            {resp.status}
+                        </span>
                     </div>
 
                     <div className="p-4 space-y-3">
@@ -79,7 +162,7 @@ export const ResponsesList: React.FC<ResponsesListProps> = ({ responses, loading
                                             {ans.label}
                                         </p>
                                         <p className="text-sm text-gray-200 bg-black/20 p-2 rounded-lg border border-gray-800/50">
-                                            {Array.isArray(ans.value) ? ans.value.join(', ') : ans.value || '—'}
+                                            {Array.isArray(ans.value) ? ans.value.join(", ") : ans.value || "—"}
                                         </p>
                                     </div>
                                 ))}

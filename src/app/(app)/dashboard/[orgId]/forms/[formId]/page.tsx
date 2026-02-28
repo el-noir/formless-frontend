@@ -223,7 +223,7 @@ export default function OrgFormViewerPage() {
 
                 {/* Responses Tab */}
                 {activeTab === 'responses' && (
-                    <ResponsesList responses={responses} loading={responsesLoading} />
+                    <ResponsesList responses={responses} loading={responsesLoading} formTitle={form?.title} />
                 )}
 
                 {/* Details Tab */}
