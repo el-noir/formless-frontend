@@ -13,6 +13,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
+import { logoutUser } from '@/lib/api/auth';
 
 const navItems = [
   { name: 'Features', href: '#features' },
@@ -32,11 +34,15 @@ const authNavItems = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  // Import useAuth hook
   const { isAuthenticated, isLoading } = useAuth();
-  const { user, clearAuth } = require("@/stores/authStore").useAuthStore();
-  const handleLogout = () => {
-    clearAuth();
+  const { user } = useAuthStore();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch {
+      // logoutUser already clears local state in its finally block
+    }
     window.location.href = "/";
   };
 

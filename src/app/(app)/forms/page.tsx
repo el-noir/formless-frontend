@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Background } from "@/components/Background";
-import { Loader2, Plus, FileText, Trash2, ExternalLink, Building2 } from "lucide-react";
+import { Loader2, Plus, FileText, Trash2, Building2 } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
 import { useOrgStore } from "@/stores/orgStore";

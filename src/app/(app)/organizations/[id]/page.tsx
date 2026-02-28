@@ -6,14 +6,14 @@ import { Background } from "@/components/Background";
 import {
     Loader2, ArrowLeft, Building2, FileText, Users, Settings,
     Plus, Trash2, ExternalLink, Crown, Shield, User as UserIcon,
-    UserPlus, ChevronDown, Check
+    UserPlus, Check
 } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
 import { useOrgStore } from "@/stores/orgStore";
 import {
     getOrganization, getOrgForms, getOrgMembers,
-    inviteMember, removeMember, changeMemberRole, deleteOrgForm
+    inviteMember, removeMember, deleteOrgForm
 } from "@/lib/api/organizations";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";

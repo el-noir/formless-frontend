@@ -3,7 +3,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowRight, Send, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Navbar } from '@/components/Navbar';
 import { Background } from '@/components/Background';
 import { startChat, replyChat } from '@/lib/api/chat';
 
@@ -93,7 +92,6 @@ function StartFreePage() {
   return (
     <div className="min-h-screen bg-[#0B0B0F] relative flex flex-col">
       <Background />
-      <Navbar />
 
       <div className="flex-1 max-w-4xl mx-auto w-full flex flex-col px-4 py-8 relative z-10">
 

@@ -1,5 +1,3 @@
-import { motion } from 'motion/react';
-
 export function Footer() {
   return (
     <footer className="py-20 border-t border-white/5 bg-[#0B0B0F] relative z-10">

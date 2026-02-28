@@ -48,7 +48,6 @@ export default function GoogleFormsHub() {
         try {
             setLoading(true);
             setError(null);
-            console.log("Fetching auth URL from:", getIntegrationsGoogleAuthUrl());
 
             const response = await fetch(getIntegrationsGoogleAuthUrl(), {
                 method: 'GET',
@@ -57,9 +56,7 @@ export default function GoogleFormsHub() {
                 }
             });
 
-            console.log("Auth URL response status:", response.status);
             const data = await response.json();
-            console.log("Auth URL response data:", data);
 
             if (data.url) {
                 window.location.href = data.url;
@@ -120,7 +117,7 @@ export default function GoogleFormsHub() {
                         </div>
                         <h3 className="text-xl font-bold text-white mb-2">No Forms Found</h3>
                         <p className="text-gray-400 mb-6 max-w-md mx-auto">
-                            You haven't connected your Google Account or you don't have any forms.
+                            You haven&apos;t connected your Google Account or you don&apos;t have any forms.
                             Connect your account to get started.
                         </p>
                         <button

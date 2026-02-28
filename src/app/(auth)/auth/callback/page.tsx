@@ -3,6 +3,7 @@
 import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
+import { API_BASE_URL } from "@/lib/api/config";
 import { Loader2 } from "lucide-react";
 import { Background } from "@/components/Background";
 
@@ -23,7 +24,7 @@ function AuthCallbackContent() {
     // Fetch user data with the access token
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+        const response = await fetch(`${API_BASE_URL}/auth/me`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -40,8 +41,7 @@ function AuthCallbackContent() {
 
         // Redirect to dashboard
         router.push("/dashboard");
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+      } catch {
         router.push("/sign-in?error=auth_failed");
       }
     };

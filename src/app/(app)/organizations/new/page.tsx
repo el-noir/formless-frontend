@@ -88,7 +88,7 @@ export default function NewOrganizationPage() {
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold text-white">Create Organization</h1>
-                            <p className="text-gray-400 text-sm mt-1">You'll become the owner and can invite teammates</p>
+                            <p className="text-gray-400 text-sm mt-1">You&apos;ll become the owner and can invite teammates</p>
                         </div>
                     </div>
 

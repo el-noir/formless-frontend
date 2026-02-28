@@ -1,4 +1,3 @@
-import { motion } from 'motion/react';
 import React, { useRef } from 'react';
 
 export function TiltCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {

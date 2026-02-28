@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { Background } from "@/components/Background";
-import { Settings, RefreshCw, Mail } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 
 export default function IntegrationsPage() {
     const router = useRouter();

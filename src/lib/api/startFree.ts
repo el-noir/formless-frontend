@@ -10,7 +10,6 @@ export async function checkFree(url: string) {
             },
         });
 
-        console.log("API Response:", response.data); // Log the entire response for debugging
         return response.data;
     } catch (error) {
         throw error;

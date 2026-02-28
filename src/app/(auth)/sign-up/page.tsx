@@ -9,7 +9,6 @@ import { motion } from "motion/react";
 import { ChatMockup } from "@/components/ChatMockup";
 import { Background } from "@/components/Background";
 import { Mail, Lock, User, ArrowRight, Loader2, Building, Globe, MapPin, Phone } from "lucide-react";
-import { Navbar } from "@/components/Navbar";
 import { useAuth } from "@/hooks/useAuth";
 
 function SignUp() {
@@ -33,7 +32,6 @@ function SignUp() {
 
     try {
       const response = await registerUser(data);
-      console.log("Registration successful:", response);
 
       // Redirect to dashboard or home page after successful registration
       router.push("/dashboard");
@@ -61,10 +59,8 @@ function SignUp() {
   return (
     <div className="min-h-screen bg-[#0B0B0F] relative">
       <Background />
-      {/* Navbar */}
-      <Navbar />
 
-      <div className="flex min-h-[calc(100vh-80px)] pt-20">
+      <div className="flex min-h-[calc(100vh-80px)]">
         {/* Left Side - Content */}
         <div className="hidden lg:flex lg:w-1/2 items-center justify-center p-12 relative overflow-hidden">
           <motion.div

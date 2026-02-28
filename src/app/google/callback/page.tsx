@@ -10,17 +10,20 @@ const STORAGE_KEY = 'google_access_token';
 
 export default function GoogleCallbackPage() {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
+  
+  // Check for code immediately — if missing, start with error
+  const code = typeof window !== 'undefined'
+    ? new URLSearchParams(window.location.search).get('code')
+    : null;
+
+  const [error, setError] = useState<string | null>(
+    code ? null : 'No authorization code found in the URL.'
+  );
 
   useEffect(() => {
-    let mounted = true;
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
+    if (!code) return;
 
-    if (!code) {
-      if (mounted) setError('No authorization code found in the URL.');
-      return;
-    }
+    let mounted = true;
 
     (async () => {
       try {
@@ -38,14 +41,14 @@ export default function GoogleCallbackPage() {
 
         // Redirect to dashboard
         router.replace('/dashboard');
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!mounted) return;
-        console.error('Google callback error:', err);
-        setError(err?.message || 'An error occurred during authentication.');
+        const message = err instanceof Error ? err.message : 'An error occurred during authentication.';
+        setError(message);
       }
     })();
     return () => { mounted = false; };
-  }, [router]);
+  }, [router, code]);
 
   return (
     <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center relative">

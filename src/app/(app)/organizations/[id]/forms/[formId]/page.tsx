@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Background } from "@/components/Background";
 import {
-    Loader2, ArrowLeft, ExternalLink, FileText,
+    Loader2, ExternalLink, FileText,
     ChevronRight, AlertCircle
 } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";

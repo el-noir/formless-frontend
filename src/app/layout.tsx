@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
@@ -87,10 +86,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} scroll-smooth`}>
       <body className={`${inter.className} antialiased`}>
         <div className="relative min-h-screen bg-[#0B0B0F] text-white selection:bg-[#9A6BFF] selection:text-white overflow-x-hidden">
-          <Navbar />
-          <div className="pt-20">
-            {children}
-          </div>
+          {children}
           <Toaster />
         </div>
       </body>

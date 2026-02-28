@@ -68,7 +68,7 @@ export function Testimonials() {
                 </div>
 
                 <p className="text-2xl md:text-4xl font-medium text-white mb-12 leading-tight max-w-4xl tracking-tight">
-                  "{testimonials[current].quote}"
+                  &ldquo;{testimonials[current].quote}&rdquo;
                 </p>
 
                 <div className="flex flex-col items-center gap-4">

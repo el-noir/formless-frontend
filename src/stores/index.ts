@@ -6,8 +6,4 @@
  */
 
 export { useAuthStore } from './authStore';
-
-// Future stores can be added here:
-// export { useFormStore } from './formStore';
-// export { useUIStore } from './uiStore';
-// export { useUserPreferencesStore } from './userPreferencesStore';
+export { useOrgStore } from './orgStore';

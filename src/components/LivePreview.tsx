@@ -66,7 +66,7 @@ export function LivePreview() {
                <div className="space-y-1 flex-1">
                  <div className="text-xs font-medium text-gray-500 uppercase tracking-wider">User Input</div>
                  <div className="text-xl text-white font-medium leading-relaxed min-h-[60px]">
-                   "{typedText}<span className="animate-pulse">|</span>"
+                   &ldquo;{typedText}<span className="animate-pulse">|</span>&rdquo;
                  </div>
                </div>
              </div>

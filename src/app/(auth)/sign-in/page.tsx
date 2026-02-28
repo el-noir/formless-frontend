@@ -9,7 +9,6 @@ import { motion } from "motion/react";
 import { ChatMockup } from "@/components/ChatMockup";
 import { Background } from "@/components/Background";
 import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
-import { Navbar } from "@/components/Navbar";
 import { useAuth } from "@/hooks/useAuth";
 
 function SignInContent() {
@@ -42,7 +41,6 @@ function SignInContent() {
 
     try {
       const response = await loginUser(data);
-      console.log("Login successful:", response);
 
       // Redirect to dashboard after successful login
       router.push("/dashboard");
@@ -70,10 +68,8 @@ function SignInContent() {
   return (
     <div className="min-h-screen bg-[#0B0B0F] relative">
       <Background />
-      {/* Navbar */}
-      <Navbar />
 
-      <div className="flex min-h-[calc(100vh-80px)] pt-20">
+      <div className="flex min-h-[calc(100vh-80px)]">
         {/* Left Side - Content */}
         <div className="hidden lg:flex lg:w-1/2 items-center justify-center p-12 relative overflow-hidden">
           <motion.div
@@ -292,7 +288,7 @@ function SignInContent() {
               {/* Footer */}
               <div className="mt-8 text-center">
                 <p className="text-gray-400 text-sm">
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <a
                     href="/sign-up"
                     className="text-[#6E8BFF] hover:text-[#9A6BFF] font-medium transition-colors"
