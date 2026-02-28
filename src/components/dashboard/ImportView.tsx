@@ -62,20 +62,20 @@ export function ImportView({ currentOrgId }: { currentOrgId: string }) {
         <div className="w-full h-full flex flex-col max-w-4xl">
             {/* Header */}
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-white mb-1">Import a Google Form</h1>
-                <p className="text-gray-400 text-sm">Select a form from your Google account to import into this workspace</p>
+                <h1 className="text-3xl font-semibold tracking-tight text-white mb-2">Import a Google Form</h1>
+                <p className="text-gray-500 text-sm font-medium mb-8">Select a form from your Google account to import into this workspace</p>
             </div>
 
             {/* Search */}
             {forms.length > 0 && (
-                <div className="relative mb-6">
+                <div className="relative mb-8">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search forms..."
-                        className="w-full bg-[#111116] border border-gray-800 rounded-xl pl-11 pr-4 py-3 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-[#9A6BFF] transition-colors shadow-sm"
+                        className="w-full bg-[#0B0B0F] border border-gray-800/60 rounded-xl pl-11 pr-4 py-3 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-white/20 transition-colors shadow-sm"
                     />
                 </div>
             )}
@@ -105,7 +105,7 @@ export function ImportView({ currentOrgId }: { currentOrgId: string }) {
                     </p>
                 </div>
             ) : (
-                <div className="space-y-3">
+                <div className="flex flex-col border-y border-gray-800/40">
                     {filtered.map((form) => {
                         const formId = form.formId || form.id;
                         const state = importing[formId] || 'idle';
@@ -114,15 +114,15 @@ export function ImportView({ currentOrgId }: { currentOrgId: string }) {
                         return (
                             <div
                                 key={formId}
-                                className={`bg-[#111116] border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors shadow-sm ${state === 'done' ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-gray-800 hover:border-gray-700'}`}
+                                className={`group bg-transparent border-b border-gray-800/40 last:border-0 px-2 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors ${state === 'done' ? 'bg-emerald-500/[0.02]' : 'hover:bg-white/[0.02]'}`}
                             >
                                 <div className="flex items-center gap-4 min-w-0">
-                                    <div className="w-10 h-10 rounded-lg bg-[#1C1C22] border border-gray-800 flex items-center justify-center shrink-0">
-                                        <FileText className="w-5 h-5 text-gray-400" />
+                                    <div className="w-10 h-10 rounded-xl bg-white/[0.02] border border-white/[0.05] group-hover:border-white/[0.1] transition-colors flex items-center justify-center shrink-0">
+                                        <FileText className="w-5 h-5 text-gray-400 group-hover:text-gray-300 transition-colors" />
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="text-gray-200 text-sm font-medium truncate">{form.title || form.name}</p>
-                                        <p className="text-gray-500 font-mono text-xs truncate mt-0.5">{formId}</p>
+                                        <p className="text-gray-300 group-hover:text-white transition-colors text-sm font-medium tracking-tight truncate">{form.title || form.name}</p>
+                                        <p className="text-gray-600 font-mono text-[11px] truncate mt-0.5">{formId}</p>
                                         {err && (
                                             <p className="text-red-400 text-xs mt-1">{err}</p>
                                         )}
@@ -145,13 +145,13 @@ export function ImportView({ currentOrgId }: { currentOrgId: string }) {
                                     <button
                                         onClick={() => handleImport(form)}
                                         disabled={state === 'loading' || state === 'done'}
-                                        className={`flex items-center justify-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg transition-colors w-[110px] ${state === 'done'
+                                        className={`flex items-center justify-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg transition-all w-[110px] ${state === 'done'
                                             ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 cursor-default'
                                             : state === 'loading'
-                                                ? 'bg-[#1C1C22] text-gray-400 border border-gray-800 cursor-wait'
+                                                ? 'bg-transparent text-gray-500 border border-gray-800/50 cursor-wait'
                                                 : state === 'error'
                                                     ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20'
-                                                    : 'bg-[#9A6BFF] hover:bg-[#8555e8] text-white shadow-sm'
+                                                    : 'bg-white/[0.03] text-gray-400 hover:text-white border border-white/[0.05] hover:border-[#9A6BFF]/40 hover:bg-[#9A6BFF]/10 opacity-70 group-hover:opacity-100'
                                             }`}
                                     >
                                         {state === 'loading' ? (
