@@ -39,7 +39,7 @@ export function ChatInput({
                         <button
                             onClick={() => handleSend(undefined, 'submit')}
                             disabled={isSubmitting || isTyping}
-                            className="w-full bg-[#6E8BFF] hover:bg-[#5a72e0] text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 group animate-in fade-in slide-in-from-bottom-2 duration-300"
+                            className="w-full bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 group animate-in fade-in slide-in-from-bottom-2 duration-300"
                         >
                             {isSubmitting ? (
                                 <Loader2 className="w-6 h-6 animate-spin" />
@@ -60,7 +60,7 @@ export function ChatInput({
                 ) : (
                     <form
                         onSubmit={onSend}
-                        className="relative flex items-end gap-2 bg-[#1A1A24] border border-gray-700 rounded-2xl focus-within:border-[#6E8BFF] focus-within:ring-1 focus-within:ring-[#6E8BFF] transition-all p-1.5 pl-4"
+                        className="relative flex items-end gap-2 bg-[#1A1A24] border border-gray-700 rounded-2xl focus-within:border-[#9A6BFF] focus-within:ring-1 focus-within:ring-[#9A6BFF] transition-all p-1.5 pl-4"
                     >
                         <textarea
                             ref={textareaRef}
@@ -80,7 +80,7 @@ export function ChatInput({
                         <button
                             type="submit"
                             disabled={!input.trim() || isSubmitting || isTyping}
-                            className="shrink-0 w-11 h-11 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white rounded-xl flex items-center justify-center transition-colors disabled:opacity-50 disabled:hover:bg-[#6E8BFF]"
+                            className="shrink-0 w-11 h-11 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white rounded-xl flex items-center justify-center transition-colors disabled:opacity-50 disabled:hover:bg-[#9A6BFF]"
                         >
                             {isSubmitting ? (
                                 <Loader2 className="w-5 h-5 animate-spin" />

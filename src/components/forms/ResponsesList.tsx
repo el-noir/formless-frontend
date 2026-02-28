@@ -21,7 +21,7 @@ export const ResponsesList: React.FC<ResponsesListProps> = ({ responses, loading
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-                <div className="w-8 h-8 border-2 border-t-[#6E8BFF] border-gray-800 rounded-full animate-spin mb-4" />
+                <div className="w-8 h-8 border-2 border-t-[#9A6BFF] border-gray-800 rounded-full animate-spin mb-4" />
                 <p className="text-sm">Loading responses...</p>
             </div>
         );
@@ -100,7 +100,7 @@ export const ResponsesList: React.FC<ResponsesListProps> = ({ responses, loading
                                 href={resp.confirmationUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex items-center gap-1.5 text-xs text-[#6E8BFF] hover:underline mt-2"
+                                className="inline-flex items-center gap-1.5 text-xs text-[#9A6BFF] hover:underline mt-2"
                             >
                                 <ExternalLink className="w-3 h-3" />
                                 View Confirmation

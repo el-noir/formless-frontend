@@ -41,7 +41,7 @@ export function Testimonials() {
   }, [isPaused]);
 
   return (
-    <section id="testimonials" className="py-24 md:py-32 relative overflow-hidden bg-[#0B0B0F] border-t border-gray-800" aria-labelledby="testimonials-title">
+    <section id="testimonials" className="py-24 md:py-32 relative overflow-hidden bg-brand-dark border-t border-gray-800" aria-labelledby="testimonials-title">
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-20">
@@ -60,8 +60,8 @@ export function Testimonials() {
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="absolute inset-0 flex flex-col items-center justify-center text-center"
               >
-                <div className="w-12 h-12 rounded-md bg-[#111116] border border-gray-800 flex items-center justify-center mb-10 shadow-sm">
-                  <Quote className="w-6 h-6 text-[#9A6BFF]" />
+                <div className="w-12 h-12 rounded-md bg-brand-surface border border-gray-800 flex items-center justify-center mb-10 shadow-sm">
+                  <Quote className="w-6 h-6 text-brand-purple" />
                 </div>
 
                 <p className="text-2xl md:text-4xl font-medium text-white mb-12 leading-tight max-w-4xl tracking-tight">
@@ -80,7 +80,7 @@ export function Testimonials() {
                   </div>
                   <div className="text-center">
                     <div className="text-white text-lg font-semibold mb-1">{testimonials[current].author}</div>
-                    <div className="text-sm text-gray-400 font-medium tracking-wide uppercase">{testimonials[current].role} • <span className="text-[#9A6BFF]">{testimonials[current].company}</span></div>
+                    <div className="text-sm text-gray-400 font-medium tracking-wide uppercase">{testimonials[current].role} • <span className="text-brand-purple">{testimonials[current].company}</span></div>
                   </div>
                 </div>
               </motion.div>
@@ -90,7 +90,7 @@ export function Testimonials() {
           <div className="flex justify-center items-center gap-6 mt-12">
             <button
               onClick={() => setIsPaused(!isPaused)}
-              className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]"
+              className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple"
               aria-label={isPaused ? 'Resume testimonial rotation' : 'Pause testimonial rotation'}
             >
               {isPaused ? <Play className="w-4 h-4 text-white" /> : <Pause className="w-4 h-4 text-white" />}
@@ -100,7 +100,7 @@ export function Testimonials() {
                 <button
                   key={index}
                   onClick={() => setCurrent(index)}
-                  className={`h-1.5 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] ${index === current ? 'w-12 bg-white' : 'w-2 bg-white/20 hover:bg-white/40'
+                  className={`h-1.5 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-brand-purple ${index === current ? 'w-12 bg-white' : 'w-2 bg-white/20 hover:bg-white/40'
                     }`}
                   aria-label={`Go to testimonial ${index + 1} of ${testimonials.length}`}
                   aria-current={index === current ? 'true' : 'false'}

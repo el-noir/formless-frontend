@@ -39,6 +39,15 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+
+  /* FormAI Custom Theme Colors */
+  --color-brand-purple: #9A6BFF;
+  --color-brand-purple: #9A6BFF;
+  --color-brand-dark: #0B0B0F;
+  --color-brand-card: #1C1C24;
+  --color-brand-surface: #111116;
+  --color-brand-gold: #F4E7B8;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -122,6 +131,7 @@
     @apply border-border outline-ring/50;
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
     @apply bg-background text-foreground;

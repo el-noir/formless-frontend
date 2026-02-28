@@ -21,11 +21,11 @@ export function MessageItem({ message, state }: MessageItemProps) {
             <div className={cn(
                 "max-w-[85%] md:max-w-[75%] rounded-2xl px-5 py-3.5",
                 isUser
-                    ? "bg-[#6E8BFF] text-white rounded-br-sm"
+                    ? "bg-[#9A6BFF] text-white rounded-br-sm"
                     : "bg-[#1A1A24] border border-gray-800 text-gray-100 rounded-bl-sm"
             )}>
                 {!isUser ? (
-                    <div className="prose prose-invert max-w-none prose-p:leading-relaxed prose-pre:bg-black/50 prose-a:text-[#6E8BFF]">
+                    <div className="prose prose-invert max-w-none prose-p:leading-relaxed prose-pre:bg-black/50 prose-a:text-[#9A6BFF]">
                         <ReactMarkdown>{message.content}</ReactMarkdown>
                     </div>
                 ) : (

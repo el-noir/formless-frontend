@@ -61,7 +61,7 @@ export function Navbar() {
   return (
     <div className="fixed top-6 left-0 w-full z-50 flex justify-center px-4 pointer-events-none transition-all duration-300">
       <motion.nav
-        className={`pointer-events-auto rounded-full transition-all duration-300 ${scrolled ? 'bg-[#111116]/80 backdrop-blur-md border border-gray-800 shadow-xl' : 'bg-transparent border border-transparent'
+        className={`pointer-events-auto rounded-full transition-all duration-300 ${scrolled ? 'bg-brand-surface/80 backdrop-blur-md border border-gray-800 shadow-xl' : 'bg-transparent border border-transparent'
           }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -80,10 +80,10 @@ export function Navbar() {
         <div className="px-6 md:px-8 h-14 flex items-center justify-between gap-6 md:gap-12">
           <Link
             href="/"
-            className="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F] rounded-lg"
+            className="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-brand-dark rounded-lg"
             aria-label="FormAI home"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform" aria-hidden="true">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-purple to-brand-purple flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform" aria-hidden="true">
               F
             </div>
             <span className="text-xl font-bold text-white tracking-tight">FormAI</span>
@@ -99,7 +99,7 @@ export function Navbar() {
                 aria-label={`Navigate to ${item.name}`}
               >
                 {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#6E8BFF] transition-all group-hover:w-full group-focus:w-full" />
+                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-brand-purple transition-all group-hover:w-full group-focus:w-full" />
               </Link>
             ))}
           </div>
@@ -113,7 +113,7 @@ export function Navbar() {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 rounded-full bg-[#6E8BFF] text-white font-semibold text-sm hover:bg-[#4B6BFF] transition-colors focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F]"
+                  className="px-4 py-2 rounded-full bg-brand-purple text-white font-semibold text-sm hover:bg-[#4B6BFF] transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-brand-dark"
                   aria-label="Logout"
                 >
                   Logout
@@ -123,14 +123,14 @@ export function Navbar() {
               <>
                 <Link
                   href="/sign-in"
-                  className="text-sm font-medium text-white hover:text-gray-300 hidden sm:block focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F] rounded px-2 py-1"
+                  className="text-sm font-medium text-white hover:text-gray-300 hidden sm:block focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-brand-dark rounded px-2 py-1"
                   aria-label="Sign in to your account"
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/sign-up"
-                  className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] focus:ring-offset-2 focus:ring-offset-[#0B0B0F]"
+                  className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-brand-dark"
                   aria-label="Start free trial"
                 >
                   Start Free
@@ -141,7 +141,7 @@ export function Navbar() {
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
                 <button
-                  className="md:hidden p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] rounded-lg"
+                  className="md:hidden p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#9A6BFF] rounded-lg"
                   aria-label="Open navigation menu"
                   aria-expanded={mobileMenuOpen}
                   aria-controls="mobile-menu"
@@ -180,7 +180,7 @@ export function Navbar() {
                       </div>
                       <button
                         onClick={() => { handleNavClick(); handleLogout(); }}
-                        className="px-6 py-3 rounded-full bg-[#6E8BFF] text-white font-semibold text-center hover:bg-[#4B6BFF] transition-colors focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]"
+                        className="px-6 py-3 rounded-full bg-[#9A6BFF] text-white font-semibold text-center hover:bg-[#4B6BFF] transition-colors focus:outline-none focus:ring-2 focus:ring-[#9A6BFF]"
                         aria-label="Logout"
                       >
                         Logout
@@ -199,7 +199,7 @@ export function Navbar() {
                       <Link
                         href="/sign-up"
                         onClick={handleNavClick}
-                        className="px-6 py-3 rounded-full bg-white text-black font-semibold text-center hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]"
+                        className="px-6 py-3 rounded-full bg-white text-black font-semibold text-center hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#9A6BFF]"
                         aria-label="Start free trial"
                       >
                         Start Free Trial

@@ -104,7 +104,7 @@ export function MappingModal({ isOpen, onClose, form }: MappingModalProps) {
                             <button
                                 onClick={handleSave}
                                 disabled={saving}
-                                className="px-5 py-2.5 bg-gradient-to-r from-[#6E8BFF] to-[#9A6BFF] hover:shadow-[#6E8BFF]/20 hover:shadow-lg rounded-xl font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                className="px-5 py-2.5 bg-gradient-to-r from-brand-purple to-brand-purple hover:shadow-[theme(colors.brand.blue/20)] hover:shadow-lg rounded-xl font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                             >
                                 {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                                 {saving ? "Connecting..." : "Connect Form"}

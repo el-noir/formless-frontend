@@ -74,7 +74,7 @@ export default function OrgFormViewerPage() {
             <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
                 <Background />
                 <div className="text-center relative z-10">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
+                    <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
                     <p className="text-gray-400 text-sm">Loading form...</p>
                 </div>
             </div>
@@ -90,7 +90,7 @@ export default function OrgFormViewerPage() {
                     <p className="text-gray-400 mb-4">{error || 'Form not found'}</p>
                     <button
                         onClick={() => router.push(`/organizations/${orgId}`)}
-                        className="text-[#6E8BFF] hover:underline text-sm"
+                        className="text-[#9A6BFF] hover:underline text-sm"
                     >
                         ← Back to organization
                     </button>
@@ -160,11 +160,11 @@ export default function OrgFormViewerPage() {
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
-                            className={`px-4 py-2.5 text-sm font-medium relative transition-colors ${activeTab === tab.id ? 'text-[#6E8BFF]' : 'text-gray-400 hover:text-gray-200'}`}
+                            className={`px-4 py-2.5 text-sm font-medium relative transition-colors ${activeTab === tab.id ? 'text-[#9A6BFF]' : 'text-gray-400 hover:text-gray-200'}`}
                         >
                             {tab.label}
                             {activeTab === tab.id && (
-                                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#6E8BFF]" />
+                                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#9A6BFF]" />
                             )}
                         </button>
                     ))}

@@ -57,7 +57,7 @@ export default function FormViewerPage() {
             <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
                 <Background />
                 <div className="text-center relative z-10">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
+                    <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
                     <p className="text-gray-400">Loading form details...</p>
                 </div>
             </div>
@@ -123,7 +123,7 @@ export default function FormViewerPage() {
                                 Original
                             </a>
                         )}
-                        <MagneticButton className="flex items-center px-4 py-2 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white rounded-lg transition-colors font-medium">
+                        <MagneticButton className="flex items-center px-4 py-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white rounded-lg transition-colors font-medium">
                             <Share2 className="w-4 h-4 mr-2" />
                             Share
                         </MagneticButton>
@@ -134,17 +134,17 @@ export default function FormViewerPage() {
                 <div className="flex space-x-1 border-b border-gray-800 mb-8">
                     <button
                         onClick={() => setActiveTab('fields')}
-                        className={`px-4 py-3 font-medium text-sm flex items-center transition-colors relative ${activeTab === 'fields' ? 'text-[#6E8BFF]' : 'text-gray-400 hover:text-gray-200'}`}
+                        className={`px-4 py-3 font-medium text-sm flex items-center transition-colors relative ${activeTab === 'fields' ? 'text-[#9A6BFF]' : 'text-gray-400 hover:text-gray-200'}`}
                     >
                         <Eye className="w-4 h-4 mr-2" /> Fields & Schema
-                        {activeTab === 'fields' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#6E8BFF]" />}
+                        {activeTab === 'fields' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#9A6BFF]" />}
                     </button>
                     <button
                         onClick={() => setActiveTab('settings')}
-                        className={`px-4 py-3 font-medium text-sm flex items-center transition-colors relative ${activeTab === 'settings' ? 'text-[#6E8BFF]' : 'text-gray-400 hover:text-gray-200'}`}
+                        className={`px-4 py-3 font-medium text-sm flex items-center transition-colors relative ${activeTab === 'settings' ? 'text-[#9A6BFF]' : 'text-gray-400 hover:text-gray-200'}`}
                     >
                         <Settings className="w-4 h-4 mr-2" /> Settings
-                        {activeTab === 'settings' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#6E8BFF]" />}
+                        {activeTab === 'settings' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#9A6BFF]" />}
                     </button>
                 </div>
 
@@ -163,7 +163,7 @@ export default function FormViewerPage() {
                                 {fields.map((field: any, i: number) =>
                                     field.type === 'SECTION_HEADER' ? (
                                         <div key={field.id || i} className="border-t border-gray-800 pt-5 mt-6 first:border-0 first:mt-0 first:pt-0">
-                                            <h3 className="text-sm font-semibold text-[#6E8BFF] uppercase tracking-widest">{field.label}</h3>
+                                            <h3 className="text-sm font-semibold text-[#9A6BFF] uppercase tracking-widest">{field.label}</h3>
                                             {field.description && <p className="text-xs text-gray-500 mt-1">{field.description}</p>}
                                         </div>
                                     ) : (

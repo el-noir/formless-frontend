@@ -59,14 +59,14 @@ export default function GoogleCallbackPage() {
             <p className="text-red-400 text-lg mb-4">{error}</p>
             <button
               onClick={() => router.replace('/dashboard')}
-              className="text-[#6E8BFF] underline text-sm"
+              className="text-[#9A6BFF] underline text-sm"
             >
               Go back to Dashboard
             </button>
           </>
         ) : (
           <>
-            <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
             <p className="text-gray-400">Connecting your Google account…</p>
           </>
         )}

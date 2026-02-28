@@ -3,13 +3,13 @@ import { User, Sparkles, Check, FileSpreadsheet } from 'lucide-react';
 
 export function Step1Visual() {
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-center p-6 bg-[#0B0B0F]/50 pointer-events-none">
+    <div className="relative w-full h-full flex flex-col items-center justify-center p-6 bg-brand-dark/50 pointer-events-none">
       {/* Mock Input */}
       <motion.div
         initial={{ width: '80%', opacity: 1 }}
         animate={{ width: '0%', opacity: 0 }}
         transition={{ duration: 1, delay: 2, repeat: Infinity, repeatDelay: 4 }}
-        className="h-10 bg-[#1C1C24] border border-white/10 rounded-lg flex items-center px-3 mb-8 overflow-hidden"
+        className="h-10 bg-brand-card border border-white/10 rounded-lg flex items-center px-3 mb-8 overflow-hidden"
       >
         <div className="text-xs text-gray-500 truncate">https://docs.google.com/forms/d/e/...</div>
       </motion.div>
@@ -21,7 +21,7 @@ export function Step1Visual() {
         transition={{ duration: 0.8, delay: 2.5, repeat: Infinity, repeatDelay: 4.2 }}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
       >
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center shadow-[0_0_30px_#6E8BFF]">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-purple to-brand-purple flex items-center justify-center shadow-[0_0_30px_theme(colors.brand.blue)]">
           <Sparkles className="w-6 h-6 text-white" />
         </div>
       </motion.div>
@@ -31,7 +31,7 @@ export function Step1Visual() {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, delay: 3, repeat: Infinity, repeatDelay: 4.5 }}
-        className="bg-[#1C1C24] border border-[#6E8BFF]/30 p-4 rounded-2xl rounded-tl-none w-3/4 shadow-lg"
+        className="bg-brand-card border border-brand-purple/30 p-4 rounded-2xl rounded-tl-none w-3/4 shadow-lg"
       >
         <div className="h-2 w-1/2 bg-white/10 rounded-full mb-2" />
         <div className="h-2 w-3/4 bg-white/10 rounded-full" />
@@ -50,7 +50,7 @@ export function Step2Visual() {
         transition={{ duration: 0.5 }}
         className="relative"
       >
-        <div className="w-16 h-16 rounded-2xl bg-[#1C1C24] border border-white/10 flex flex-col items-center justify-center shadow-lg">
+        <div className="w-16 h-16 rounded-2xl bg-brand-card border border-white/10 flex flex-col items-center justify-center shadow-lg">
           <User className="w-6 h-6 text-gray-400 mb-1" />
           <span className="text-[10px] text-gray-500">User</span>
         </div>
@@ -74,9 +74,9 @@ export function Step2Visual() {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="relative"
       >
-        <div className="w-16 h-16 rounded-2xl bg-[#1C1C24] border border-[#9A6BFF]/30 flex flex-col items-center justify-center shadow-[0_0_30px_rgba(154,107,255,0.1)]">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center text-white font-bold text-xs mb-1">AI</div>
-          <span className="text-[10px] text-[#9A6BFF]">Agent</span>
+        <div className="w-16 h-16 rounded-2xl bg-brand-card border border-brand-purple/30 flex flex-col items-center justify-center shadow-[0_0_30px_theme(colors.brand.purple/10)]">
+          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-brand-purple to-brand-purple flex items-center justify-center text-white font-bold text-xs mb-1">AI</div>
+          <span className="text-[10px] text-brand-purple">Agent</span>
         </div>
       </motion.div>
     </div>
@@ -87,13 +87,13 @@ export function Step3Visual() {
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center p-6 pointer-events-none">
       {/* Spreadsheet Header */}
-      <div className="w-full bg-[#1C1C24] border border-white/10 rounded-t-xl p-2 flex items-center gap-2 border-b-0">
+      <div className="w-full bg-brand-card border border-white/10 rounded-t-xl p-2 flex items-center gap-2 border-b-0">
         <FileSpreadsheet className="w-4 h-4 text-[#25D366]" />
         <div className="h-2 w-20 bg-white/10 rounded-full" />
       </div>
 
       {/* Rows */}
-      <div className="w-full bg-[#0B0B0F] border border-white/10 rounded-b-xl overflow-hidden">
+      <div className="w-full bg-brand-dark border border-white/10 rounded-b-xl overflow-hidden">
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}

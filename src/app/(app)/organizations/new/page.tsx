@@ -64,7 +64,7 @@ export default function NewOrganizationPage() {
         return (
             <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
                 <Background />
-                <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] relative z-10" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] relative z-10" />
             </div>
         );
     }
@@ -83,8 +83,8 @@ export default function NewOrganizationPage() {
 
                 <div className="bg-[#0f0f14] border border-gray-800 rounded-2xl p-8">
                     <div className="flex items-center gap-4 mb-8">
-                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#6E8BFF]/20 to-[#9A6BFF]/20 border border-[#6E8BFF]/20 flex items-center justify-center">
-                            <Building2 className="w-7 h-7 text-[#6E8BFF]" />
+                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#9A6BFF]/20 to-[#9A6BFF]/20 border border-[#9A6BFF]/20 flex items-center justify-center">
+                            <Building2 className="w-7 h-7 text-[#9A6BFF]" />
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold text-white">Create Organization</h1>
@@ -109,7 +109,7 @@ export default function NewOrganizationPage() {
                                 value={form.name}
                                 onChange={handleChange}
                                 placeholder="Acme Corp"
-                                className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#6E8BFF] transition-colors"
+                                className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#9A6BFF] transition-colors"
                             />
                         </div>
 
@@ -122,7 +122,7 @@ export default function NewOrganizationPage() {
                                     value={form.email}
                                     onChange={handleChange}
                                     placeholder="hello@acme.com"
-                                    className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#6E8BFF] transition-colors"
+                                    className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#9A6BFF] transition-colors"
                                 />
                             </div>
                             <div>
@@ -133,7 +133,7 @@ export default function NewOrganizationPage() {
                                     value={form.website}
                                     onChange={handleChange}
                                     placeholder="https://acme.com"
-                                    className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#6E8BFF] transition-colors"
+                                    className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#9A6BFF] transition-colors"
                                 />
                             </div>
                         </div>
@@ -146,14 +146,14 @@ export default function NewOrganizationPage() {
                                 onChange={handleChange}
                                 rows={3}
                                 placeholder="What does your organization do?"
-                                className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#6E8BFF] transition-colors resize-none"
+                                className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#9A6BFF] transition-colors resize-none"
                             />
                         </div>
 
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="w-full flex items-center justify-center gap-2 bg-[#6E8BFF] hover:bg-[#5a72e0] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-xl transition-colors mt-2"
+                            className="w-full flex items-center justify-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-xl transition-colors mt-2"
                         >
                             {submitting ? (
                                 <><Loader2 className="w-4 h-4 animate-spin" /> Creating...</>

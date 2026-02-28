@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import Link from 'next/link';
 import { loginUser, loginWithGoogle } from "@/lib/api/auth";
 import { LoginDto } from "@/app/types/Auth";
 import { motion } from "motion/react";
@@ -16,7 +17,7 @@ function SignInContent() {
   const searchParams = useSearchParams();
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  
+
   const {
     register,
     handleSubmit,
@@ -24,7 +25,7 @@ function SignInContent() {
   } = useForm<LoginDto>({
     mode: "onBlur",
   });
-  
+
   const { isLoading: checkingAuth } = useAuth("/dashboard");
 
   // Check for OAuth errors
@@ -58,7 +59,7 @@ function SignInContent() {
       <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
         <Background />
         <div className="text-center relative z-10">
-          <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
           <p className="text-gray-400">Loading...</p>
         </div>
       </div>
@@ -79,14 +80,11 @@ function SignInContent() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <div className="mb-12">
-              <h1 className="text-5xl font-bold text-white mb-4 leading-tight">
-                Welcome Back to{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6E8BFF] via-[#9A6BFF] to-[#F4E7B8]">
-                  Formless AI
-                </span>
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                Welcome back
               </h1>
               <p className="text-gray-400 text-lg">
-                Continue building intelligent forms with AI-powered conversations
+                Continue building with <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-purple to-brand-gold font-medium">FormAI</span>
               </p>
             </div>
             <ChatMockup />
@@ -104,6 +102,11 @@ function SignInContent() {
             <div className="bg-[#1C1C24] rounded-2xl p-10 shadow-xl border border-white/10 backdrop-blur-sm">
               {/* Header */}
               <div className="mb-8">
+                <Link href="/" className="inline-block mb-8 group focus:outline-none focus:ring-2 focus:ring-brand-purple rounded-lg">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-purple to-brand-purple flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-purple/20 group-hover:scale-105 transition-all">
+                    FI
+                  </div>
+                </Link>
                 <h1 className="text-3xl font-bold text-white mb-2">
                   Sign In
                 </h1>
@@ -148,9 +151,8 @@ function SignInContent() {
                           message: "Invalid email address",
                         },
                       })}
-                      className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${
-                        errors.email ? "border-red-500/50" : "border-white/10"
-                      } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
+                      className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${errors.email ? "border-red-500/50" : "border-white/10"
+                        } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-transparent transition-all`}
                       placeholder="john@example.com"
                     />
                   </div>
@@ -172,7 +174,7 @@ function SignInContent() {
                     </label>
                     <a
                       href="#"
-                      className="text-xs text-[#6E8BFF] hover:text-[#9A6BFF] transition-colors"
+                      className="text-brand-purple hover:text-brand-purple transition-colors"
                     >
                       Forgot password?
                     </a>
@@ -189,9 +191,8 @@ function SignInContent() {
                           message: "Password must be at least 8 characters",
                         },
                       })}
-                      className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${
-                        errors.password ? "border-red-500/50" : "border-white/10"
-                      } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
+                      className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${errors.password ? "border-red-500/50" : "border-white/10"
+                        } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-transparent transition-all`}
                       placeholder="••••••••"
                     />
                   </div>
@@ -207,7 +208,7 @@ function SignInContent() {
                   <input
                     type="checkbox"
                     id="remember"
-                    className="w-4 h-4 rounded border-white/10 bg-[#0B0B0F] text-[#6E8BFF] focus:ring-2 focus:ring-[#6E8BFF]/50"
+                    className="w-4 h-4 rounded border-white/10 bg-[#0B0B0F] text-brand-purple focus:ring-2 focus:ring-brand-purple/50"
                   />
                   <label
                     htmlFor="remember"
@@ -221,7 +222,7 @@ function SignInContent() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-6 px-6 py-4 rounded-lg bg-gradient-to-r from-[#6E8BFF] to-[#9A6BFF] text-white font-semibold hover:shadow-lg hover:shadow-[#6E8BFF]/30 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                  className="w-full mt-6 px-6 py-4 rounded-lg bg-gradient-to-r from-brand-purple to-brand-purple text-white font-semibold hover:shadow-lg hover:shadow-brand-purple/30 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <>
@@ -252,7 +253,7 @@ function SignInContent() {
               {/* Social Login Buttons */}
               <div className="grid grid-cols-2 gap-3">
                 <button
-                  type="button"                  onClick={loginWithGoogle}                  className="flex items-center justify-center gap-3 px-4 py-3 bg-[#1f1f2e] border border-[#3a3a4a] rounded-lg text-white hover:bg-[#252533] transition-all"
+                  type="button" onClick={loginWithGoogle} className="flex items-center justify-center gap-3 px-4 py-3 bg-[#1f1f2e] border border-[#3a3a4a] rounded-lg text-white hover:bg-[#252533] transition-all"
                 >
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path
@@ -287,14 +288,11 @@ function SignInContent() {
 
               {/* Footer */}
               <div className="mt-8 text-center">
-                <p className="text-gray-400 text-sm">
-                  Don&apos;t have an account?{" "}
-                  <a
-                    href="/sign-up"
-                    className="text-[#6E8BFF] hover:text-[#9A6BFF] font-medium transition-colors"
-                  >
-                    Sign up
-                  </a>
+                <p className="mt-8 text-center text-gray-500 font-medium">
+                  Don't have an account?{' '}
+                  <Link href="/sign-up" className="text-brand-purple hover:text-brand-purple transition-colors focus:outline-none focus:underline rounded font-semibold">
+                    Sign up for free
+                  </Link>
                 </p>
               </div>
             </div>
@@ -312,7 +310,7 @@ export default function SignIn() {
         <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
           <Background />
           <div className="text-center relative z-10">
-            <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
             <p className="text-gray-400">Loading...</p>
           </div>
         </div>

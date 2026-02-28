@@ -40,7 +40,7 @@ export function Hero() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-            <MagneticButton className="px-8 py-3 bg-[#9A6BFF] hover:bg-[#8555e8] text-white font-medium rounded-full transition-colors cursor-pointer shadow-[0_0_20px_rgba(154,107,255,0.4)]">
+            <MagneticButton className="px-8 py-3 bg-brand-purple hover:bg-[#8555e8] text-white font-medium rounded-full transition-colors cursor-pointer shadow-[0_0_20px_theme(colors.brand.purple/40)]">
               <a href="/start-free" className="flex items-center gap-2 focus:outline-none" aria-label="Start your free trial">
                 <span>Start Free</span> <ArrowRight className="w-4 h-4" />
               </a>

@@ -72,7 +72,7 @@ export default function ImportFormPage() {
         return (
             <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
                 <Background />
-                <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] relative z-10" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] relative z-10" />
             </div>
         );
     }
@@ -105,7 +105,7 @@ export default function ImportFormPage() {
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Search forms..."
-                            className="w-full bg-[#0f0f14] border border-gray-800 rounded-xl pl-11 pr-4 py-3 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-[#6E8BFF] transition-colors"
+                            className="w-full bg-[#0f0f14] border border-gray-800 rounded-xl pl-11 pr-4 py-3 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-[#9A6BFF] transition-colors"
                         />
                     </div>
                 )}
@@ -113,7 +113,7 @@ export default function ImportFormPage() {
                 {/* States */}
                 {loadingForms ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-3">
-                        <Loader2 className="w-7 h-7 animate-spin text-[#6E8BFF]" />
+                        <Loader2 className="w-7 h-7 animate-spin text-[#9A6BFF]" />
                         <p className="text-gray-400 text-sm">Loading your Google Forms...</p>
                     </div>
                 ) : fetchError ? (
@@ -122,7 +122,7 @@ export default function ImportFormPage() {
                         <p className="text-gray-400 text-sm mb-5">{fetchError}</p>
                         <a
                             href="/integrations"
-                            className="inline-flex items-center gap-2 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors"
+                            className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors"
                         >
                             Connect Google Account
                         </a>
@@ -147,8 +147,8 @@ export default function ImportFormPage() {
                                     className={`bg-[#0f0f14] border rounded-xl p-4 flex items-center justify-between gap-4 transition-colors ${state === 'done' ? 'border-green-500/30' : 'border-gray-800 hover:border-gray-700'}`}
                                 >
                                     <div className="flex items-center gap-4 min-w-0">
-                                        <div className="w-10 h-10 rounded-lg bg-[#6E8BFF]/10 border border-[#6E8BFF]/20 flex items-center justify-center shrink-0">
-                                            <FileText className="w-5 h-5 text-[#6E8BFF]" />
+                                        <div className="w-10 h-10 rounded-lg bg-[#9A6BFF]/10 border border-[#9A6BFF]/20 flex items-center justify-center shrink-0">
+                                            <FileText className="w-5 h-5 text-[#9A6BFF]" />
                                         </div>
                                         <div className="min-w-0">
                                             <p className="text-white text-sm font-medium truncate">{form.title || form.name}</p>
@@ -178,10 +178,10 @@ export default function ImportFormPage() {
                                             className={`flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg transition-colors ${state === 'done'
                                                     ? 'bg-green-500/10 text-green-400 border border-green-500/20 cursor-default'
                                                     : state === 'loading'
-                                                        ? 'bg-[#6E8BFF]/20 text-[#6E8BFF] cursor-wait'
+                                                        ? 'bg-[#9A6BFF]/20 text-[#9A6BFF] cursor-wait'
                                                         : state === 'error'
                                                             ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20'
-                                                            : 'bg-[#6E8BFF] hover:bg-[#5a72e0] text-white'
+                                                            : 'bg-[#9A6BFF] hover:bg-[#5a72e0] text-white'
                                                 }`}
                                         >
                                             {state === 'loading' ? (
@@ -206,7 +206,7 @@ export default function ImportFormPage() {
                     <div className="mt-6 text-center">
                         <button
                             onClick={() => router.push(`/organizations/${orgId}`)}
-                            className="text-sm text-[#6E8BFF] hover:underline"
+                            className="text-sm text-[#9A6BFF] hover:underline"
                         >
                             ← Back to view imported forms
                         </button>

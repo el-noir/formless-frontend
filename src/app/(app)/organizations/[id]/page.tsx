@@ -107,7 +107,7 @@ export default function OrganizationDetailPage() {
             <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
                 <Background />
                 <div className="text-center relative z-10">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
+                    <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
                     <p className="text-gray-400">Loading organization...</p>
                 </div>
             </div>
@@ -122,7 +122,7 @@ export default function OrganizationDetailPage() {
                     <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-6 rounded-xl mb-6">
                         <p>{error || 'Organization not found'}</p>
                     </div>
-                    <button onClick={() => router.push('/organizations')} className="text-[#6E8BFF] hover:underline">
+                    <button onClick={() => router.push('/organizations')} className="text-[#9A6BFF] hover:underline">
                         ← Back to organizations
                     </button>
                 </div>
@@ -153,8 +153,8 @@ export default function OrganizationDetailPage() {
                     </button>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#6E8BFF]/20 to-[#9A6BFF]/20 border border-[#6E8BFF]/20 flex items-center justify-center">
-                                <Building2 className="w-7 h-7 text-[#6E8BFF]" />
+                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#9A6BFF]/20 to-[#9A6BFF]/20 border border-[#9A6BFF]/20 flex items-center justify-center">
+                                <Building2 className="w-7 h-7 text-[#9A6BFF]" />
                             </div>
                             <div>
                                 <div className="flex items-center gap-3">
@@ -166,7 +166,7 @@ export default function OrganizationDetailPage() {
                                     {currentOrgId !== orgId && (
                                         <button
                                             onClick={() => setCurrentOrg(orgId)}
-                                            className="text-xs text-[#6E8BFF] hover:underline"
+                                            className="text-xs text-[#9A6BFF] hover:underline"
                                         >
                                             Set active
                                         </button>
@@ -186,7 +186,7 @@ export default function OrganizationDetailPage() {
                         {isAdmin && (
                             <Link
                                 href={`/organizations/${orgId}/import`}
-                                className="flex items-center gap-2 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
+                                className="flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
                             >
                                 <Plus className="w-4 h-4" /> Import Form
                             </Link>
@@ -202,16 +202,16 @@ export default function OrganizationDetailPage() {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as Tab)}
-                                className={`px-4 py-3 font-medium text-sm flex items-center gap-2 transition-colors relative ${activeTab === tab.id ? 'text-[#6E8BFF]' : 'text-gray-400 hover:text-gray-200'}`}
+                                className={`px-4 py-3 font-medium text-sm flex items-center gap-2 transition-colors relative ${activeTab === tab.id ? 'text-[#9A6BFF]' : 'text-gray-400 hover:text-gray-200'}`}
                             >
                                 <Icon className="w-4 h-4" />
                                 {tab.label}
                                 {tab.count !== null && (
-                                    <span className={`text-xs px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-[#6E8BFF]/20 text-[#6E8BFF]' : 'bg-gray-800 text-gray-500'}`}>
+                                    <span className={`text-xs px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-[#9A6BFF]/20 text-[#9A6BFF]' : 'bg-gray-800 text-gray-500'}`}>
                                         {tab.count}
                                     </span>
                                 )}
-                                {activeTab === tab.id && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#6E8BFF]" />}
+                                {activeTab === tab.id && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#9A6BFF]" />}
                             </button>
                         );
                     })}
@@ -225,8 +225,8 @@ export default function OrganizationDetailPage() {
                                 {forms.map((form) => (
                                     <div key={form.id} className="bg-[#0f0f14] border border-gray-800 rounded-xl p-5 hover:border-gray-700 transition-colors flex flex-col">
                                         <div className="flex justify-between items-start mb-3">
-                                            <div className="p-2 bg-[#6E8BFF]/10 rounded-lg">
-                                                <FileText className="w-5 h-5 text-[#6E8BFF]" />
+                                            <div className="p-2 bg-[#9A6BFF]/10 rounded-lg">
+                                                <FileText className="w-5 h-5 text-[#9A6BFF]" />
                                             </div>
                                             {form.status === 'ACTIVE' && (
                                                 <span className="bg-green-500/10 border border-green-500/20 text-green-400 text-xs px-2 py-0.5 rounded-full">Active</span>
@@ -266,7 +266,7 @@ export default function OrganizationDetailPage() {
                                 <p className="text-gray-500 text-sm mb-5">Import a Google Form into this organization to get started.</p>
                                 {isAdmin && (
                                     <Link href={`/organizations/${orgId}/import`}
-                                        className="inline-flex items-center gap-2 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors">
+                                        className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors">
                                         <Plus className="w-4 h-4" /> Import Form
                                     </Link>
                                 )}
@@ -282,7 +282,7 @@ export default function OrganizationDetailPage() {
                         {isAdmin && (
                             <form onSubmit={handleInvite} className="bg-[#0f0f14] border border-gray-800 rounded-xl p-5">
                                 <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-                                    <UserPlus className="w-4 h-4 text-[#6E8BFF]" /> Invite Member
+                                    <UserPlus className="w-4 h-4 text-[#9A6BFF]" /> Invite Member
                                 </h3>
                                 {inviteError && (
                                     <p className="text-red-400 text-sm mb-3">{inviteError}</p>
@@ -293,12 +293,12 @@ export default function OrganizationDetailPage() {
                                         value={inviteEmail}
                                         onChange={(e) => setInviteEmail(e.target.value)}
                                         placeholder="teammate@company.com"
-                                        className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-[#6E8BFF]"
+                                        className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-[#9A6BFF]"
                                     />
                                     <select
                                         value={inviteRole}
                                         onChange={(e) => setInviteRole(e.target.value as 'admin' | 'member')}
-                                        className="bg-gray-900 border border-gray-700 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#6E8BFF]"
+                                        className="bg-gray-900 border border-gray-700 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#9A6BFF]"
                                     >
                                         <option value="member">Member</option>
                                         <option value="admin">Admin</option>
@@ -306,7 +306,7 @@ export default function OrganizationDetailPage() {
                                     <button
                                         type="submit"
                                         disabled={inviting || !inviteEmail}
-                                        className="bg-[#6E8BFF] hover:bg-[#5a72e0] disabled:opacity-60 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors"
+                                        className="bg-[#9A6BFF] hover:bg-[#5a72e0] disabled:opacity-60 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors"
                                     >
                                         {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Invite'}
                                     </button>

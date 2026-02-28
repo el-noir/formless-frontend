@@ -77,7 +77,7 @@ export default function FormsPage() {
             <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
                 <Background />
                 <div className="text-center relative z-10">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
+                    <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
                     <p className="text-gray-400">Loading forms...</p>
                 </div>
             </div>
@@ -90,8 +90,8 @@ export default function FormsPage() {
             <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 pb-12 relative">
                 <Background />
                 <div className="max-w-xl mx-auto relative z-10 text-center py-16">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#6E8BFF]/10 to-[#9A6BFF]/10 rounded-full flex items-center justify-center mx-auto mb-5">
-                        <Building2 className="w-8 h-8 text-[#6E8BFF]" />
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#9A6BFF]/10 to-[#9A6BFF]/10 rounded-full flex items-center justify-center mx-auto mb-5">
+                        <Building2 className="w-8 h-8 text-[#9A6BFF]" />
                     </div>
                     <h2 className="text-xl font-semibold text-white mb-2">No active organization</h2>
                     <p className="text-gray-400 text-sm mb-6">
@@ -99,7 +99,7 @@ export default function FormsPage() {
                     </p>
                     <Link
                         href="/organizations"
-                        className="inline-flex items-center gap-2 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-6 rounded-lg transition-colors"
+                        className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-6 rounded-lg transition-colors"
                     >
                         Go to Organizations
                     </Link>
@@ -127,7 +127,7 @@ export default function FormsPage() {
                     {isAdmin && (
                         <Link
                             href={`/organizations/${currentOrgId}/import`}
-                            className="flex items-center gap-2 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
+                            className="flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
                         >
                             <Plus className="w-4 h-4" /> Import Form
                         </Link>
@@ -150,7 +150,7 @@ export default function FormsPage() {
                                 className="bg-[#0f0f14] border border-gray-800 rounded-xl p-5 hover:border-gray-700 transition-colors flex flex-col h-full group"
                             >
                                 <div className="flex justify-between items-start mb-4">
-                                    <div className="p-2 bg-[#6E8BFF]/10 rounded-lg text-[#6E8BFF]">
+                                    <div className="p-2 bg-[#9A6BFF]/10 rounded-lg text-[#9A6BFF]">
                                         <FileText className="w-6 h-6" />
                                     </div>
                                     {form.status === 'ACTIVE' && (
@@ -178,7 +178,7 @@ export default function FormsPage() {
                                         <button
                                             onClick={() => handleShare(form.id)}
                                             disabled={isGeneratingLink}
-                                            className="flex-1 bg-[#6E8BFF]/10 hover:bg-[#6E8BFF]/20 text-[#6E8BFF] text-sm py-2 px-4 rounded-lg text-center transition-colors disabled:opacity-50"
+                                            className="flex-1 bg-[#9A6BFF]/10 hover:bg-[#9A6BFF]/20 text-[#9A6BFF] text-sm py-2 px-4 rounded-lg text-center transition-colors disabled:opacity-50"
                                         >
                                             Share AI Chat
                                         </button>
@@ -216,7 +216,7 @@ export default function FormsPage() {
                         {isAdmin && (
                             <Link
                                 href={`/organizations/${currentOrgId}/import`}
-                                className="inline-flex items-center gap-2 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white font-medium py-2 px-6 rounded-lg transition-colors"
+                                className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2 px-6 rounded-lg transition-colors"
                             >
                                 <Plus className="w-4 h-4" /> Import Google Form
                             </Link>
@@ -238,12 +238,12 @@ export default function FormsPage() {
                                 type="text"
                                 readOnly
                                 value={shareLink}
-                                className="flex-1 bg-black/50 border border-gray-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#6E8BFF]"
+                                className="flex-1 bg-black/50 border border-gray-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#9A6BFF]"
                                 onClick={(e) => e.currentTarget.select()}
                             />
                             <button
                                 onClick={copyToClipboard}
-                                className="bg-[#6E8BFF] hover:bg-[#5a72e0] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                className="bg-[#9A6BFF] hover:bg-[#5a72e0] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                             >
                                 Copy
                             </button>

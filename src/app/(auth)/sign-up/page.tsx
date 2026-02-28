@@ -49,7 +49,7 @@ function SignUp() {
       <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
         <Background />
         <div className="text-center relative z-10">
-          <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
           <p className="text-gray-400">Loading...</p>
         </div>
       </div>
@@ -72,7 +72,7 @@ function SignUp() {
             <div className="mb-12">
               <h1 className="text-5xl font-bold text-white mb-4 leading-tight">
                 Build Forms That{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6E8BFF] via-[#9A6BFF] to-[#F4E7B8]">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-purple to-brand-gold">
                   Understand You
                 </span>
               </h1>
@@ -140,7 +140,7 @@ function SignUp() {
                             message: "Must be at least 2 characters",
                           },
                         })} className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${errors.firstName ? "border-red-500/50" : "border-white/10"
-                          } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
+                          } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-transparent transition-all`}
                         placeholder="John"
                       />
                     </div>
@@ -171,7 +171,7 @@ function SignUp() {
                           },
                         })}
                         className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${errors.lastName ? "border-red-500/50" : "border-white/10"
-                          } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
+                          } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[brand-purple]/50 focus:border-transparent transition-all`}
                         placeholder="Doe"
                       />
                     </div>
@@ -204,7 +204,7 @@ function SignUp() {
                         },
                       })}
                       className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${errors.email ? "border-red-500/50" : "border-white/10"
-                        } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
+                        } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[brand-purple]/50 focus:border-transparent transition-all`}
                       placeholder="john@example.com"
                     />
                   </div>
@@ -236,7 +236,7 @@ function SignUp() {
                         },
                       })}
                       className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${errors.password ? "border-red-500/50" : "border-white/10"
-                        } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 focus:border-transparent transition-all`}
+                        } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[brand-purple]/50 focus:border-transparent transition-all`}
                       placeholder="••••••••"
                     />
                   </div>
@@ -262,7 +262,7 @@ function SignUp() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label htmlFor="organizationName" className="block text-sm font-medium text-gray-300 mb-2">
-                          Company Name <span className="text-[#6E8BFF]">*</span>
+                          Company Name <span className="text-brand-purple">*</span>
                         </label>
                         <div className="relative">
                           <Building className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -270,8 +270,8 @@ function SignUp() {
                             type="text"
                             id="organizationName"
                             {...register("organizationName", { required: "Company name is required" })}
-                            className={`w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border ${errors.organizationName ? "border-red-500/50" : "border-white/10"
-                              } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 transition-all`}
+                            className={`w-full pl-12 pr-4 py-3.5 bg-brand-dark border ${errors.organizationName ? "border-red-500/50" : "border-white/10"
+                              } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 transition-all`}
                             placeholder="Acme Corp"
                           />
                         </div>
@@ -288,7 +288,7 @@ function SignUp() {
                             type="url"
                             id="organizationWebsite"
                             {...register("organizationWebsite")}
-                            className="w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 transition-all"
+                            className="w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[brand-purple]/50 transition-all"
                             placeholder="https://acme.com"
                           />
                         </div>
@@ -307,7 +307,7 @@ function SignUp() {
                             type="email"
                             id="organizationEmail"
                             {...register("organizationEmail")}
-                            className="w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 transition-all"
+                            className="w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[brand-purple]/50 transition-all"
                             placeholder="contact@acme.com"
                           />
                         </div>
@@ -323,7 +323,7 @@ function SignUp() {
                             type="tel"
                             id="organizationPhone"
                             {...register("organizationPhone")}
-                            className="w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 transition-all"
+                            className="w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[brand-purple]/50 transition-all"
                             placeholder="+1 (555) 000-0000"
                           />
                         </div>
@@ -341,7 +341,7 @@ function SignUp() {
                           type="text"
                           id="organizationAddress"
                           {...register("organizationAddress")}
-                          className="w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 transition-all"
+                          className="w-full pl-12 pr-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[brand-purple]/50 transition-all"
                           placeholder="123 Innovation Way"
                         />
                       </div>
@@ -355,7 +355,7 @@ function SignUp() {
                           type="text"
                           id="organizationCity"
                           {...register("organizationCity")}
-                          className="w-full px-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 transition-all"
+                          className="w-full px-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[brand-purple]/50 transition-all"
                           placeholder="San Francisco"
                         />
                       </div>
@@ -365,7 +365,7 @@ function SignUp() {
                           type="text"
                           id="organizationState"
                           {...register("organizationState")}
-                          className="w-full px-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 transition-all"
+                          className="w-full px-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[brand-purple]/50 transition-all"
                           placeholder="CA"
                         />
                       </div>
@@ -375,7 +375,7 @@ function SignUp() {
                           type="text"
                           id="organizationZip"
                           {...register("organizationZip")}
-                          className="w-full px-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 transition-all"
+                          className="w-full px-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[brand-purple]/50 transition-all"
                           placeholder="94105"
                         />
                       </div>
@@ -385,7 +385,7 @@ function SignUp() {
                           type="text"
                           id="organizationCountry"
                           {...register("organizationCountry")}
-                          className="w-full px-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 transition-all"
+                          className="w-full px-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[brand-purple]/50 transition-all"
                           placeholder="US"
                         />
                       </div>
@@ -400,7 +400,7 @@ function SignUp() {
                         id="organizationDescription"
                         {...register("organizationDescription")}
                         rows={3}
-                        className="w-full px-4 py-3.5 bg-[#0B0B0F] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/50 transition-all resize-none"
+                        className="w-full px-4 py-3.5 bg-brand-dark border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 transition-all resize-none"
                         placeholder="What does your company do?"
                       />
                     </div>
@@ -411,7 +411,7 @@ function SignUp() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-6 px-6 py-4 rounded-lg bg-gradient-to-r from-[#6E8BFF] to-[#9A6BFF] text-white font-semibold hover:shadow-lg hover:shadow-[#6E8BFF]/30 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                  className="w-full mt-6 px-6 py-4 rounded-lg bg-gradient-to-r from-brand-purple to-brand-purple text-white font-semibold hover:shadow-lg hover:shadow-brand-purple/30 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <>
@@ -484,7 +484,7 @@ function SignUp() {
                   Already have an account?{" "}
                   <a
                     href="/sign-in"
-                    className="text-[#6E8BFF] hover:text-[#9A6BFF] font-medium transition-colors"
+                    className="text-brand-purple hover:text-brand-purple font-medium transition-colors"
                   >
                     Sign in
                   </a>
