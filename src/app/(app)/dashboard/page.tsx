@@ -1,17 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
-import { Background } from "@/components/Background";
-import { Loader2 } from "lucide-react";
-import { MagneticButton } from "@/components/ui/MagneticButton";
 import { getGoogleForms } from "@/lib/api/integrations";
+import { KPICards } from "@/components/dashboard/KPICards";
+import { RecentActivity } from "@/components/dashboard/RecentActivity";
+import { FormsListWidget } from "@/components/dashboard/FormsListWidget";
+import { MagneticButton } from "@/components/ui/MagneticButton";
+import { Plus, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 function Dashboard() {
-  const { isLoading } = useRequireAuth();
   const { user, accessToken } = useAuthStore();
-
   const [forms, setForms] = useState<any[] | null>(null);
   const [loadingForms, setLoadingForms] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +24,7 @@ function Dashboard() {
       setForms(data);
     } catch (err: any) {
       console.error("Error fetching forms:", err);
-      // If 401/404, it just means they haven't connected yet
+      // If 401/404, they haven't connected yet
       const status = Number(err?.status || err?.statusCode);
       if (status === 401 || status === 404) {
         setForms([]);
@@ -42,61 +42,59 @@ function Dashboard() {
     }
   }, [accessToken]);
 
+  return (
+    <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+          <h2 className="text-2xl font-bold text-white tracking-tight mb-1">
+            Welcome back, {user?.firstName || 'there'}!
+          </h2>
+          <p className="text-gray-400 text-sm">Here's what's happening with your forms today.</p>
+        </div>
 
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
-        <Background />
-        <div className="text-center relative z-10">
-          <Loader2 className="w-8 h-8 animate-spin text-[#6E8BFF] mx-auto mb-4" />
-          <p className="text-gray-400">Loading...</p>
+        <div className="flex items-center gap-3">
+          <Link href="/integrations">
+            <button className="hidden sm:flex items-center justify-center bg-[#1C1C22] hover:bg-white/10 text-white text-sm font-medium py-2 px-4 rounded-lg border border-gray-800 transition-colors shadow-sm">
+              Integrations
+            </button>
+          </Link>
+          <MagneticButton onClick={() => window.location.href = '/forms'} className="bg-[#9A6BFF] hover:bg-[#8555e8] text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 shadow-[0_0_15px_-3px_rgba(154,107,255,0.4)]">
+            <Plus className="w-4 h-4" />
+            Create Form
+          </MagneticButton>
         </div>
       </div>
-    );
-  }
 
-  return (
-    <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 pb-12 relative">
-      <Background />
-      <div className="max-w-7xl mx-auto relative z-10">
-        <h1 className="text-3xl font-bold text-white mb-6">Welcome, {user?.firstName || 'there'}!</h1>
-        <p className="text-gray-400 mb-4">Your connected Google Forms will appear here.</p>
+      <KPICards formsCount={forms?.length || 0} isLoading={loadingForms} />
 
-        {loadingForms ? (
-          <div className="text-gray-400">Fetching forms...</div>
-        ) : error ? (
-          <div className="text-red-400">{error}</div>
-        ) : forms && forms.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {forms.map((f: any) => (
-              <div key={f.formId || f.id || f.name} className="relative bg-[#0f0f14] p-4 rounded-md border border-gray-800">
-                {f.isSynced && (
-                  <div className="absolute top-4 right-4 bg-green-500/10 text-green-400 text-xs px-2 py-1 rounded border border-green-500/20 font-medium">
-                    Active Sync
-                  </div>
-                )}
-                <h3 className="text-white font-medium pr-24">{f.title || f.name}</h3>
-                <p className="text-sm text-gray-400">{f.formId || f.id}</p>
-                <MagneticButton
-                  onClick={() => window.location.href = '/integrations/google-forms'}
-                  className={`mt-4 text-sm py-1.5 px-3 rounded transition-colors ${f.isSynced ? 'bg-white/5 hover:bg-white/10 text-gray-300' : 'bg-[#6E8BFF] hover:bg-[#5a72e0] text-white'}`}
-                >
-                  {f.isSynced ? 'Manage Sync' : 'Configure Sync'}
-                </MagneticButton>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center text-gray-500">
-            No forms connected yet. Click the button below to connect your first Google Form.
-          </div>
-        )}
-
-        <MagneticButton onClick={() => window.location.href = '/integrations'} className="mt-4 bg-[#6E8BFF] hover:bg-[#5a72e0] text-white font-bold py-2 px-4 rounded transition duration-200">
-          Manage Integrations
-        </MagneticButton>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+        <div className="xl:col-span-2">
+          <FormsListWidget forms={forms} isLoading={loadingForms} error={error} />
+        </div>
+        <div className="xl:col-span-1">
+          <RecentActivity />
+        </div>
       </div>
+
+      {/* AI Assistant Callout Footer */}
+      <div className="bg-gradient-to-r from-[#9A6BFF]/10 to-transparent border border-[#9A6BFF]/20 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group">
+        <div className="absolute -right-20 top-0 w-64 h-64 bg-[#9A6BFF]/5 rounded-full blur-3xl group-hover:bg-[#9A6BFF]/10 transition-colors pointer-events-none" />
+
+        <div className="flex items-start gap-4 z-10">
+          <div className="p-3 bg-[#9A6BFF]/20 text-[#9A6BFF] rounded-xl">
+            <Sparkles className="w-6 h-6" />
+          </div>
+          <div>
+            <h4 className="text-white font-medium text-lg mb-1">Formless AI Concierge</h4>
+            <p className="text-gray-400 text-sm max-w-xl">Not sure what to build next? Ask the AI concierge to generate a custom form for your specific use case perfectly optimized for conversions.</p>
+          </div>
+        </div>
+
+        <button className="shrink-0 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-sm py-2.5 px-6 rounded-lg transition-all shadow-sm z-10 w-full md:w-auto">
+          Try AI generation
+        </button>
+      </div>
+
     </div>
   );
 }
