@@ -6,7 +6,7 @@ interface PageProps {
 }
 
 async function getFormInfo(token: string) {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
     try {
         const res = await fetch(`${apiUrl}/public/chat/${token}`, {
             next: { revalidate: 3600 } // Cache for 1 hour
