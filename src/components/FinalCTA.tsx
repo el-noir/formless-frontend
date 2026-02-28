@@ -4,11 +4,10 @@ import { ArrowRight } from 'lucide-react';
 
 export function FinalCTA() {
   return (
-    <section className="py-32 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-t from-[#6E8BFF]/10 to-transparent pointer-events-none" />
-      
+    <section className="py-32 relative overflow-hidden bg-[#0B0B0F] border-t border-gray-800">
+
       <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -20,17 +19,17 @@ export function FinalCTA() {
         </motion.h2>
 
         <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true }}
-           transition={{ delay: 0.2, duration: 0.8 }}
-           className="flex justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2, duration: 0.8 }}
+          className="flex justify-center"
         >
-           <MagneticButton className="group relative px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.3)] overflow-hidden">
-             <span className="flex items-center gap-2 relative z-10">
-               Start Free <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-             </span>
-           </MagneticButton>
+          <MagneticButton className="px-8 py-3 bg-white text-[#0B0B0F] font-semibold rounded-md hover:bg-gray-200 transition-colors shadow-sm cursor-pointer">
+            <a href="/start-free" className="flex items-center gap-2 focus:outline-none" aria-label="Start your free trial">
+              <span>Start Free</span> <ArrowRight className="w-5 h-5" />
+            </a>
+          </MagneticButton>
         </motion.div>
       </div>
     </section>

@@ -41,10 +41,7 @@ export function Testimonials() {
   }, [isPaused]);
 
   return (
-    <section id="testimonials" className="py-24 md:py-32 relative overflow-hidden bg-[#0A0A0F]" aria-labelledby="testimonials-title">
-      {/* Background Elements */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#9A6BFF]/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#6E8BFF]/10 rounded-full blur-[100px] pointer-events-none" />
+    <section id="testimonials" className="py-24 md:py-32 relative overflow-hidden bg-[#0B0B0F] border-t border-gray-800" aria-labelledby="testimonials-title">
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-20">
@@ -57,13 +54,13 @@ export function Testimonials() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={current}
-                initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="absolute inset-0 flex flex-col items-center justify-center text-center"
               >
-                <div className="w-16 h-16 rounded-full bg-[#1C1C24] border border-white/10 flex items-center justify-center mb-10 shadow-2xl ring-1 ring-white/5">
+                <div className="w-12 h-12 rounded-md bg-[#111116] border border-gray-800 flex items-center justify-center mb-10 shadow-sm">
                   <Quote className="w-6 h-6 text-[#9A6BFF]" />
                 </div>
 
@@ -73,13 +70,12 @@ export function Testimonials() {
 
                 <div className="flex flex-col items-center gap-4">
                   <div className="relative group">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#9A6BFF] to-[#6E8BFF] opacity-50 blur-md group-hover:opacity-75 transition-opacity duration-500" />
                     <Image
                       src={testimonials[current].image}
                       alt={testimonials[current].author}
                       width={80}
                       height={80}
-                      className="relative w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-[#1C1C24] object-cover shadow-xl"
+                      className="relative w-16 h-16 md:w-20 md:h-20 rounded-full border border-gray-800 object-cover shadow-sm"
                     />
                   </div>
                   <div className="text-center">

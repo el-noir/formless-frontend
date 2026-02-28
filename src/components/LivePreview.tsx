@@ -19,7 +19,7 @@ export function LivePreview() {
       setTypedText("");
       setShowOutput(false);
       let i = 0;
-      
+
       intervalId = setInterval(() => {
         setTypedText(example.input.slice(0, i + 1));
         i++;
@@ -49,56 +49,53 @@ export function LivePreview() {
       </div>
 
       <div className="max-w-2xl mx-auto px-6 relative">
-         <motion.div 
-           whileHover={{ scale: 1.02 }}
-           className="bg-[#121218] border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden group hover:border-[#9A6BFF]/30 transition-colors duration-500"
-         >
-           
-           {/* Glow */}
-           <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#9A6BFF]/10 blur-[100px] rounded-full pointer-events-none" />
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          className="bg-[#0B0B0F] border border-gray-800 rounded-xl p-8 shadow-sm relative overflow-hidden group hover:border-gray-600 transition-colors duration-300"
+        >
 
-           <div className="space-y-6 relative z-10">
-             {/* User Input */}
-             <div className="flex gap-4 items-start">
-               <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-1">
-                 <User className="w-5 h-5 text-gray-300" />
-               </div>
-               <div className="space-y-1 flex-1">
-                 <div className="text-xs font-medium text-gray-500 uppercase tracking-wider">User Input</div>
-                 <div className="text-xl text-white font-medium leading-relaxed min-h-[60px]">
-                   &ldquo;{typedText}<span className="animate-pulse">|</span>&rdquo;
-                 </div>
-               </div>
-             </div>
+          <div className="space-y-6 relative z-10">
+            {/* User Input */}
+            <div className="flex gap-4 items-start">
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-1">
+                <User className="w-5 h-5 text-gray-300" />
+              </div>
+              <div className="space-y-1 flex-1">
+                <div className="text-xs font-medium text-gray-500 uppercase tracking-wider">User Input</div>
+                <div className="text-xl text-gray-200 font-medium leading-relaxed min-h-[60px]">
+                  &ldquo;{typedText}<span className="animate-pulse">|</span>&rdquo;
+                </div>
+              </div>
+            </div>
 
-             {/* Arrow */}
-             <div className="flex justify-center py-2">
-               <motion.div 
-                 animate={{ y: [0, 5, 0] }}
-                 transition={{ duration: 2, repeat: Infinity }}
-                 className="w-8 h-8 rounded-full bg-[#1C1C24] border border-white/10 flex items-center justify-center text-gray-500"
-               >
-                 <ArrowDown className="w-4 h-4" />
-               </motion.div>
-             </div>
+            {/* Arrow */}
+            <div className="flex justify-center py-2">
+              <motion.div
+                animate={{ y: [0, 5, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-8 h-8 rounded-md bg-[#111116] border border-gray-800 flex items-center justify-center text-gray-500"
+              >
+                <ArrowDown className="w-4 h-4" />
+              </motion.div>
+            </div>
 
-             {/* AI Output */}
-             <div className="flex gap-4 items-start">
-               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6E8BFF] to-[#9A6BFF] flex items-center justify-center shrink-0 shadow-lg shadow-[#9A6BFF]/20 mt-1">
-                 <Sparkles className="w-5 h-5 text-white" />
-               </div>
-               <div className="space-y-2 flex-1">
-                 <div className="text-xs font-medium text-[#9A6BFF] uppercase tracking-wider">Structured Output</div>
-                 <motion.div
-                   initial={{ opacity: 0, y: 10 }}
-                   animate={showOutput ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-                   className="inline-block px-4 py-2 rounded-lg bg-[#1C1C24] border border-[#9A6BFF]/30 text-[#9A6BFF] font-mono font-semibold"
-                 >
-                   {example.output}
-                 </motion.div>
-               </div>
-             </div>
-           </div>
+            {/* AI Output */}
+            <div className="flex gap-4 items-start">
+              <div className="w-10 h-10 rounded-md bg-[#9A6BFF] flex items-center justify-center shrink-0 mt-1">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <div className="space-y-2 flex-1">
+                <div className="text-xs font-medium text-[#9A6BFF] uppercase tracking-wider">Structured Output</div>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={showOutput ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                  className="inline-block px-4 py-2 rounded-md bg-[#111116] border border-gray-800 text-gray-300 font-mono text-sm"
+                >
+                  {example.output}
+                </motion.div>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>

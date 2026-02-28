@@ -23,14 +23,14 @@ export function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="space-y-8 relative z-10"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-[#9A6BFF] font-medium backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-[#9A6BFF] animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#111116] border border-gray-800 text-sm text-[#9A6BFF] font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#9A6BFF]" />
             Launching Soon
           </div>
 
           <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tight leading-[0.95] text-white">
             Turn Your Forms Into{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6E8BFF] via-[#9A6BFF] to-[#F4E7B8]">
+            <span className="text-[#9A6BFF]">
               Conversations.
             </span>
           </h1>
@@ -40,20 +40,17 @@ export function Hero() {
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
-            <MagneticButton className="group relative px-8 py-4 bg-[#1C1C24] text-white font-semibold rounded-full border border-white/10 hover:border-[#6E8BFF]/50 transition-colors shadow-[0_0_30px_rgba(110,139,255,0.15)] overflow-hidden cursor-pointer">
-              <a href="/start-free" className="relative flex items-center gap-2 z-10 focus:outline-none" aria-label="Start your free trial">
-                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#6E8BFF] to-[#9A6BFF] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative z-10">Start Free <ArrowRight className="inline-block w-4 h-4 group-hover:translate-x-1 transition-transform" /></span>
+            <MagneticButton className="px-8 py-3 bg-[#9A6BFF] hover:bg-[#8555e8] text-white font-medium rounded-md transition-colors cursor-pointer">
+              <a href="/start-free" className="flex items-center gap-2 focus:outline-none" aria-label="Start your free trial">
+                <span>Start Free</span> <ArrowRight className="w-4 h-4" />
               </a>
             </MagneticButton>
 
             <button
-              className="px-8 py-4 text-gray-300 font-medium hover:text-white flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-[#6E8BFF] rounded-full"
+              className="px-6 py-3 bg-[#111116] border border-gray-800 text-gray-300 font-medium hover:bg-[#1C1C22] hover:text-white flex items-center gap-2 transition-colors rounded-md"
               aria-label="Watch product demo video"
             >
-              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-                <Play className="w-4 h-4 fill-current ml-0.5" />
-              </div>
+              <Play className="w-4 h-4 fill-current" />
               View Demo
             </button>
           </div>
