@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, Wand2, Eye } from "lucide-react";
+import { ArrowLeft, Wand2, Eye, Check, Loader2 } from "lucide-react";
 
 interface BuilderHeaderProps {
     formTitle: string;
@@ -13,6 +13,7 @@ interface BuilderHeaderProps {
     chatLink: string | null;
     previewMode: boolean;
     onTogglePreview: () => void;
+    saveStatus: "idle" | "saving" | "saved" | "error";
 }
 
 export function BuilderHeader({
@@ -24,6 +25,7 @@ export function BuilderHeader({
     chatLink,
     previewMode,
     onTogglePreview,
+    saveStatus,
 }: BuilderHeaderProps) {
     return (
         <header className="flex items-center justify-between px-4 h-12 border-b border-gray-800/80 shrink-0 bg-[#0B0B0F]">
@@ -43,6 +45,20 @@ export function BuilderHeader({
                     <span className="text-[10px] font-semibold text-[#9A6BFF] bg-[#9A6BFF]/10 border border-[#9A6BFF]/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
                         AI Chat Builder
                     </span>
+                    {/* Auto-save status */}
+                    {saveStatus === "saving" && (
+                        <span className="flex items-center gap-1 text-[10px] text-gray-600 ml-1">
+                            <Loader2 className="w-2.5 h-2.5 animate-spin" /> Saving
+                        </span>
+                    )}
+                    {saveStatus === "saved" && (
+                        <span className="flex items-center gap-1 text-[10px] text-green-600 ml-1">
+                            <Check className="w-2.5 h-2.5" /> Saved
+                        </span>
+                    )}
+                    {saveStatus === "error" && (
+                        <span className="text-[10px] text-red-500 ml-1">Save failed</span>
+                    )}
                 </div>
             </div>
 

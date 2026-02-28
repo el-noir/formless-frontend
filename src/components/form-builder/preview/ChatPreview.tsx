@@ -1,54 +1,99 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { Sparkles } from "lucide-react";
+
+type Tone = "friendly" | "professional" | "concise";
+
+interface Field {
+    id: string;
+    label: string;
+    type: string;
+    required?: boolean;
+    options?: { label: string }[];
+}
 
 interface ChatPreviewProps {
     formTitle: string;
     aiName: string;
     aiAvatar: string;
     welcomeMessage: string;
-    tone: string;
+    tone: Tone;
+    fields: Field[];
 }
 
-// Static "demo" messages that simulate a conversation
-const DEMO_MESSAGES = (aiName: string, welcomeMessage: string, tone: string, formTitle: string) => [
-    {
-        role: "ai",
-        text: welcomeMessage || `Hi! I'm ${aiName}. I'll help you complete "${formTitle}". Let's get started!`,
-        delay: 0,
-    },
-    { role: "user", text: "Sure, sounds good!", delay: 600 },
-    {
-        role: "ai",
-        text:
-            tone === "concise"
-                ? "First question: What's your full name?"
-                : tone === "professional"
-                    ? "Thank you for your time. Could you please provide your full name to begin?"
-                    : "Great! 🎉 First up — what's your full name?",
-        delay: 1200,
-    },
-    { role: "user", text: "John Smith", delay: 2000 },
-    {
-        role: "ai",
-        text:
-            tone === "concise"
-                ? "Got it. Next: your email address?"
-                : tone === "professional"
-                    ? "Thank you, John. Could you please provide your email address?"
-                    : "Perfect, John! 👏 Now, what's your email address?",
-        delay: 2800,
-    },
-];
+// Turn a field into the AI's question for it
+function fieldToQuestion(field: Field, tone: Tone): string {
+    const label = field.label;
+    const required = field.required;
 
-export function ChatPreview({ formTitle, aiName, aiAvatar, welcomeMessage, tone }: ChatPreviewProps) {
-    const messages = DEMO_MESSAGES(aiName || "AI", welcomeMessage, tone, formTitle);
+    if (tone === "concise") {
+        return `${label}?`;
+    }
+    if (tone === "professional") {
+        return `Could you please provide your ${label.toLowerCase()}${required ? "" : " (optional)"}?`;
+    }
+    // friendly
+    const starters = ["Great! Now, ", "Perfect! Next — ", "Got it! ", "Awesome! "];
+    const i = Math.abs(label.charCodeAt(0)) % starters.length;
+    return `${starters[i]}what's your ${label.toLowerCase()}?`;
+}
+
+// Build a realistic message sequence from the actual form fields
+function buildMessages(formTitle: string, aiName: string, tone: Tone, welcomeMessage: string, fields: Field[]) {
+    const questionFields = fields.filter((f) => f.type !== "SECTION_HEADER").slice(0, 3);
+
+    const aiOpening = welcomeMessage?.trim()
+        ? welcomeMessage
+        : tone === "concise"
+            ? `Let's fill out "${formTitle}". Ready?`
+            : tone === "professional"
+                ? `Welcome. I'll guide you through completing "${formTitle}".`
+                : `Hi! I'm here to help you fill out "${formTitle}" 👋 Ready to begin?`;
+
+    const messages: { role: "ai" | "user"; text: string; delay: number }[] = [
+        { role: "ai", text: aiOpening, delay: 0 },
+        { role: "user", text: "Yes, let's go!", delay: 700 },
+    ];
+
+    questionFields.forEach((field, i) => {
+        const question = fieldToQuestion(field, tone);
+        messages.push({ role: "ai", text: question, delay: messages[messages.length - 1].delay + 900 });
+
+        // realistic user answer based on field type
+        let userAns = "Sure!";
+        switch (field.type) {
+            case "SHORT_TEXT":
+            case "SHORT_ANSWER": userAns = i === 0 ? "John Smith" : i === 1 ? "john@example.com" : "Marketing"; break;
+            case "EMAIL": userAns = "john@example.com"; break;
+            case "LINEAR_SCALE":
+            case "SCALE": userAns = "8 out of 10"; break;
+            case "MULTIPLE_CHOICE":
+                userAns = field.options?.[0]?.label ?? "Option A"; break;
+            case "CHECKBOXES":
+                userAns = [field.options?.[0]?.label, field.options?.[1]?.label].filter(Boolean).join(", ") || "A, B"; break;
+            case "DATE": userAns = "March 15, 2025"; break;
+            case "PARAGRAPH": userAns = "Everything was great, very smooth experience!"; break;
+            default: userAns = "Got it ✓";
+        }
+        messages.push({ role: "user", text: userAns, delay: messages[messages.length - 1].delay + 700 });
+    });
+
+    return messages;
+}
+
+export function ChatPreview({ formTitle, aiName, aiAvatar, welcomeMessage, tone, fields }: ChatPreviewProps) {
+    const messages = useMemo(
+        () => buildMessages(formTitle, aiName, tone, welcomeMessage, fields),
+        [formTitle, aiName, tone, welcomeMessage, fields]
+    );
     const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [aiName, welcomeMessage, tone]);
+        const last = messages[messages.length - 1]?.delay ?? 0;
+        const t = setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), last + 200);
+        return () => clearTimeout(t);
+    }, [messages]);
 
     return (
         <div className="h-full flex flex-col bg-[#0B0B0F]">
@@ -57,9 +102,12 @@ export function ChatPreview({ formTitle, aiName, aiAvatar, welcomeMessage, tone 
                 <span className="text-[10px] font-semibold text-gray-600 uppercase tracking-wider">Live Preview</span>
             </div>
 
-            {/* Phone-frame chat window */}
+            {/* Phone-frame */}
             <div className="flex-1 flex items-center justify-center p-6 overflow-auto">
-                <div className="w-full max-w-sm bg-[#0f0f14] border border-gray-800/80 rounded-2xl overflow-hidden shadow-2xl flex flex-col" style={{ height: "520px" }}>
+                <div
+                    className="w-full max-w-sm bg-[#0f0f14] border border-gray-800/80 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+                    style={{ height: "520px" }}
+                >
                     {/* Chat topbar */}
                     <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800/80 bg-[#0B0B0F] shrink-0">
                         <div className="w-8 h-8 rounded-full bg-[#9A6BFF]/10 border border-[#9A6BFF]/20 flex items-center justify-center text-base">
@@ -81,10 +129,10 @@ export function ChatPreview({ formTitle, aiName, aiAvatar, welcomeMessage, tone 
                     <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
                         {messages.map((msg, i) => (
                             <div
-                                key={`${aiName}-${welcomeMessage}-${tone}-${i}`}
+                                key={`${formTitle}-${aiName}-${tone}-${welcomeMessage}-${i}`}
                                 className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                                 style={{
-                                    animation: `fadeIn 0.3s ease forwards`,
+                                    animation: "fadeIn 0.3s ease forwards",
                                     animationDelay: `${msg.delay}ms`,
                                     opacity: 0,
                                 }}
@@ -105,8 +153,15 @@ export function ChatPreview({ formTitle, aiName, aiAvatar, welcomeMessage, tone 
                             </div>
                         ))}
 
-                        {/* Typing indicator */}
-                        <div className="flex gap-2 justify-start" style={{ animation: "fadeIn 0.3s ease forwards", animationDelay: `${messages[messages.length - 1].delay + 600}ms`, opacity: 0 }}>
+                        {/* Typing indicator — appears after last message */}
+                        <div
+                            className="flex gap-2 justify-start"
+                            style={{
+                                animation: "fadeIn 0.3s ease forwards",
+                                animationDelay: `${(messages[messages.length - 1]?.delay ?? 0) + 700}ms`,
+                                opacity: 0,
+                            }}
+                        >
                             <div className="w-6 h-6 rounded-full bg-[#9A6BFF]/10 border border-[#9A6BFF]/20 flex items-center justify-center text-xs shrink-0 mt-0.5">
                                 {aiAvatar}
                             </div>
@@ -124,7 +179,7 @@ export function ChatPreview({ formTitle, aiName, aiAvatar, welcomeMessage, tone 
                         <div className="flex items-center gap-2 bg-[#111116] border border-gray-800 rounded-xl px-3 py-2">
                             <span className="text-xs text-gray-600 flex-1">Type a message...</span>
                             <div className="w-6 h-6 rounded-full bg-[#9A6BFF] flex items-center justify-center opacity-40">
-                                <svg viewBox="0 0 24 24" fill="none" className="w-3 h-3 text-white fill-white">
+                                <svg viewBox="0 0 24 24" fill="none" className="w-3 h-3">
                                     <path d="M5 12h14M12 5l7 7-7 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
@@ -133,7 +188,6 @@ export function ChatPreview({ formTitle, aiName, aiAvatar, welcomeMessage, tone 
                 </div>
             </div>
 
-            {/* Preview note */}
             <div className="text-center pb-4 shrink-0">
                 <p className="text-[10px] text-gray-700">Preview updates as you configure</p>
             </div>
@@ -141,7 +195,7 @@ export function ChatPreview({ formTitle, aiName, aiAvatar, welcomeMessage, tone 
             <style jsx>{`
                 @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(4px); }
-                    to { opacity: 1; transform: translateY(0); }
+                    to   { opacity: 1; transform: translateY(0); }
                 }
             `}</style>
         </div>

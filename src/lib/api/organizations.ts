@@ -146,3 +146,19 @@ export const getFormResponses = async (orgId: string, formId: string) => {
     const data = await res.json();
     return data.data;
 };
+
+export const saveChatConfig = async (
+    orgId: string,
+    formId: string,
+    config: { aiName?: string; tone?: string; avatar?: string; welcomeMessage?: string },
+) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/chat-config`, {
+        method: 'PATCH',
+        body: JSON.stringify(config),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to save chat config');
+    }
+    return res.json();
+};
