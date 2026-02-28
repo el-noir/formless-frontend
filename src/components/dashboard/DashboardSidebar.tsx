@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FormInput, Inbox, Blocks, Settings, Menu } from "lucide-react";
+import { LayoutDashboard, FormInput, Inbox, Blocks, Settings } from "lucide-react";
 
 export function DashboardSidebar() {
     const pathname = usePathname();
@@ -16,11 +16,11 @@ export function DashboardSidebar() {
     ];
 
     return (
-        <aside className="w-64 flex-shrink-0 bg-[#0B0B0F]/90 backdrop-blur-md border-r border-gray-800/60 hidden md:flex flex-col">
-            <div className="h-16 flex items-center px-6 border-b border-gray-800/60">
-                <span className="text-white font-bold text-xl tracking-tight">
+        <aside className="w-64 flex-shrink-0 bg-[#0B0B0F] border-r border-gray-800/80 hidden md:flex flex-col">
+            <div className="h-16 flex items-center px-6 border-b border-gray-800/80">
+                <span className="text-white font-semibold flex items-center gap-1.5 tracking-tight">
+                    <span className="w-4 h-4 bg-[#9A6BFF] rounded-sm"></span>
                     Formless
-                    <span className="text-[#9A6BFF]">.</span>
                 </span>
             </div>
 
@@ -33,26 +33,28 @@ export function DashboardSidebar() {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 ${isActive
-                                    ? "bg-[#9A6BFF]/10 text-[#9A6BFF] font-medium border border-[#9A6BFF]/20 shadow-[0_0_15px_-3px_rgba(154,107,255,0.2)]"
-                                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                            className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors duration-150 ${isActive
+                                    ? "bg-[#1C1C22] text-white font-medium"
+                                    : "text-gray-400 hover:text-white hover:bg-white-[0.02]"
                                 }`}
                         >
-                            <Icon className="w-5 h-5 shrink-0" />
+                            <Icon className={`w-4 h-4 shrink-0 col-span-1 ${isActive ? "text-white" : "text-gray-500"}`} />
                             {link.name}
                         </Link>
                     );
                 })}
             </nav>
 
-            <div className="p-4 border-t border-gray-800/60">
-                <div className="bg-[#1C1C22] rounded-xl p-4 text-sm relative overflow-hidden group border border-gray-800">
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#9A6BFF]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <h4 className="text-white font-medium mb-1">Pro Plan</h4>
-                    <p className="text-gray-400 text-xs mb-3">1,240/10,000 limits</p>
-                    <div className="w-full bg-gray-800 rounded-full h-1.5">
-                        <div className="bg-[#9A6BFF] h-1.5 rounded-full" style={{ width: "12%" }} />
+            <div className="p-4 border-t border-gray-800/80">
+                <div className="bg-[#111116] rounded-md p-4 text-sm border border-gray-800">
+                    <div className="flex items-center justify-between mb-2">
+                        <h4 className="text-gray-200 font-medium text-xs">Pro Plan</h4>
+                        <span className="text-[#9A6BFF] text-xs font-semibold">12%</span>
                     </div>
+                    <div className="w-full bg-gray-800 rounded-sm h-1 mb-2">
+                        <div className="bg-[#9A6BFF] h-full rounded-sm" style={{ width: "12%" }} />
+                    </div>
+                    <p className="text-gray-500 text-[10px] uppercase tracking-wider">1,240 / 10,000</p>
                 </div>
             </div>
         </aside>

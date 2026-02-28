@@ -1,57 +1,52 @@
 "use client";
 
 import { useAuthStore } from "@/stores/authStore";
-import { Search, Bell, Command, User } from "lucide-react";
+import { Search, Bell, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function DashboardTopNav() {
     const { user } = useAuthStore();
     const pathname = usePathname();
 
-    // Simple breadcrumb logic based on pathname
     const pathSegments = pathname.split('/').filter(Boolean);
     const currentPage = pathSegments[pathSegments.length - 1] || 'overview';
     const displayTitle = currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
 
     return (
-        <header className="h-16 bg-[#0B0B0F]/90 backdrop-blur-md border-b border-gray-800/60 px-6 flex items-center justify-between sticky top-0 z-30">
+        <header className="h-16 bg-[#0B0B0F] border-b border-gray-800/80 px-4 md:px-6 flex items-center justify-between sticky top-0 z-30">
             <div className="flex items-center gap-4">
-                <div className="md:hidden text-white font-bold text-lg tracking-tight mr-4">
-                    <span className="text-[#9A6BFF]">F</span>.
+                <div className="md:hidden text-white font-bold flex items-center mr-2">
+                    <span className="w-5 h-5 bg-[#9A6BFF] rounded-sm"></span>
                 </div>
-                <div className="flex flex-col">
-                    <nav className="text-xs text-gray-500 font-medium tracking-wider uppercase mb-0.5 hidden sm:block">
-                        Dashboard / {pathSegments.length > 1 ? pathSegments[0] : ''}
-                    </nav>
-                    <h1 className="text-white text-lg font-semibold leading-tight">{displayTitle}</h1>
+                <div className="flex items-center text-sm font-medium">
+                    <span className="text-gray-500 hidden sm:inline-block">Dashboard / </span>
+                    <span className="text-gray-200 sm:ml-1.5">{displayTitle}</span>
                 </div>
             </div>
 
-            <div className="flex items-center gap-4">
-                {/* Global Search Stub */}
-                <div className="hidden lg:flex items-center relative">
-                    <Search className="w-4 h-4 text-gray-500 absolute left-3" />
+            <div className="flex items-center gap-3">
+                {/* Flat Search Input */}
+                <div className="hidden lg:flex items-center relative group">
+                    <Search className="w-3.5 h-3.5 text-gray-500 absolute left-2.5" />
                     <input
                         type="text"
-                        placeholder="Search forms, submissions..."
-                        className="bg-[#1C1C22] border border-gray-800 text-white text-sm rounded-full pl-9 pr-12 py-1.5 focus:outline-none focus:border-[#9A6BFF] focus:ring-1 focus:ring-[#9A6BFF] transition-all w-64 placeholder:text-gray-500"
+                        placeholder="Search..."
+                        className="bg-[#111116] border border-gray-800 hover:border-gray-700 text-gray-200 text-sm rounded-md pl-8 pr-10 py-1.5 focus:outline-none focus:border-[#9A6BFF] transition-colors w-56 placeholder:text-gray-600 focus:bg-[#0B0B0F]"
                     />
-                    <div className="absolute right-3 flex items-center gap-1 text-gray-500">
-                        <Command className="w-3 h-3" />
-                        <span className="text-xs font-medium">K</span>
+                    <div className="absolute right-2 px-1 text-[10px] font-medium text-gray-500 border border-gray-800 rounded bg-[#1C1C22]">
+                        ⌘K
                     </div>
                 </div>
 
-                {/* Action Icons */}
-                <button className="relative p-2 text-gray-400 hover:text-white transition-colors rounded-full hover:bg-white/5">
-                    <Bell className="w-5 h-5" />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#9A6BFF] rounded-full border border-[#0B0B0F]"></span>
+                <div className="h-4 w-px bg-gray-800 mx-1 hidden sm:block"></div>
+
+                <button className="p-1.5 text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white-[0.02]">
+                    <Bell className="w-4 h-4" />
                 </button>
 
-                {/* User Profile Stub */}
-                <button className="flex items-center gap-2 pl-2 border-l border-gray-800">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#9A6BFF] to-[#6E8BFF] flex items-center justify-center text-white font-bold text-sm shadow-[0_0_10px_rgba(154,107,255,0.3)]">
-                        {user?.firstName?.[0] || <User className="w-4 h-4" />}
+                <button className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-sm bg-[#1C1C22] border border-gray-800 flex items-center justify-center text-gray-300 font-medium text-xs hover:border-gray-600 transition-colors">
+                        {user?.firstName?.[0] || <User className="w-3.5 h-3.5 text-gray-500" />}
                     </div>
                 </button>
             </div>

@@ -3,8 +3,6 @@
 import { TrendingUp, TrendingDown, Users, FileText, CheckCircle2, Activity } from "lucide-react";
 
 export function KPICards({ formsCount, isLoading }: { formsCount: number, isLoading: boolean }) {
-    // In a real app, these would come from an API. For now, we mock some beautiful stats
-    // based on the connected forms count.
     const kpis = [
         {
             title: "Total Forms",
@@ -12,17 +10,13 @@ export function KPICards({ formsCount, isLoading }: { formsCount: number, isLoad
             trend: "+12%",
             isPositive: true,
             icon: FileText,
-            color: "text-blue-400",
-            bgBase: "from-blue-500/10 to-transparent",
         },
         {
             title: "Active Syncs",
-            value: isLoading ? "-" : formsCount.toString(), // Mock syncing all
+            value: isLoading ? "-" : formsCount.toString(),
             trend: "+5%",
             isPositive: true,
             icon: Activity,
-            color: "text-[#9A6BFF]",
-            bgBase: "from-[#9A6BFF]/10 to-transparent",
         },
         {
             title: "Total Submissions",
@@ -30,47 +24,39 @@ export function KPICards({ formsCount, isLoading }: { formsCount: number, isLoad
             trend: "+24%",
             isPositive: true,
             icon: Users,
-            color: "text-emerald-400",
-            bgBase: "from-emerald-500/10 to-transparent",
         },
         {
-            title: "Completion Rate",
+            title: "Avg. Completion",
             value: isLoading ? "-" : "68.4%",
             trend: "-2.1%",
             isPositive: false,
             icon: CheckCircle2,
-            color: "text-amber-400",
-            bgBase: "from-amber-500/10 to-transparent",
         }
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
             {kpis.map((kpi, idx) => {
                 const Icon = kpi.icon;
                 return (
-                    <div key={idx} className="bg-[#111116] border border-gray-800/80 rounded-xl p-5 relative overflow-hidden group hover:border-gray-700 transition-colors">
-                        {/* Subtle background gradient shine */}
-                        <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${kpi.bgBase} rounded-full blur-2xl opacity-50 group-hover:opacity-100 transition-opacity`} />
+                    <div key={idx} className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-5 flex flex-col justify-between hover:border-gray-700 transition-colors shadow-sm">
 
-                        <div className="flex justify-between items-start mb-4 relative z-10">
+                        <div className="flex items-center justify-between mb-4">
                             <span className="text-gray-400 text-sm font-medium">{kpi.title}</span>
-                            <div className={`p-2 bg-[#1C1C22] rounded-lg border border-gray-800/50 ${kpi.color}`}>
-                                <Icon className="w-4 h-4" />
-                            </div>
+                            <Icon className="w-4 h-4 text-gray-600" />
                         </div>
 
-                        <div className="flex items-baseline gap-3 relative z-10">
+                        <div className="flex items-end justify-between">
                             {isLoading ? (
-                                <div className="h-8 w-16 bg-gray-800 rounded animate-pulse" />
+                                <div className="h-8 w-16 bg-gray-800/50 rounded animate-pulse" />
                             ) : (
-                                <h3 className="text-3xl font-bold text-white font-mono tracking-tight">{kpi.value}</h3>
+                                <h3 className="text-2xl font-semibold text-gray-100 tabular-nums tracking-tight">{kpi.value}</h3>
                             )}
 
                             {!isLoading && (
-                                <div className={`flex items-center text-xs font-medium px-1.5 py-0.5 rounded ${kpi.isPositive ? 'text-emerald-400 bg-emerald-400/10' : 'text-red-400 bg-red-400/10'
+                                <div className={`flex items-center text-xs font-semibold ${kpi.isPositive ? 'text-emerald-500' : 'text-red-500'
                                     }`}>
-                                    {kpi.isPositive ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
+                                    {kpi.isPositive ? <TrendingUp className="w-3 h-3 mr-1 opacity-70" /> : <TrendingDown className="w-3 h-3 mr-1 opacity-70" />}
                                     {kpi.trend}
                                 </div>
                             )}
