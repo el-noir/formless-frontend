@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Background } from "@/components/Background";
 import { Loader2, ArrowLeft, Building2, Check } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useOrgStore } from "@/stores/orgStore";
@@ -62,17 +61,15 @@ export default function NewOrganizationPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
-                <Background />
-                <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] relative z-10" />
+            <div className="flex items-center justify-center p-20">
+                <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF]" />
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 pb-12 relative">
-            <Background />
-            <div className="max-w-2xl mx-auto relative z-10">
+        <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
+            <div className="max-w-2xl">
 
                 <button
                     onClick={() => router.push('/dashboard/organizations')}

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Background } from "@/components/Background";
 import {
     Loader2, Plus, Building2, Users, ChevronRight,
     Crown, Shield, User, Zap
@@ -51,9 +50,8 @@ export default function OrganizationsPage() {
 
     if (isLoading || loading) {
         return (
-            <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
-                <Background />
-                <div className="text-center relative z-10">
+            <div className="flex items-center justify-center p-20">
+                <div className="text-center">
                     <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
                     <p className="text-gray-400">Loading your organizations...</p>
                 </div>
@@ -62,9 +60,8 @@ export default function OrganizationsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 pb-12 relative">
-            <Background />
-            <div className="max-w-5xl mx-auto relative z-10">
+        <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
+            <div className="max-w-5xl">
 
                 {/* Header */}
                 <div className="flex justify-between items-start mb-10">

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Background } from "@/components/Background";
 import { Loader2, Plus, FileText, Trash2, Building2 } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
@@ -74,9 +73,8 @@ export default function FormsPage() {
 
     if (isLoading || loadingForms) {
         return (
-            <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
-                <Background />
-                <div className="text-center relative z-10">
+            <div className="flex items-center justify-center p-20">
+                <div className="text-center">
                     <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
                     <p className="text-gray-400">Loading forms...</p>
                 </div>
@@ -87,9 +85,8 @@ export default function FormsPage() {
     // No active org — prompt to create or switch
     if (!currentOrgId || !currentOrg) {
         return (
-            <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 pb-12 relative">
-                <Background />
-                <div className="max-w-xl mx-auto relative z-10 text-center py-16">
+            <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
+                <div className="max-w-xl mx-auto text-center py-16">
                     <div className="w-16 h-16 bg-gradient-to-br from-[#9A6BFF]/10 to-[#9A6BFF]/10 rounded-full flex items-center justify-center mx-auto mb-5">
                         <Building2 className="w-8 h-8 text-[#9A6BFF]" />
                     </div>
@@ -109,9 +106,8 @@ export default function FormsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 pb-12 relative">
-            <Background />
-            <div className="max-w-7xl mx-auto relative z-10">
+        <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
+            <div className="max-w-7xl">
 
                 {/* Header */}
                 <div className="flex justify-between items-start mb-8">

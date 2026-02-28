@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Background } from "@/components/Background";
 import {
     Loader2, ExternalLink, FileText,
     ChevronRight, AlertCircle
@@ -71,9 +70,8 @@ export default function OrgFormViewerPage() {
 
     if (isLoading || loading) {
         return (
-            <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
-                <Background />
-                <div className="text-center relative z-10">
+            <div className="flex items-center justify-center p-20">
+                <div className="text-center">
                     <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
                     <p className="text-gray-400 text-sm">Loading form...</p>
                 </div>
@@ -83,9 +81,8 @@ export default function OrgFormViewerPage() {
 
     if (error || !form) {
         return (
-            <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 relative">
-                <Background />
-                <div className="max-w-3xl mx-auto relative z-10 text-center">
+            <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
+                <div className="max-w-3xl mx-auto text-center">
                     <AlertCircle className="w-10 h-10 text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-400 mb-4">{error || 'Form not found'}</p>
                     <button
@@ -103,9 +100,8 @@ export default function OrgFormViewerPage() {
     const questionFields = fields.filter((f: any) => f.type !== 'SECTION_HEADER');
 
     return (
-        <div className="min-h-screen bg-[#0B0B0F] pt-24 px-6 pb-12 relative">
-            <Background />
-            <div className="max-w-4xl mx-auto relative z-10">
+        <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
+            <div className="max-w-4xl">
 
                 {/* Breadcrumb */}
                 <div className="flex items-center gap-1.5 text-sm text-gray-500 mb-6">
