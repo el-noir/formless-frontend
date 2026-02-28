@@ -162,3 +162,19 @@ export const saveChatConfig = async (
     }
     return res.json();
 };
+
+export const setLinkExpiry = async (
+    orgId: string,
+    formId: string,
+    expiresAt: string | null,   // ISO date string or null to clear
+) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/link-expiry`, {
+        method: 'PATCH',
+        body: JSON.stringify({ expiresAt }),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to set link expiry');
+    }
+    return res.json();
+};

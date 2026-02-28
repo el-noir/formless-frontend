@@ -162,7 +162,15 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                             <WelcomeTab message={welcomeMessage} formTitle={form.title} onChange={setWelcomeMessage} />
                         )}
                         {activeTab === "share" && (
-                            <ShareTab chatLink={chatLink} formTitle={form.title} onPublish={handlePublish} isPublishing={isPublishing} />
+                            <ShareTab
+                                chatLink={chatLink}
+                                formTitle={form.title}
+                                onPublish={handlePublish}
+                                isPublishing={isPublishing}
+                                orgId={orgId}
+                                formId={formId}
+                                initialExpiresAt={form.chatLinkExpiresAt ?? null}
+                            />
                         )}
                     </div>
                 </div>
