@@ -1,17 +1,10 @@
 'use client';
 
-import { motion } from 'motion/react';
-import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+import { usePathname } from 'next/navigation';
+import { Menu, LogOut, ExternalLink } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
 import { logoutUser } from '@/lib/api/auth';
@@ -21,197 +14,203 @@ const navItems = [
   { name: 'How It Works', href: '#how-it-works' },
   { name: 'Testimonials', href: '#testimonials' },
   { name: 'Integrations', href: '#integrations' },
-  { name: "Case Studies", href: "/case-studies" }
+  { name: 'Case Studies', href: '/case-studies' },
 ];
 
 const authNavItems = [
   { name: 'Dashboard', href: '/dashboard' },
-  { name: 'Organizations', href: '/dashboard/organizations' },
   { name: 'My Forms', href: '/dashboard/forms' },
-  { name: 'Integrations', href: '/dashboard/integrations' }
+  { name: 'Integrations', href: '/dashboard/integrations' },
 ];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, isLoading } = useAuth();
   const { user } = useAuthStore();
+  const pathname = usePathname();
 
   const handleLogout = async () => {
-    try {
-      await logoutUser();
-    } catch {
-      // logoutUser already clears local state in its finally block
-    }
-    window.location.href = "/";
+    setDropdownOpen(false);
+    try { await logoutUser(); } catch { /* clearAuth runs in finally */ }
+    window.location.href = '/';
   };
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleNavClick = () => {
-    setMobileMenuOpen(false);
-  };
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const items = isAuthenticated && !isLoading ? authNavItems : navItems;
 
   return (
-    <div className="fixed top-6 left-0 w-full z-50 flex justify-center px-4 pointer-events-none transition-all duration-300">
-      <motion.nav
-        className={`pointer-events-auto rounded-full transition-all duration-300 ${scrolled ? 'bg-brand-surface/80 backdrop-blur-md border border-gray-800 shadow-xl' : 'bg-transparent border border-transparent'
-          }`}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        role="navigation"
-        aria-label="Main navigation"
-      >
-        {/* Skip to content link for accessibility */}
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded-md focus:font-semibold"
+    <div className="fixed top-6 left-0 w-full z-50 flex justify-center px-4 pointer-events-none">
+      <div className="pointer-events-auto relative" ref={dropdownRef}>
+        {/* ─── Pill ───────────────────────────────────────────────── */}
+        <motion.nav
+          className={`rounded-full transition-all duration-300 ${scrolled
+              ? 'bg-[#0B0B0F]/80 backdrop-blur-md border border-gray-800 shadow-xl'
+              : 'bg-[#111116] border border-gray-700 shadow-lg md:bg-transparent md:border-transparent md:shadow-none'
+            }`}
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          role="navigation"
+          aria-label="Main navigation"
         >
-          Skip to content
-        </a>
+          <div className="px-5 md:px-8 h-14 flex items-center justify-between gap-3 md:gap-12">
 
-        <div className="px-6 md:px-8 h-14 flex items-center justify-between gap-6 md:gap-12">
-          <Link
-            href="/"
-            className="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-brand-dark rounded-lg"
-            aria-label="Formless home"
-          >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-purple to-brand-purple flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform" aria-hidden="true">
-              F
+            {/* Logo */}
+            <Link
+              href="/"
+              className="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-[#9A6BFF] rounded-lg shrink-0"
+            >
+              <div className="w-8 h-8 rounded-lg bg-[#9A6BFF] flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform shrink-0">
+                F
+              </div>
+              <span className="text-xl font-bold text-white tracking-tight">Formless</span>
+            </Link>
+
+            {/* Desktop nav links */}
+            <div className="hidden md:flex items-center gap-8">
+              {items.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`text-sm font-medium transition-colors relative group ${isActive ? 'text-white' : 'text-gray-400 hover:text-white'
+                      }`}
+                  >
+                    {item.name}
+                    <span className={`absolute -bottom-1 left-0 h-[2px] bg-[#9A6BFF] transition-all ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+                  </Link>
+                );
+              })}
             </div>
-            <span className="text-xl font-bold text-white tracking-tight">Formless</span>
-          </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {(isAuthenticated && !isLoading ? authNavItems : navItems).map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-sm font-medium text-gray-400 hover:text-white transition-colors relative group focus:outline-none focus:text-white"
-                aria-label={`Navigate to ${item.name}`}
-              >
-                {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-brand-purple transition-all group-hover:w-full group-focus:w-full" />
-              </Link>
-            ))}
+            {/* Desktop CTAs */}
+            <div className="hidden md:flex items-center gap-3">
+              {isAuthenticated && !isLoading ? (
+                <>
+                  <span className="text-white text-sm font-medium bg-white/10 px-3 py-1.5 rounded-lg">
+                    {user?.firstName}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#9A6BFF] text-white font-semibold text-sm hover:bg-[#8B5CF6] transition-colors"
+                  >
+                    <LogOut className="w-3.5 h-3.5" /> Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/sign-in" className="text-sm font-medium text-white hover:text-gray-300 transition-colors px-2 py-1 rounded">
+                    Sign In
+                  </Link>
+                  <Link href="/sign-up" className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                    Start Free
+                  </Link>
+                </>
+              )}
+            </div>
+
+            {/* Mobile hamburger — inside the pill */}
+            <button
+              onClick={() => setDropdownOpen((v) => !v)}
+              className="md:hidden p-1.5 text-gray-400 hover:text-white transition-colors rounded-lg"
+              aria-label="Open menu"
+              aria-expanded={dropdownOpen}
+            >
+              <Menu className="w-5 h-5" />
+            </button>
           </div>
+        </motion.nav>
 
-          <div className="flex items-center gap-4">
-            {/* Show profile and logout if authenticated */}
-            {isAuthenticated && !isLoading ? (
-              <>
-                <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg">
-                  <span className="text-white font-medium">{user?.firstName} {user?.lastName}</span>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 rounded-full bg-brand-purple text-white font-semibold text-sm hover:bg-[#8B5CF6] transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-brand-dark"
-                  aria-label="Logout"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/sign-in"
-                  className="text-sm font-medium text-white hover:text-gray-300 hidden sm:block focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-brand-dark rounded px-2 py-1"
-                  aria-label="Sign in to your account"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/sign-up"
-                  className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 focus:ring-offset-brand-dark"
-                  aria-label="Start free trial"
-                >
-                  Start Free
-                </Link>
-              </>
-            )}
-            {/* Mobile Menu Button */}
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <button
-                  className="md:hidden p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#9A6BFF] rounded-lg"
-                  aria-label="Open navigation menu"
-                  aria-expanded={mobileMenuOpen}
-                  aria-controls="mobile-menu"
-                >
-                  {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                </button>
-              </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="bg-[#0B0B0F] border-l border-white/10 w-[300px]"
-                id="mobile-menu"
-              >
-                <SheetHeader>
-                  <SheetTitle className="text-white text-left">Navigation</SheetTitle>
-                  <SheetDescription className="text-gray-400 text-left">
-                    Explore Formless features and resources
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="flex flex-col gap-6 mt-8">
-                  {(isAuthenticated && !isLoading ? authNavItems : navItems).map((item) => (
+        {/* ─── Dropdown below the pill (mobile only) ──────────────── */}
+        <AnimatePresence>
+          {dropdownOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.97 }}
+              transition={{ duration: 0.15, ease: 'easeOut' }}
+              className="md:hidden absolute top-full left-0 right-0 mt-2 bg-[#111116] border border-gray-800 rounded-2xl overflow-hidden shadow-2xl"
+            >
+              {/* Nav links */}
+              <div className="p-2">
+                {items.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
                     <Link
                       key={item.name}
                       href={item.href}
-                      onClick={handleNavClick}
-                      className="text-lg font-medium text-gray-300 hover:text-white transition-colors focus:outline-none focus:text-white focus:pl-2"
-                      aria-label={`Navigate to ${item.name}`}
+                      onClick={() => setDropdownOpen(false)}
+                      className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors ${isActive
+                          ? 'bg-[#9A6BFF]/10 text-white font-medium'
+                          : 'text-gray-400 hover:text-white hover:bg-white/[0.04]'
+                        }`}
                     >
                       {item.name}
+                      {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#9A6BFF]" />}
                     </Link>
-                  ))}
-                  {/* Show profile and logout if authenticated */}
-                  {isAuthenticated && !isLoading ? (
-                    <div className="border-t border-white/10 pt-6 flex flex-col gap-4">
-                      <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg">
-                        <span className="text-white font-medium">{user?.firstName} {user?.lastName}</span>
+                  );
+                })}
+              </div>
+
+              {/* Auth section */}
+              <div className="border-t border-gray-800/80 p-3 space-y-2">
+                {isAuthenticated && !isLoading ? (
+                  <>
+                    <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/5">
+                      <div className="w-7 h-7 rounded-full bg-[#9A6BFF]/20 flex items-center justify-center text-xs font-semibold text-[#9A6BFF]">
+                        {user?.firstName?.charAt(0)}
                       </div>
-                      <button
-                        onClick={() => { handleNavClick(); handleLogout(); }}
-                        className="px-6 py-3 rounded-full bg-[#9A6BFF] text-white font-semibold text-center hover:bg-[#4B6BFF] transition-colors focus:outline-none focus:ring-2 focus:ring-[#9A6BFF]"
-                        aria-label="Logout"
-                      >
-                        Logout
-                      </button>
+                      <span className="text-white text-sm font-medium">{user?.firstName} {user?.lastName}</span>
                     </div>
-                  ) : (
-                    <div className="border-t border-white/10 pt-6 flex flex-col gap-4">
-                      <Link
-                        href="/sign-in"
-                        onClick={handleNavClick}
-                        className="text-lg font-medium text-gray-300 hover:text-white transition-colors focus:outline-none focus:text-white"
-                        aria-label="Sign in to your account"
-                      >
-                        Sign In
-                      </Link>
-                      <Link
-                        href="/sign-up"
-                        onClick={handleNavClick}
-                        className="px-6 py-3 rounded-full bg-white text-black font-semibold text-center hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#9A6BFF]"
-                        aria-label="Start free trial"
-                      >
-                        Start Free Trial
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-      </motion.nav>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium hover:bg-red-500/20 transition-colors"
+                    >
+                      <LogOut className="w-3.5 h-3.5" /> Logout
+                    </button>
+                  </>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href="/sign-in"
+                      onClick={() => setDropdownOpen(false)}
+                      className="text-center py-2.5 rounded-xl border border-gray-800 text-sm font-medium text-gray-300 hover:text-white hover:border-gray-700 transition-colors"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      href="/sign-up"
+                      onClick={() => setDropdownOpen(false)}
+                      className="text-center py-2.5 rounded-xl bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors"
+                    >
+                      Start Free
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
