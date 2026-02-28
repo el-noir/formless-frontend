@@ -9,7 +9,7 @@ import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { FormsListWidget } from "@/components/dashboard/FormsListWidget";
 import { OrganizationSwitcher } from "@/components/dashboard/OrganizationSwitcher";
 import { IntegrationsView } from "@/components/dashboard/IntegrationsView";
-import { ImportView } from "@/components/dashboard/ImportView";
+import { FormsView } from "@/components/dashboard/FormsView";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { Plus, Wand2, Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -122,11 +122,11 @@ function DashboardContent() {
         <IntegrationsView />
       )}
 
-      {currentView === 'import' && currentOrgId && (
-        <ImportView currentOrgId={currentOrgId} />
+      {currentView === 'forms' && currentOrgId && (
+        <FormsView currentOrgId={currentOrgId} />
       )}
 
-      {currentView === 'import' && !currentOrgId && (
+      {currentView === 'forms' && !currentOrgId && (
         <div className="bg-[#111116] border border-gray-800 rounded-2xl p-8 text-center max-w-xl mx-auto mt-12">
           <p className="text-gray-400 text-sm mb-5">Please select or create an organization first.</p>
         </div>

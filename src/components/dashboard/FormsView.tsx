@@ -8,7 +8,7 @@ import {
 import { getGoogleForms } from "@/lib/api/integrations";
 import { importOrgForm } from "@/lib/api/organizations";
 
-export function ImportView({ currentOrgId }: { currentOrgId: string }) {
+export function FormsView({ currentOrgId }: { currentOrgId: string }) {
     const [forms, setForms] = useState<any[]>([]);
     const [loadingForms, setLoadingForms] = useState(true);
     const [fetchError, setFetchError] = useState<string | null>(null);

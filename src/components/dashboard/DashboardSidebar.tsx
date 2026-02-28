@@ -11,7 +11,7 @@ function SidebarLinks() {
 
     const links = [
         { name: "Overview", href: "/dashboard", view: "overview", icon: LayoutDashboard },
-        { name: "Import", href: "/dashboard?view=import", view: "import", icon: FormInput },
+        { name: "Forms", href: "/dashboard?view=forms", view: "forms", icon: FormInput },
         { name: "Submissions", href: "/dashboard?view=submissions", view: "submissions", icon: Inbox },
         { name: "Integrations", href: "/dashboard?view=integrations", view: "integrations", icon: Blocks },
         { name: "Settings", href: "/dashboard?view=settings", view: "settings", icon: Settings },
