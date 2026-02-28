@@ -9,6 +9,7 @@ import { FormsListWidget } from "@/components/dashboard/FormsListWidget";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { Plus, Sparkles, Wand2 } from "lucide-react";
 import Link from "next/link";
+import { OrganizationSwitcher } from "@/components/dashboard/OrganizationSwitcher";
 
 function Dashboard() {
   const { user, accessToken } = useAuthStore();
@@ -44,6 +45,10 @@ function Dashboard() {
 
   return (
     <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
+      <div className="mb-8">
+        <OrganizationSwitcher />
+      </div>
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h2 className="text-xl font-semibold text-gray-100 tracking-tight mb-1">
