@@ -47,10 +47,10 @@ export function DashboardSidebar() {
     return (
         <aside className="w-64 flex-shrink-0 bg-[#0B0B0F] border-r border-gray-800/80 hidden md:flex flex-col">
             <div className="h-16 flex items-center px-6 border-b border-gray-800/80">
-                <span className="text-white font-semibold flex items-center gap-1.5 tracking-tight">
+                <Link href="/" className="text-white font-semibold flex items-center gap-1.5 tracking-tight">
                     <span className="w-4 h-4 bg-[#9A6BFF] rounded-sm"></span>
                     Formless
-                </span>
+                </Link>
             </div>
 
             <Suspense fallback={<nav className="flex-1 py-6 px-4 space-y-1" />}>

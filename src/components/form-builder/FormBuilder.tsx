@@ -82,7 +82,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
         <div className="flex flex-col flex-1 overflow-hidden relative">
             {/* Generating overlay — shown on mount, dismisses automatically */}
             {isGenerating && (
-                <GeneratingOverlay formTitle={form.title} totalMs={TOTAL_GENERATE_MS} />
+                <GeneratingOverlay form={form} totalMs={TOTAL_GENERATE_MS} />
             )}
 
             <BuilderHeader
