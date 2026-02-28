@@ -33,16 +33,16 @@ export const useOrgStore = create<OrgState>()(
             currentOrgId: null,
 
             setOrganizations: (orgs) => {
-                const current = get().currentOrgId;
+                const current = String(get().currentOrgId || '');
                 // Auto-select first org if none selected, or keep existing if still valid
-                const validCurrent = orgs.find((o) => o.id === current);
+                const validCurrent = orgs.find((o) => String(o.id) === current);
                 set({
                     organizations: orgs,
-                    currentOrgId: validCurrent?.id ?? orgs[0]?.id ?? null,
+                    currentOrgId: validCurrent ? String(validCurrent.id) : (orgs[0] ? String(orgs[0].id) : null),
                 });
             },
 
-            setCurrentOrg: (orgId) => set({ currentOrgId: orgId }),
+            setCurrentOrg: (orgId) => set({ currentOrgId: orgId ? String(orgId) : null }),
 
             addOrganization: (org) =>
                 set((state) => ({

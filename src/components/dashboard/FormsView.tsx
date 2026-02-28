@@ -19,12 +19,15 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
     const [importErrors, setImportErrors] = useState<Record<string, string>>({});
 
     useEffect(() => {
+        // Reset per-organization state when switching orgs
+        setImporting({});
+        setImportErrors({});
+
         (async () => {
             setLoadingForms(true);
             setFetchError(null);
             try {
                 const data = await getGoogleForms();
-                // API returns either an array or an object with a forms/files array
                 const list = Array.isArray(data) ? data : (data.files || data.forms || []);
                 setForms(list);
             } catch (e: any) {
@@ -38,7 +41,7 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
                 setLoadingForms(false);
             }
         })();
-    }, []);
+    }, [currentOrgId]);
 
     const handleImport = async (form: any) => {
         const formId = form.formId || form.id;

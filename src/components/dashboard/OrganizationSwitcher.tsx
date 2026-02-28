@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/authStore";
+import { useOrgStore } from "@/stores/orgStore";
 import { getMyOrganizations } from "@/lib/api/organizations";
 import {
     DropdownMenu,
@@ -16,11 +17,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export function OrganizationSwitcher() {
-    const { user, accessToken } = useAuthStore();
-    const [organizations, setOrganizations] = useState<any[]>([]);
+    const { accessToken } = useAuthStore();
+    const {
+        organizations,
+        currentOrgId,
+        setOrganizations,
+        setCurrentOrg,
+        getCurrentOrg
+    } = useOrgStore();
+
     const [loading, setLoading] = useState(true);
-    const [currentOrg, setCurrentOrg] = useState<any>(null);
-    const router = useRouter();
+    const currentOrg = getCurrentOrg();
 
     useEffect(() => {
         const fetchOrgs = async () => {
@@ -28,11 +35,17 @@ export function OrganizationSwitcher() {
             try {
                 setLoading(true);
                 const orgs = await getMyOrganizations();
-                setOrganizations(orgs);
-                if (orgs.length > 0) {
-                    // For now, default to the first one available
-                    setCurrentOrg(orgs[0]);
-                }
+
+                // Map API response to OrgSummary interface if needed
+                const summaries = orgs.map((o: any) => ({
+                    id: String(o._id || o.id),
+                    name: o.name,
+                    plan: o.plan || 'free',
+                    myRole: o.myRole || 'owner',
+                    memberCount: o.memberCount || 1
+                }));
+
+                setOrganizations(summaries);
             } catch (err) {
                 console.error("Failed to fetch organizations", err);
             } finally {
@@ -41,9 +54,9 @@ export function OrganizationSwitcher() {
         };
 
         fetchOrgs();
-    }, [accessToken]);
+    }, [accessToken, setOrganizations]);
 
-    if (loading) {
+    if (loading && organizations.length === 0) {
         return (
             <div className="flex items-center gap-2 text-gray-400 text-sm px-3 py-2 border border-gray-800 rounded-lg w-fit">
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -83,20 +96,20 @@ export function OrganizationSwitcher() {
 
                 {organizations.map((org) => (
                     <DropdownMenuItem
-                        key={org._id}
-                        className={`flex items-center gap-2 px-2 py-2 cursor-pointer rounded-md ${currentOrg?._id === org._id
-                                ? "bg-[#1C1C22] text-white"
-                                : "text-gray-300 focus:bg-white/[0.04] focus:text-white"
+                        key={org.id}
+                        className={`flex items-center gap-2 px-2 py-2 cursor-pointer rounded-md ${String(currentOrgId) === String(org.id)
+                            ? "bg-[#1C1C22] text-white"
+                            : "text-gray-300 focus:bg-white/[0.04] focus:text-white"
                             }`}
-                        onClick={() => setCurrentOrg(org)}
+                        onClick={() => setCurrentOrg(org.id)}
                     >
-                        <div className={`w-6 h-6 rounded flex items-center justify-center shrink-0 ${currentOrg?._id === org._id ? "bg-[#9A6BFF] text-white" : "bg-[#1C1C22] border border-gray-800 text-gray-400"}`}>
+                        <div className={`w-6 h-6 rounded flex items-center justify-center shrink-0 ${String(currentOrgId) === String(org.id) ? "bg-[#9A6BFF] text-white" : "bg-[#1C1C22] border border-gray-800 text-gray-400"}`}>
                             {org.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="flex flex-col overflow-hidden">
                             <span className="truncate text-sm font-medium">{org.name}</span>
                         </div>
-                        {currentOrg?._id === org._id && (
+                        {String(currentOrgId) === String(org.id) && (
                             <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#9A6BFF]" />
                         )}
                     </DropdownMenuItem>
