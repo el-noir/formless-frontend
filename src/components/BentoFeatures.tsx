@@ -1,12 +1,12 @@
 import { motion } from 'motion/react';
 import { Brain, Globe, BarChart3, ShieldCheck, UserCog, Share2 } from 'lucide-react';
 import { TiltCard } from './ui/TiltCard';
-import { 
-  ContextAwareVisual, 
-  AnalyticsVisual, 
-  SecurityVisual, 
-  GlobalVisual, 
-  IntegrationVisual 
+import {
+  ContextAwareVisual,
+  AnalyticsVisual,
+  SecurityVisual,
+  GlobalVisual,
+  IntegrationVisual
 } from './ui/FeatureVisuals';
 
 const features = [
@@ -58,9 +58,9 @@ export function BentoFeatures() {
   return (
     <section id="features" className="py-32 relative bg-[#0B0B0F]" aria-labelledby="features-title">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-20">
-          <h2 id="features-title" className="text-3xl md:text-5xl font-bold text-white mb-6">Powerful Features</h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+        <div className="text-center mb-20 flex flex-col items-center">
+          <h2 id="features-title" className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">Powerful Features</h2>
+          <p className="text-gray-400 text-lg max-w-2xl text-center">
             Everything you need to build intelligent conversational forms.
           </p>
         </div>
@@ -86,20 +86,20 @@ export function BentoFeatures() {
                       </div>
                     );
                   })()}
-                  
+
                   {/* Fallback/Overlay for hover effect */}
-                  <div 
-                     className="absolute inset-0 bg-gradient-to-br from-[#6E8BFF]/5 to-[#9A6BFF]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" 
-                     style={{ transform: "translateZ(-10px)" }}
+                  <div
+                    className="absolute inset-0 bg-gradient-to-br from-[#6E8BFF]/5 to-[#9A6BFF]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{ transform: "translateZ(-10px)" }}
                   />
                 </div>
-                
+
                 {/* Content */}
                 <div className="relative z-20 p-8 pt-0 bg-gradient-to-t from-[#121218] via-[#121218] to-transparent" style={{ transform: "translateZ(30px)" }}>
                   <div className="w-12 h-12 rounded-2xl bg-[#1C1C24] border border-white/10 flex items-center justify-center mb-4 shadow-lg">
                     <feature.icon className="w-6 h-6 text-[#9A6BFF]" />
                   </div>
-                  
+
                   <h3 className="text-2xl font-semibold text-white mb-2 tracking-tight">{feature.title}</h3>
                   <p className="text-gray-400 leading-relaxed font-medium">{feature.desc}</p>
                 </div>

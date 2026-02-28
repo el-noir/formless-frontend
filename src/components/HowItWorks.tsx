@@ -27,15 +27,15 @@ export function HowItWorks() {
     <section id="how-it-works" className="py-32 relative overflow-hidden bg-[#0B0B0F]" aria-labelledby="how-it-works-title">
       <div className="absolute top-0 left-0 right-0 h-[500px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="text-center max-w-2xl mx-auto mb-20">
-          <h2 id="how-it-works-title" className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">How It Works</h2>
+      <div className="max-w-7xl mx-auto px-6 relative z-10 text-center flex flex-col items-center">
+        <div className="max-w-2xl mb-20 text-center">
+          <h2 id="how-it-works-title" className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">How It Works</h2>
           <p className="text-gray-400 text-lg">
             Three simple steps to modernize your data collection.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 relative">
+        <div className="grid md:grid-cols-3 gap-8 relative w-full">
           {/* Connecting Line (Desktop) */}
           <div className="hidden md:block absolute top-[180px] left-[16%] right-[16%] h-px bg-gray-800 z-0">
             <motion.div
@@ -54,7 +54,6 @@ export function HowItWorks() {
               transition={{ delay: index * 0.2, duration: 0.6 }}
               className="relative flex flex-col items-center group z-10"
             >
-              {/* Card Container */}
               <div className="w-full h-[320px] bg-[#0B0B0F] border border-gray-800 rounded-xl overflow-hidden relative group-hover:border-gray-600 transition-all duration-300 flex flex-col">
 
                 {/* Visual Area */}
