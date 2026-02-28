@@ -25,15 +25,12 @@ function DashboardContent() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const fetchForms = async () => {
-    if (!currentOrgId) {
-      setForms([]);
-      return;
-    }
+  const fetchForms = async (id: string) => {
+    setForms(null);  // clear immediately — prevents stale data from previous org showing
     setLoadingForms(true);
     setError(null);
     try {
-      const data = await getOrgForms(currentOrgId);
+      const data = await getOrgForms(id);
       setForms(data.forms || []);
     } catch (err: any) {
       console.error("Error fetching forms:", err);
@@ -44,12 +41,14 @@ function DashboardContent() {
   };
 
   useEffect(() => {
-    if (accessToken && currentOrgId) {
-      fetchForms();
+    // Use orgId from URL (source of truth) — not currentOrgId from Zustand,
+    // which can be momentarily stale during org switches.
+    if (accessToken && orgId) {
+      fetchForms(orgId);
     } else {
       setForms([]);
     }
-  }, [accessToken, currentOrgId]);
+  }, [accessToken, orgId]); // orgId, not currentOrgId
 
   return (
     <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
