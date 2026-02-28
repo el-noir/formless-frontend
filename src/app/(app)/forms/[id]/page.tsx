@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, use } from "react";
+
 import { useParams, useRouter } from "next/navigation";
 import { Background } from "@/components/Background";
 import { Loader2, ArrowLeft, ExternalLink, MessageSquare, Settings, Share2, Eye } from "lucide-react";
@@ -23,7 +24,8 @@ const FIELD_TYPE_STYLES: Record<string, string> = {
 };
 
 export default function FormViewerPage() {
-    const { id } = useParams() as { id: string };
+    const params = useParams();
+    const id = params?.id as string;
     const router = useRouter();
     const { isLoading } = useRequireAuth();
     const { accessToken } = useAuthStore();

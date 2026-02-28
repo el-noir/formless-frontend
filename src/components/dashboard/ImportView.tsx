@@ -1,0 +1,175 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import {
+    Loader2, FileText, Search, Check, AlertCircle,
+    ExternalLink, Plus
+} from "lucide-react";
+import { getGoogleForms } from "@/lib/api/integrations";
+import { importOrgForm } from "@/lib/api/organizations";
+
+export function ImportView({ currentOrgId }: { currentOrgId: string }) {
+    const [forms, setForms] = useState<any[]>([]);
+    const [loadingForms, setLoadingForms] = useState(true);
+    const [fetchError, setFetchError] = useState<string | null>(null);
+    const [search, setSearch] = useState('');
+
+    // Per-form import state
+    const [importing, setImporting] = useState<Record<string, 'idle' | 'loading' | 'done' | 'error'>>({});
+    const [importErrors, setImportErrors] = useState<Record<string, string>>({});
+
+    useEffect(() => {
+        (async () => {
+            setLoadingForms(true);
+            setFetchError(null);
+            try {
+                const data = await getGoogleForms();
+                // API returns either an array or an object with a forms/files array
+                const list = Array.isArray(data) ? data : (data.files || data.forms || []);
+                setForms(list);
+            } catch (e: any) {
+                const status = Number(e?.status || e?.statusCode);
+                if (status === 401 || status === 404) {
+                    setFetchError('Your Google account is not connected yet. Go to Integrations to connect it first.');
+                } else {
+                    setFetchError(e?.message || 'Failed to fetch your Google Forms');
+                }
+            } finally {
+                setLoadingForms(false);
+            }
+        })();
+    }, []);
+
+    const handleImport = async (form: any) => {
+        const formId = form.formId || form.id;
+        setImporting((prev) => ({ ...prev, [formId]: 'loading' }));
+        setImportErrors((prev) => ({ ...prev, [formId]: '' }));
+        try {
+            await importOrgForm(currentOrgId, formId);
+            setImporting((prev) => ({ ...prev, [formId]: 'done' }));
+        } catch (e: any) {
+            setImporting((prev) => ({ ...prev, [formId]: 'error' }));
+            setImportErrors((prev) => ({ ...prev, [formId]: e.message || 'Import failed' }));
+        }
+    };
+
+    const filtered = forms.filter((f) => {
+        const name = (f.title || f.name || '').toLowerCase();
+        return name.includes(search.toLowerCase());
+    });
+
+    return (
+        <div className="w-full h-full flex flex-col max-w-4xl">
+            {/* Header */}
+            <div className="mb-6">
+                <h1 className="text-3xl font-bold text-white mb-1">Import a Google Form</h1>
+                <p className="text-gray-400 text-sm">Select a form from your Google account to import into this workspace</p>
+            </div>
+
+            {/* Search */}
+            {forms.length > 0 && (
+                <div className="relative mb-6">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Search forms..."
+                        className="w-full bg-[#111116] border border-gray-800 rounded-xl pl-11 pr-4 py-3 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-[#9A6BFF] transition-colors shadow-sm"
+                    />
+                </div>
+            )}
+
+            {/* States */}
+            {loadingForms ? (
+                <div className="flex flex-col items-center justify-center py-20 gap-3 border border-gray-800/50 rounded-2xl bg-[#0B0B0F]">
+                    <Loader2 className="w-7 h-7 animate-spin text-[#9A6BFF]" />
+                    <p className="text-gray-400 text-sm">Loading your Google Forms...</p>
+                </div>
+            ) : fetchError ? (
+                <div className="bg-[#111116] border border-gray-800 rounded-2xl p-8 text-center max-w-xl">
+                    <AlertCircle className="w-10 h-10 text-gray-600 mx-auto mb-3" />
+                    <p className="text-gray-400 text-sm mb-5">{fetchError}</p>
+                    <a
+                        href="/dashboard?view=integrations"
+                        className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors"
+                    >
+                        Connect Google Account
+                    </a>
+                </div>
+            ) : filtered.length === 0 ? (
+                <div className="border border-dashed border-gray-800 bg-[#0B0B0F] rounded-xl p-12 text-center max-w-xl">
+                    <FileText className="w-10 h-10 text-gray-700 mx-auto mb-3" />
+                    <p className="text-gray-500 text-sm">
+                        {search ? `No forms match "${search}"` : 'No Google Forms found in your account'}
+                    </p>
+                </div>
+            ) : (
+                <div className="space-y-3">
+                    {filtered.map((form) => {
+                        const formId = form.formId || form.id;
+                        const state = importing[formId] || 'idle';
+                        const err = importErrors[formId];
+
+                        return (
+                            <div
+                                key={formId}
+                                className={`bg-[#111116] border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors shadow-sm ${state === 'done' ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-gray-800 hover:border-gray-700'}`}
+                            >
+                                <div className="flex items-center gap-4 min-w-0">
+                                    <div className="w-10 h-10 rounded-lg bg-[#1C1C22] border border-gray-800 flex items-center justify-center shrink-0">
+                                        <FileText className="w-5 h-5 text-gray-400" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-gray-200 text-sm font-medium truncate">{form.title || form.name}</p>
+                                        <p className="text-gray-500 font-mono text-xs truncate mt-0.5">{formId}</p>
+                                        {err && (
+                                            <p className="text-red-400 text-xs mt-1">{err}</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                                    {form.alternateLink && (
+                                        <a
+                                            href={form.alternateLink}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="p-2 text-gray-500 hover:text-gray-300 hover:bg-white/[0.04] rounded transition-colors"
+                                            title="Open in Google Forms"
+                                        >
+                                            <ExternalLink className="w-4 h-4" />
+                                        </a>
+                                    )}
+
+                                    <button
+                                        onClick={() => handleImport(form)}
+                                        disabled={state === 'loading' || state === 'done'}
+                                        className={`flex items-center justify-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg transition-colors w-[110px] ${state === 'done'
+                                            ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 cursor-default'
+                                            : state === 'loading'
+                                                ? 'bg-[#1C1C22] text-gray-400 border border-gray-800 cursor-wait'
+                                                : state === 'error'
+                                                    ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20'
+                                                    : 'bg-[#9A6BFF] hover:bg-[#8555e8] text-white shadow-sm'
+                                            }`}
+                                    >
+                                        {state === 'loading' ? (
+                                            <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Importing</>
+                                        ) : state === 'done' ? (
+                                            <><Check className="w-3.5 h-3.5" /> Imported</>
+                                        ) : state === 'error' ? (
+                                            'Retry'
+                                        ) : (
+                                            <><Plus className="w-3.5 h-3.5" /> Import</>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+}
