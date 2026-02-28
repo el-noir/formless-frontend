@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BuilderHeader } from "./BuilderHeader";
 import { PersonaTab, type Tone } from "./config/PersonaTab";
 import { WelcomeTab } from "./config/WelcomeTab";
 import { ShareTab } from "./config/ShareTab";
 import { ChatPreview } from "./preview/ChatPreview";
+import { GeneratingOverlay } from "./GeneratingOverlay";
 import { generateChatLink } from "@/lib/api/organizations";
 import { User, MessageCircle, Share2 } from "lucide-react";
 
@@ -23,7 +24,10 @@ const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
     { id: "share", label: "Publish", icon: Share2 },
 ];
 
+const TOTAL_GENERATE_MS = 2600;
+
 export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
+    const [isGenerating, setIsGenerating] = useState(true);
     const [activeTab, setActiveTab] = useState<Tab>("persona");
 
     // Config state
@@ -39,6 +43,19 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
 
     // Mobile: toggle between config and preview
     const [previewMode, setPreviewMode] = useState(false);
+
+    // Auto-dismiss the generating overlay
+    const mounted = useRef(true);
+    useEffect(() => {
+        mounted.current = true;
+        const t = setTimeout(() => {
+            if (mounted.current) setIsGenerating(false);
+        }, TOTAL_GENERATE_MS);
+        return () => {
+            mounted.current = false;
+            clearTimeout(t);
+        };
+    }, []);
 
     const handlePublish = async () => {
         setIsPublishing(true);
@@ -62,7 +79,12 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
     };
 
     return (
-        <div className="flex flex-col flex-1 overflow-hidden">
+        <div className="flex flex-col flex-1 overflow-hidden relative">
+            {/* Generating overlay — shown on mount, dismisses automatically */}
+            {isGenerating && (
+                <GeneratingOverlay formTitle={form.title} totalMs={TOTAL_GENERATE_MS} />
+            )}
+
             <BuilderHeader
                 formTitle={form.title}
                 orgId={orgId}
@@ -87,8 +109,8 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={`flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors relative ${activeTab === tab.id
-                                            ? "text-[#9A6BFF]"
-                                            : "text-gray-500 hover:text-gray-300"
+                                        ? "text-[#9A6BFF]"
+                                        : "text-gray-500 hover:text-gray-300"
                                         }`}
                                 >
                                     <Icon className="w-3.5 h-3.5" />
