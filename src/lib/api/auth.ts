@@ -1,6 +1,6 @@
 'use client';
 import axios from "axios";
-import { RegisterDto, RegisterUserResponse, LoginDto, LoginResponse } from "@/app/types/Auth";
+import { RegisterDto, RegisterUserResponse, LoginDto, LoginResponse, User } from "@/app/types/Auth";
 import { useAuthStore } from "@/stores/authStore";
 import { API_BASE_URL } from "./config";
 
@@ -100,6 +100,25 @@ export function isAuthenticated(): boolean {
  */
 export function loginWithGoogle(): void {
   window.location.href = `${API_BASE_URL}/auth/google`;
+}
+
+/**
+ * Get the latest user profile from the server
+ */
+export async function fetchUserProfile(): Promise<User> {
+  try {
+    const response = await api.get<User>('/users/me');
+    if (response.data) {
+      useAuthStore.getState().updateUser(response.data);
+    }
+    return response.data;
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message || error.message || 'Failed to fetch profile';
+      throw new Error(message);
+    }
+    throw new Error('An unexpected error occurred');
+  }
 }
 
 export { api };
