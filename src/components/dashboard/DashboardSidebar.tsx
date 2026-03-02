@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { LayoutDashboard, FormInput, Inbox, Blocks, Settings } from "lucide-react";
 import { Suspense } from "react";
+import Image from "next/image";
 
 function SidebarLinks() {
     const pathname = usePathname();
@@ -47,8 +48,15 @@ export function DashboardSidebar() {
     return (
         <aside className="w-64 flex-shrink-0 bg-[#0B0B0F] border-r border-gray-800/80 hidden md:flex flex-col">
             <div className="h-16 flex items-center px-6 border-b border-gray-800/80">
-                <Link href="/" className="text-white font-semibold flex items-center gap-1.5 tracking-tight">
-                    <span className="w-4 h-4 bg-[#9A6BFF] rounded-sm"></span>
+                <Link href="/" className="text-white font-semibold flex items-center gap-2.5 tracking-tight group">
+                    <div className="relative w-6 h-6 rounded-md overflow-hidden group-hover:scale-110 transition-transform shrink-0">
+                        <Image
+                            src="/logo.png"
+                            alt="Formless Logo"
+                            fill
+                            className="object-contain"
+                        />
+                    </div>
                     Formless
                 </Link>
             </div>

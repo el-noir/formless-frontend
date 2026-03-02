@@ -1,11 +1,18 @@
+import Image from "next/image";
+
 export function Footer() {
   return (
     <footer className="bg-brand-dark border-t border-gray-800 py-16 text-gray-400" aria-label="Footer">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="col-span-1 md:col-span-1">
           <a href="/" className="inline-flex items-center gap-2 mb-6 group focus:outline-none focus:ring-2 focus:ring-brand-purple rounded-lg">
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-brand-purple to-brand-purple flex items-center justify-center text-white font-bold text-xs" aria-hidden="true">
-              FI
+            <div className="relative w-7 h-7 rounded-md overflow-hidden group-hover:scale-110 transition-transform shrink-0">
+              <Image
+                src="/logo.png"
+                alt="Formless Logo"
+                fill
+                className="object-contain"
+              />
             </div>
             <span className="text-white font-semibold">Formless</span>
           </a>

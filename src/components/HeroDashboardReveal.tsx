@@ -35,7 +35,7 @@ export function HeroDashboardReveal() {
                     }}
                     className="absolute inset-0 flex items-center justify-center px-4 md:px-6 max-w-7xl mx-auto z-0"
                 >
-                    <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden border border-gray-800 bg-[#0B0B0F] shadow-2xl">
+                    <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden border border-gray-800/50 bg-[#0B0B0F] shadow-[0_0_50px_rgba(154,107,255,0.15)]">
                         <Image
                             src="/dashboard-live2.png"
                             alt="Formless Dashboard Interface"

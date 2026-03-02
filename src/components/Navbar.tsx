@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, LogOut, ExternalLink } from 'lucide-react';
+import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
 import { logoutUser } from '@/lib/api/auth';
@@ -62,8 +63,8 @@ export function Navbar() {
         {/* ─── Pill ───────────────────────────────────────────────── */}
         <motion.nav
           className={`rounded-full transition-all duration-300 ${scrolled
-              ? 'bg-[#0B0B0F]/80 backdrop-blur-md border border-gray-800 shadow-xl'
-              : 'bg-[#111116] border border-gray-700 shadow-lg md:bg-transparent md:border-transparent md:shadow-none'
+            ? 'bg-[#0B0B0F]/80 backdrop-blur-md border border-gray-800 shadow-xl'
+            : 'bg-[#111116] border border-gray-700 shadow-lg md:bg-transparent md:border-transparent md:shadow-none'
             }`}
           initial={{ y: -100 }}
           animate={{ y: 0 }}
@@ -73,13 +74,17 @@ export function Navbar() {
         >
           <div className="px-5 md:px-8 h-14 flex items-center justify-between gap-3 md:gap-12">
 
-            {/* Logo */}
             <Link
               href="/"
               className="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-[#9A6BFF] rounded-lg shrink-0"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#9A6BFF] flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform shrink-0">
-                F
+              <div className="relative w-8 h-8 rounded-lg overflow-hidden group-hover:scale-110 transition-transform shrink-0">
+                <Image
+                  src="/logo.png"
+                  alt="Formless Logo"
+                  fill
+                  className="object-contain"
+                />
               </div>
               <span className="text-xl font-bold text-white tracking-tight">Formless</span>
             </Link>
@@ -160,8 +165,8 @@ export function Navbar() {
                       href={item.href}
                       onClick={() => setDropdownOpen(false)}
                       className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors ${isActive
-                          ? 'bg-[#9A6BFF]/10 text-white font-medium'
-                          : 'text-gray-400 hover:text-white hover:bg-white/[0.04]'
+                        ? 'bg-[#9A6BFF]/10 text-white font-medium'
+                        : 'text-gray-400 hover:text-white hover:bg-white/[0.04]'
                         }`}
                     >
                       {item.name}

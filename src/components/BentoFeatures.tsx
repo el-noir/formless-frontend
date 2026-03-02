@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Brain, Globe, BarChart3, ShieldCheck, UserCog, Share2 } from 'lucide-react';
 import { TiltCard } from './ui/TiltCard';
+import Image from 'next/image';
 import {
   ContextAwareVisual,
   AnalyticsVisual,
@@ -39,18 +40,29 @@ const features = [
     visual: SecurityVisual,
   },
   {
-    icon: UserCog,
-    title: 'Custom Personality',
-    desc: 'Match your brand voice perfectly.',
-    colSpan: 'md:col-span-1',
-    // No specific visual for this one, keep simple or add later
-  },
-  {
     icon: Share2,
     title: 'Export Anywhere',
     desc: 'Sync to Notion, Airtable, or Excel.',
     colSpan: 'md:col-span-2',
     visual: IntegrationVisual,
+  },
+  {
+    icon: UserCog,
+    title: 'Custom Personality',
+    desc: 'Match your brand voice perfectly.',
+    colSpan: 'md:col-span-1',
+    visual: () => (
+      <div className="absolute inset-0 p-4 pt-12 overflow-hidden opacity-40 group-hover:opacity-100 transition-opacity duration-500">
+        <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/10 shadow-2xl">
+          <Image
+            src="/ai-builder-feature.png"
+            alt="AI Personality Builder"
+            fill
+            className="object-cover object-top scale-110 group-hover:scale-100 transition-transform duration-700"
+          />
+        </div>
+      </div>
+    )
   },
 ];
 
