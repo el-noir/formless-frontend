@@ -30,7 +30,7 @@ export function FinalCTA() {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="flex justify-center gap-4"
         >
-          <MagneticButton className="px-10 py-4 bg-brand-purple hover:bg-[#8B5CF6] text-white font-semibold rounded-full text-lg transition-all focus:outline-none focus:ring-4 focus:ring-brand-purple/30 shadow-[0_0_20px_theme(colors.brand.blue/30)]">
+          <MagneticButton className="px-10 py-4 bg-brand-purple hover:bg-[#8B5CF6] text-white font-semibold rounded-full text-lg transition-all focus:outline-none focus:ring-4 focus:ring-brand-purple/30 shadow-[0_0_20px_theme(colors.brand.purple/30)]">
             <a href="/start-free" className="flex items-center gap-2">
               Get Started Free <ArrowRight className="w-5 h-5" />
             </a>

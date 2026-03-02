@@ -113,15 +113,5 @@ export async function apiFetch(
         }
     }
 
-    // Handle other errors or valid responses
-    if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        const message = errorData.message || res.statusText || "An unexpected error occurred.";
-
-        // Enhance the response object with a standard error message property if possible
-        // or just throw here? Throwing is often cleaner for the UI to catch.
-        throw new Error(message);
-    }
-
     return res;
 }

@@ -34,7 +34,7 @@ export function ChatInput({
                         <CheckCircle className="w-6 h-6" />
                         <p className="font-semibold">Form submitted successfully. You can close this window.</p>
                     </div>
-                ) : chatState === 'CONFIRMING' ? (
+                ) : chatState === 'CONFIRMING' || chatState === 'READY_TO_SUBMIT' ? (
                     <div className="flex flex-col gap-3">
                         <button
                             onClick={() => handleSend(undefined, 'submit')}

@@ -28,6 +28,7 @@ function AuthCallbackContent() {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
+          credentials: "include",
         });
 
         if (!response.ok) {

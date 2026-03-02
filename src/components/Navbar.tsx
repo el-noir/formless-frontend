@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, LogOut, ExternalLink } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
+import { useOrgStore } from '@/stores/orgStore';
 import { logoutUser } from '@/lib/api/auth';
 
 const navItems = [
@@ -17,19 +18,20 @@ const navItems = [
   { name: 'Case Studies', href: '/case-studies' },
 ];
 
-const authNavItems = [
-  { name: 'Dashboard', href: '/dashboard' },
-  { name: 'My Forms', href: '/dashboard/forms' },
-  { name: 'Integrations', href: '/dashboard/integrations' },
-];
-
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, isLoading } = useAuth();
   const { user } = useAuthStore();
+  const { currentOrgId } = useOrgStore();
   const pathname = usePathname();
+
+  const authNavItems = [
+    { name: 'Dashboard', href: `/dashboard/${currentOrgId || ''}` },
+    { name: 'My Forms', href: `/dashboard/${currentOrgId || ''}/forms` },
+    { name: 'Integrations', href: `/dashboard/${currentOrgId || ''}/integrations` },
+  ];
 
   const handleLogout = async () => {
     setDropdownOpen(false);
@@ -62,8 +64,8 @@ export function Navbar() {
         {/* ─── Pill ───────────────────────────────────────────────── */}
         <motion.nav
           className={`rounded-full transition-all duration-300 ${scrolled
-              ? 'bg-[#0B0B0F]/80 backdrop-blur-md border border-gray-800 shadow-xl'
-              : 'bg-[#111116] border border-gray-700 shadow-lg md:bg-transparent md:border-transparent md:shadow-none'
+            ? 'bg-[#0B0B0F]/80 backdrop-blur-md border border-gray-800 shadow-xl'
+            : 'bg-[#111116] border border-gray-700 shadow-lg md:bg-transparent md:border-transparent md:shadow-none'
             }`}
           initial={{ y: -100 }}
           animate={{ y: 0 }}
@@ -160,8 +162,8 @@ export function Navbar() {
                       href={item.href}
                       onClick={() => setDropdownOpen(false)}
                       className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors ${isActive
-                          ? 'bg-[#9A6BFF]/10 text-white font-medium'
-                          : 'text-gray-400 hover:text-white hover:bg-white/[0.04]'
+                        ? 'bg-[#9A6BFF]/10 text-white font-medium'
+                        : 'text-gray-400 hover:text-white hover:bg-white/[0.04]'
                         }`}
                     >
                       {item.name}
