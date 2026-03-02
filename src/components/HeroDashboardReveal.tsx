@@ -10,18 +10,22 @@ export function HeroDashboardReveal() {
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
-        offset: ["start start", "end end"]
+        offset: ["start end", "end end"]
     });
 
-    // ChatMockup transforms
-    const chatScale = useTransform(scrollYProgress, [0, 1], [1, 0.4]);
-    const chatX = useTransform(scrollYProgress, [0, 1], ["0vw", "35vw"]);
-    const chatY = useTransform(scrollYProgress, [0, 1], ["0vh", "25vh"]);
-    const chatOpacity = useTransform(scrollYProgress, [0.8, 1], [1, 0.8]);
+    // Phase 1: 0-35% scroll → chat stays full-size and centered (user arrives & sees it)
+    // Phase 2: 35-70% scroll → chat shrinks, moves to corner, fades out
+    // Phase 3: 70-100% → dashboard fully revealed
 
-    // Dashboard transforms
-    const dashScale = useTransform(scrollYProgress, [0, 1], [0.85, 1]);
-    const dashOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+    // ChatMockup transforms — stays put, then moves away
+    const chatScale = useTransform(scrollYProgress, [0, 0.35, 0.7], [1, 1, 0.25]);
+    const chatX = useTransform(scrollYProgress, [0, 0.35, 0.7], ["0vw", "0vw", "40vw"]);
+    const chatY = useTransform(scrollYProgress, [0, 0.35, 0.7], ["0vh", "0vh", "28vh"]);
+    const chatOpacity = useTransform(scrollYProgress, [0.35, 0.65], [1, 0]);
+
+    // Dashboard transforms — hidden, then fades in crisp and clear
+    const dashScale = useTransform(scrollYProgress, [0.3, 0.7], [0.95, 1]);
+    const dashOpacity = useTransform(scrollYProgress, [0.3, 0.55], [0, 1]);
 
     return (
         <div ref={containerRef} className="relative h-[200vh] w-full">
