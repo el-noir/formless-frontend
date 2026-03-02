@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import { ArrowRight, Send, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useSearchParams } from 'next/navigation';
 import { Background } from '@/components/Background';
 import { startChat, replyChat } from '@/lib/api/chat';
 
@@ -16,7 +17,7 @@ type ChatMessage = {
   content: string;
 };
 
-function StartFreePage() {
+function StartFreeContent() {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -25,6 +26,7 @@ function StartFreePage() {
   const [collectedData, setCollectedData] = useState<any>(null);
   const [sendingMsg, setSendingMsg] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const searchParams = useSearchParams();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -58,6 +60,15 @@ function StartFreePage() {
       setLoading(false);
     }
   };
+
+  // Auto-start from query param if redirected from Hero
+  useEffect(() => {
+    const urlParam = searchParams.get('url');
+    if (urlParam && !sessionId && !loading) {
+      onStart({ url: urlParam });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -253,4 +264,20 @@ function StartFreePage() {
   );
 }
 
-export default StartFreePage;
+export default function StartFreePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
+          <Background />
+          <div className="text-center relative z-10">
+            <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
+            <p className="text-gray-400">Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <StartFreeContent />
+    </Suspense>
+  );
+}
