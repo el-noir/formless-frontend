@@ -18,6 +18,7 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
     const [loadingForms, setLoadingForms] = useState(true);
     const [fetchError, setFetchError] = useState<string | null>(null);
     const [search, setSearch] = useState('');
+    const [importedFormIds, setImportedFormIds] = useState<Set<string>>(new Set());
 
     // Per-form import state
     const [importing, setImporting] = useState<Record<string, 'idle' | 'loading' | 'done' | 'error'>>({});
@@ -35,6 +36,21 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
                 const data = await getGoogleForms(currentOrgId);
                 const list = Array.isArray(data) ? data : (data.files || data.forms || []);
                 setForms(list);
+
+                // Fetch existing org forms to mark imported ones
+                const { getOrgForms } = await import('@/lib/api/organizations');
+                const orgFormsData = await getOrgForms(currentOrgId, { limit: 1000 });
+                const orgFormsList = orgFormsData.forms || [];
+                const importedIds = new Set<string>();
+                orgFormsList.forEach((f: any) => {
+                    if (f.sourceFormId) importedIds.add(f.sourceFormId);
+                    // Fallback for older records
+                    else if (f.sourceUrl) {
+                        const match = f.sourceUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                        if (match) importedIds.add(match[1]);
+                    }
+                });
+                setImportedFormIds(importedIds);
             } catch (e: any) {
                 const status = Number(e?.status || e?.statusCode);
                 if (status === 400 || status === 404) {
@@ -162,7 +178,8 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
                 <div className="flex flex-col border-y border-gray-800/40">
                     {filtered.map((form) => {
                         const formId = form.formId || form.id;
-                        const state = importing[formId] || 'idle';
+                        const isAlreadyImported = importedFormIds.has(formId);
+                        const state = importing[formId] || (isAlreadyImported ? 'done' : 'idle');
                         const err = importErrors[formId];
 
                         return (
@@ -198,8 +215,8 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
 
                                     <button
                                         onClick={() => handleImport(form)}
-                                        disabled={state === 'loading' || state === 'done'}
-                                        className={`flex items-center justify-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg transition-all w-[110px] ${state === 'done'
+                                        disabled={state === 'loading' || state === 'done' || isAlreadyImported}
+                                        className={`flex items-center justify-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg transition-all w-[110px] ${state === 'done' || isAlreadyImported
                                             ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 cursor-default'
                                             : state === 'loading'
                                                 ? 'bg-transparent text-gray-500 border border-gray-800/50 cursor-wait'
@@ -210,7 +227,7 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
                                     >
                                         {state === 'loading' ? (
                                             <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Importing</>
-                                        ) : state === 'done' ? (
+                                        ) : (state === 'done' || isAlreadyImported) ? (
                                             <><Check className="w-3.5 h-3.5" /> Imported</>
                                         ) : state === 'error' ? (
                                             'Retry'

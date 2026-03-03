@@ -24,6 +24,7 @@ export default function ImportFormPage() {
     const [loadingForms, setLoadingForms] = useState(true);
     const [fetchError, setFetchError] = useState<string | null>(null);
     const [search, setSearch] = useState('');
+    const [importedFormIds, setImportedFormIds] = useState<Set<string>>(new Set());
 
     // Per-form import state
     const [importing, setImporting] = useState<Record<string, 'idle' | 'loading' | 'done' | 'error'>>({});
@@ -39,6 +40,20 @@ export default function ImportFormPage() {
                 // API returns either an array or an object with a forms/files array
                 const list = Array.isArray(data) ? data : (data.files || data.forms || []);
                 setForms(list);
+
+                // Fetch existing org forms to mark imported ones
+                const { getOrgForms } = await import('@/lib/api/organizations');
+                const orgFormsData = await getOrgForms(orgId, { limit: 1000 });
+                const orgFormsList = orgFormsData.forms || [];
+                const importedIds = new Set<string>();
+                orgFormsList.forEach((f: any) => {
+                    if (f.sourceFormId) importedIds.add(f.sourceFormId);
+                    else if (f.sourceUrl) {
+                        const match = f.sourceUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                        if (match) importedIds.add(match[1]);
+                    }
+                });
+                setImportedFormIds(importedIds);
             } catch (e: any) {
                 const status = Number(e?.status || e?.statusCode);
                 if (status === 400 || status === 404) {
@@ -179,7 +194,8 @@ export default function ImportFormPage() {
                     <div className="space-y-3">
                         {filtered.map((form) => {
                             const formId = form.formId || form.id;
-                            const state = importing[formId] || 'idle';
+                            const isAlreadyImported = importedFormIds.has(formId);
+                            const state = importing[formId] || (isAlreadyImported ? 'done' : 'idle');
                             const err = importErrors[formId];
 
                             return (
@@ -215,8 +231,8 @@ export default function ImportFormPage() {
 
                                         <button
                                             onClick={() => handleImport(form)}
-                                            disabled={state === 'loading' || state === 'done'}
-                                            className={`flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg transition-colors ${state === 'done'
+                                            disabled={state === 'loading' || state === 'done' || isAlreadyImported}
+                                            className={`flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg transition-colors ${state === 'done' || isAlreadyImported
                                                 ? 'bg-green-500/10 text-green-400 border border-green-500/20 cursor-default'
                                                 : state === 'loading'
                                                     ? 'bg-brand-purple/20 text-brand-purple cursor-wait'
@@ -227,7 +243,7 @@ export default function ImportFormPage() {
                                         >
                                             {state === 'loading' ? (
                                                 <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Importing...</>
-                                            ) : state === 'done' ? (
+                                            ) : (state === 'done' || isAlreadyImported) ? (
                                                 <><Check className="w-3.5 h-3.5" /> Imported</>
                                             ) : state === 'error' ? (
                                                 'Retry'
