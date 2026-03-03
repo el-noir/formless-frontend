@@ -7,6 +7,8 @@ interface FormInfo {
     description?: string;
     questionCount?: number;
     estimatedMinutes?: number;
+    aiName?: string;
+    aiAvatar?: string;
 }
 
 import { toast } from 'sonner';
