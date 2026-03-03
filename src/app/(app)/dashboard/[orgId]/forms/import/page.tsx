@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import {
     Loader2, FileText, Search, Check, AlertCircle,
     ExternalLink, Plus
@@ -39,7 +40,7 @@ export default function ImportFormPage() {
                 setForms(list);
             } catch (e: any) {
                 const status = Number(e?.status || e?.statusCode);
-                if (status === 401 || status === 404) {
+                if (status === 400 || status === 404) {
                     setFetchError('Your Google account is not connected yet. Go to Integrations to connect it first.');
                 } else {
                     setFetchError(e?.message || 'Failed to fetch your Google Forms');
@@ -65,6 +66,36 @@ export default function ImportFormPage() {
         } catch (e: any) {
             setImporting((prev) => ({ ...prev, [formId]: 'error' }));
             setImportErrors((prev) => ({ ...prev, [formId]: e.message || 'Import failed' }));
+        }
+    };
+
+    const handleConnect = async () => {
+        try {
+            setFetchError(null);
+            setLoadingForms(true);
+
+            // Import dynamically to avoid top-level dependencies if possible, or just use it directly since it's already imported
+            const { getIntegrationsGoogleAuthUrl } = await import("@/lib/api/integrations");
+
+            const response = await fetch(getIntegrationsGoogleAuthUrl(orgId), {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                setFetchError(`Failed to generate connect URL`);
+                setLoadingForms(false);
+            }
+        } catch (err: any) {
+            console.error("handleConnect error:", err);
+            setFetchError(`Failed to connect to Google: ${err.message || 'Check console'}`);
+            setLoadingForms(false);
         }
     };
 
@@ -122,12 +153,12 @@ export default function ImportFormPage() {
                     <div className="bg-[#0f0f14] border border-gray-800 rounded-2xl p-8 text-center">
                         <AlertCircle className="w-10 h-10 text-gray-600 mx-auto mb-3" />
                         <p className="text-gray-400 text-sm mb-5">{fetchError}</p>
-                        <a
-                            href="/integrations"
+                        <button
+                            onClick={handleConnect}
                             className="inline-flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors"
                         >
                             Connect Google Account
-                        </a>
+                        </button>
                     </div>
                 ) : filtered.length === 0 ? (
                     <div className="border-2 border-dashed border-gray-800 rounded-xl p-12 text-center">

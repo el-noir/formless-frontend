@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { getIntegrationsGoogleAuthUrl, getGoogleForms } from "@/lib/api/integrations";
 import { Background } from "@/components/Background";
 import { Loader2, ArrowLeft } from "lucide-react";
@@ -10,6 +10,8 @@ import { useAuthStore } from "@/stores/authStore";
 
 export default function GoogleFormsHub() {
     const router = useRouter();
+    const params = useParams();
+    const orgId = params?.orgId as string | undefined;
     const { accessToken } = useAuthStore();
     const [forms, setForms] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -49,7 +51,7 @@ export default function GoogleFormsHub() {
             setLoading(true);
             setError(null);
 
-            const response = await fetch(getIntegrationsGoogleAuthUrl(), {
+            const response = await fetch(getIntegrationsGoogleAuthUrl(orgId), {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`

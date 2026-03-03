@@ -1,8 +1,8 @@
 import { apiFetch } from "./apiFetch";
 import { API_BASE_URL } from "./config";
 
-export const getIntegrationsGoogleAuthUrl = () => {
-    return `${API_BASE_URL}/integrations/google/auth`;
+export const getIntegrationsGoogleAuthUrl = (orgId?: string) => {
+    return `${API_BASE_URL}/integrations/google/auth${orgId ? `?orgId=${orgId}` : ''}`;
 };
 
 export const getGoogleForms = async (orgId?: string) => {

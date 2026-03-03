@@ -51,7 +51,7 @@ export default function NewOrganizationPage() {
             });
             setCurrentOrg(org.id);
 
-            router.push(`/dashboard/organizations/${org.id}`);
+            router.push(`/dashboard/${org.id}`);
         } catch (e: any) {
             setError(e.message || 'Failed to create organization');
         } finally {

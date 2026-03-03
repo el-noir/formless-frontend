@@ -36,7 +36,7 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
                 setForms(list);
             } catch (e: any) {
                 const status = Number(e?.status || e?.statusCode);
-                if (status === 401 || status === 404) {
+                if (status === 400 || status === 404) {
                     setFetchError('Your Google account is not connected yet. Go to Integrations to connect it first.');
                 } else {
                     setFetchError(e?.message || 'Failed to fetch your Google Forms');
@@ -61,6 +61,37 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
         } catch (e: any) {
             setImporting((prev) => ({ ...prev, [formId]: 'error' }));
             setImportErrors((prev) => ({ ...prev, [formId]: e.message || 'Import failed' }));
+        }
+    };
+
+    const handleConnect = async () => {
+        try {
+            setFetchError(null);
+            setLoadingForms(true);
+
+            const { getIntegrationsGoogleAuthUrl } = await import("@/lib/api/integrations");
+            const { useAuthStore } = await import("@/stores/authStore");
+            const { accessToken } = useAuthStore.getState();
+
+            const response = await fetch(getIntegrationsGoogleAuthUrl(currentOrgId), {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                setFetchError(`Failed to generate connect URL`);
+                setLoadingForms(false);
+            }
+        } catch (err: any) {
+            console.error("handleConnect error:", err);
+            setFetchError(`Failed to connect to Google: ${err.message || 'Check console'}`);
+            setLoadingForms(false);
         }
     };
 
@@ -105,12 +136,12 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
                 <div className="bg-[#111116] border border-gray-800 rounded-2xl p-8 text-center max-w-xl">
                     <AlertCircle className="w-10 h-10 text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-400 text-sm mb-5">{fetchError}</p>
-                    <Link
-                        href={`/dashboard/${currentOrgId}/integrations`}
+                    <button
+                        onClick={handleConnect}
                         className="inline-flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors"
                     >
                         Connect Google Account
-                    </Link>
+                    </button>
                 </div>
             ) : filtered.length === 0 ? (
                 <div className="border border-dashed border-gray-800 bg-[#0B0B0F] rounded-xl p-12 text-center max-w-xl">
