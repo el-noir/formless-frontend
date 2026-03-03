@@ -60,13 +60,13 @@ export function Navbar() {
   const items = isAuthenticated && !isLoading ? authNavItems : navItems;
 
   return (
-    <div className="fixed top-6 left-0 w-full z-50 flex justify-center px-4 pointer-events-none">
-      <div className="pointer-events-auto relative" ref={dropdownRef}>
+    <div className="fixed top-4 sm:top-6 left-0 w-full z-50 flex justify-center px-4 pointer-events-none">
+      <div className="pointer-events-auto relative w-full max-w-5xl" ref={dropdownRef}>
         {/* ─── Pill ───────────────────────────────────────────────── */}
         <motion.nav
           className={`rounded-full transition-all duration-300 ${scrolled
-            ? 'bg-[#0B0B0F]/80 backdrop-blur-md border border-gray-800 shadow-xl'
-            : 'bg-[#111116] border border-gray-700 shadow-lg md:bg-transparent md:border-transparent md:shadow-none'
+            ? 'bg-[#0B0B0F]/90 backdrop-blur-md border border-gray-800 shadow-xl'
+            : 'bg-[#111116]/95 border border-gray-800/80 shadow-lg md:bg-transparent md:border-transparent md:shadow-none'
             }`}
           initial={{ y: -100 }}
           animate={{ y: 0 }}
@@ -74,7 +74,7 @@ export function Navbar() {
           role="navigation"
           aria-label="Main navigation"
         >
-          <div className="px-5 md:px-8 h-14 flex items-center justify-between gap-3 md:gap-12">
+          <div className="px-4 sm:px-5 md:px-8 h-14 flex items-center justify-between gap-3 md:gap-12">
 
             <Link
               href="/"
@@ -88,13 +88,13 @@ export function Navbar() {
                   className="object-cover"
                 />
               </div>
-              {/* <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-300 tracking-tight group-hover:to-white transition-colors duration-300">
+              <span className="text-base font-bold text-white tracking-tight group-hover:text-gray-200 transition-colors duration-300 md:hidden">
                 Formless
-              </span> */}
+              </span>
             </Link>
 
             {/* Desktop nav links */}
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-8 flex-1 justify-center">
               {items.map((item) => {
                 const isActive = pathname === item.href;
                 return (
@@ -112,7 +112,7 @@ export function Navbar() {
             </div>
 
             {/* Desktop CTAs */}
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-3 shrink-0">
               {isAuthenticated && !isLoading ? (
                 <>
                   <span className="text-white text-sm font-medium bg-white/10 px-3 py-1.5 rounded-lg">
@@ -137,17 +137,37 @@ export function Navbar() {
               )}
             </div>
 
-            {/* Mobile hamburger — inside the pill */}
-            <button
-              onClick={() => setDropdownOpen((v) => !v)}
-              className="md:hidden p-1.5 text-gray-400 hover:text-white transition-colors rounded-lg"
-              aria-label="Open menu"
-              aria-expanded={dropdownOpen}
-            >
-              <Menu className="w-5 h-5" />
-            </button>
+            {/* Mobile right side: CTA + hamburger */}
+            <div className="md:hidden flex items-center gap-2 shrink-0">
+              {!isAuthenticated && !isLoading && (
+                <Link
+                  href="/sign-up"
+                  onClick={() => setDropdownOpen(false)}
+                  className="px-3.5 py-1.5 rounded-full bg-brand-purple text-white font-semibold text-xs hover:bg-[#0da372] transition-colors"
+                >
+                  Start Free
+                </Link>
+              )}
+              {isAuthenticated && !isLoading && (
+                <Link
+                  href={`/dashboard/${currentOrgId || ''}`}
+                  className="px-3 py-1.5 rounded-full bg-brand-purple/20 text-brand-purple font-semibold text-xs border border-brand-purple/30 hover:bg-brand-purple/30 transition-colors"
+                >
+                  Dashboard
+                </Link>
+              )}
+              <button
+                onClick={() => setDropdownOpen((v) => !v)}
+                className={`p-2 rounded-full border transition-colors ${dropdownOpen ? 'bg-white/10 border-gray-600 text-white' : 'border-gray-700 text-gray-400 hover:text-white hover:border-gray-600'}`}
+                aria-label="Open menu"
+                aria-expanded={dropdownOpen}
+              >
+                <Menu className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </motion.nav>
+
 
         {/* ─── Dropdown below the pill (mobile only) ──────────────── */}
         <AnimatePresence>
