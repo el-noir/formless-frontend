@@ -124,11 +124,11 @@ export default function OrgFormViewerPage() {
                 />
 
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                    <div>
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
+                    <div className="min-w-0">
                         <h2 className="text-xl font-semibold text-gray-100 tracking-tight mb-1">{form.title}</h2>
-                        <div className="flex items-center gap-3 text-xs text-gray-500">
-                            {form.description && <span>{form.description}</span>}
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                            {form.description && <span className="truncate max-w-[300px]">{form.description}</span>}
                             {form.description && <span className="text-gray-700">·</span>}
                             <span>{questionFields.length} question{questionFields.length !== 1 ? 's' : ''}</span>
                             {form.metadata?.estimatedCompletionCompletionMinutes && (
@@ -140,10 +140,10 @@ export default function OrgFormViewerPage() {
                             </span>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2 shrink-0">
                         <Link
                             href={`/dashboard/${orgId}/forms/${formId}/builder`}
-                            className="flex items-center gap-1.5 bg-brand-purple hover:bg-[#0da372] text-white text-xs font-medium px-4 py-2 rounded-md transition-colors shrink-0"
+                            className="flex items-center gap-1.5 bg-brand-purple hover:bg-[#0da372] text-white text-xs font-medium px-4 py-2 rounded-md transition-colors"
                         >
                             <Wand2 className="w-3.5 h-3.5" />
                             Configure AI Chat
@@ -153,7 +153,7 @@ export default function OrgFormViewerPage() {
                                 href={form.publicUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="flex items-center gap-2 bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 text-gray-300 hover:text-white text-xs font-medium px-4 py-2 rounded-md transition-colors shrink-0"
+                                className="flex items-center gap-2 bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 text-gray-300 hover:text-white text-xs font-medium px-4 py-2 rounded-md transition-colors"
                             >
                                 <ExternalLink className="w-3.5 h-3.5" />
                                 Open Form
@@ -178,7 +178,7 @@ export default function OrgFormViewerPage() {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex space-x-1 border-b border-gray-800/80 mb-6">
+                <div className="flex overflow-x-auto space-x-1 border-b border-gray-800/80 mb-6 scrollbar-none">
                     {[
                         { id: 'fields', label: `Fields (${fields.length})` },
                         { id: 'responses', label: `Responses (${form.submissionCount ?? 0})` },

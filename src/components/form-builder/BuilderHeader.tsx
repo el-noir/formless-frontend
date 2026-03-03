@@ -28,36 +28,36 @@ export function BuilderHeader({
     saveStatus,
 }: BuilderHeaderProps) {
     return (
-        <header className="flex items-center justify-between px-4 h-12 border-b border-gray-800/80 shrink-0 bg-[#0B0B0F]">
+        <header className="flex items-center justify-between px-4 h-12 border-b border-gray-800/80 shrink-0 bg-[#0B0B0F] gap-2">
             {/* Left — back link + form name */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
                 <Link
                     href={`/dashboard/${orgId}/forms/${formId}`}
-                    className="flex items-center gap-1.5 text-gray-500 hover:text-gray-200 transition-colors text-xs"
+                    className="flex items-center gap-1.5 text-gray-500 hover:text-gray-200 transition-colors text-xs shrink-0"
                 >
                     <ArrowLeft className="w-3.5 h-3.5" />
-                    Back
+                    <span className="hidden sm:inline">Back</span>
                 </Link>
-                <span className="text-gray-700 text-xs">|</span>
-                <div className="flex items-center gap-1.5">
-                    <Wand2 className="w-3.5 h-3.5 text-brand-purple" />
-                    <span className="text-sm font-medium text-gray-200 max-w-[200px] truncate">{formTitle}</span>
-                    <span className="text-[10px] font-semibold text-brand-purple bg-brand-purple/10 border border-brand-purple/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="text-gray-700 text-xs shrink-0">|</span>
+                <div className="flex items-center gap-1.5 min-w-0">
+                    <Wand2 className="w-3.5 h-3.5 text-brand-purple shrink-0" />
+                    <span className="text-sm font-medium text-gray-200 truncate max-w-[100px] sm:max-w-[200px]">{formTitle}</span>
+                    <span className="hidden md:inline text-[10px] font-semibold text-brand-purple bg-brand-purple/10 border border-brand-purple/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap">
                         AI Chat Builder
                     </span>
                     {/* Auto-save status */}
                     {saveStatus === "saving" && (
-                        <span className="flex items-center gap-1 text-[10px] text-gray-600 ml-1">
+                        <span className="hidden sm:flex items-center gap-1 text-[10px] text-gray-600 ml-1 shrink-0">
                             <Loader2 className="w-2.5 h-2.5 animate-spin" /> Saving
                         </span>
                     )}
                     {saveStatus === "saved" && (
-                        <span className="flex items-center gap-1 text-[10px] text-green-600 ml-1">
+                        <span className="hidden sm:flex items-center gap-1 text-[10px] text-green-600 ml-1 shrink-0">
                             <Check className="w-2.5 h-2.5" /> Saved
                         </span>
                     )}
                     {saveStatus === "error" && (
-                        <span className="text-[10px] text-red-500 ml-1">Save failed</span>
+                        <span className="hidden sm:inline text-[10px] text-red-500 ml-1 shrink-0">Save failed</span>
                     )}
                 </div>
             </div>
