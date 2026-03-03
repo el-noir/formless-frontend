@@ -8,9 +8,13 @@ export const getPublicFormInfo = async (token: string) => {
     return data.data;
 };
 
-export const startPublicChat = async (token: string) => {
+export const startPublicChat = async (
+    token: string,
+    pageContext?: { pageTitle?: string; pageUrl?: string }
+) => {
     const res = await apiFetch(`${BASE}/${token}/start`, {
         method: 'POST',
+        body: pageContext ? JSON.stringify(pageContext) : undefined,
     });
     const data = await res.json();
     return data.data;

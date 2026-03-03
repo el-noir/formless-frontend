@@ -50,7 +50,14 @@ export function useChatSession(token: string) {
         setChatState('STARTING');
         setIsTyping(true);
         try {
-            const data = await startPublicChat(token);
+            // Read page context injected by widget.js via URL search params
+            const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+            const pageContext = (params?.get('pageTitle') || params?.get('pageUrl')) ? {
+                pageTitle: params?.get('pageTitle') ?? undefined,
+                pageUrl: params?.get('pageUrl') ?? undefined,
+            } : undefined;
+
+            const data = await startPublicChat(token, pageContext);
             setSessionId(data.sessionId);
             setChatState(data.state);
             if (data.greeting) {

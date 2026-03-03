@@ -99,7 +99,11 @@
 
     const iframe = document.createElement('iframe');
     iframe.id = 'formless-iframe';
-    iframe.src = `${baseUrl}/chat/${token}/embed`;
+
+    // Capture the host page context to enable AI personalization
+    const pageTitle = encodeURIComponent(document.title || '');
+    const pageUrl = encodeURIComponent(window.location.href || '');
+    iframe.src = `${baseUrl}/chat/${token}/embed?pageTitle=${pageTitle}&pageUrl=${pageUrl}`;
 
     iframeContainer.appendChild(iframe);
 
