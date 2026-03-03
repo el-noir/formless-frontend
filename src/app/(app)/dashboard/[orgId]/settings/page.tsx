@@ -15,7 +15,7 @@ import { DashboardBreadcrumbs } from "@/components/dashboard/DashboardBreadcrumb
 
 const ROLE_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
     owner: { label: "Owner", icon: Crown, color: "text-yellow-400" },
-    admin: { label: "Admin", icon: UserCog, color: "text-[#9A6BFF]" },
+    admin: { label: "Admin", icon: UserCog, color: "text-brand-purple" },
     member: { label: "Member", icon: UserIcon, color: "text-gray-400" },
 };
 
@@ -89,7 +89,7 @@ export default function OrgSettingsPage() {
     if (isLoading || orgLoading) {
         return (
             <div className="flex items-center justify-center p-20">
-                <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF]" />
+                <Loader2 className="w-8 h-8 animate-spin text-brand-purple" />
             </div>
         );
     }
@@ -158,7 +158,7 @@ export default function OrgSettingsPage() {
                                             value={orgName}
                                             onChange={(e) => setOrgName(e.target.value)}
                                             disabled={!isOwnerOrAdmin}
-                                            className="w-full bg-[#111116] border border-gray-800 rounded-md px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-[#9A6BFF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="w-full bg-[#111116] border border-gray-800 rounded-md px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-brand-purple transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                             placeholder="e.g. Acme Corp"
                                         />
                                     </div>
@@ -172,7 +172,7 @@ export default function OrgSettingsPage() {
                                             value={orgEmail}
                                             onChange={(e) => setOrgEmail(e.target.value)}
                                             disabled={!isOwnerOrAdmin}
-                                            className="w-full bg-[#111116] border border-gray-800 rounded-md px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-[#9A6BFF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="w-full bg-[#111116] border border-gray-800 rounded-md px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-brand-purple transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                             placeholder="hello@yourorg.com"
                                         />
                                     </div>
@@ -186,7 +186,7 @@ export default function OrgSettingsPage() {
                                             value={orgWebsite}
                                             onChange={(e) => setOrgWebsite(e.target.value)}
                                             disabled={!isOwnerOrAdmin}
-                                            className="w-full bg-[#111116] border border-gray-800 rounded-md px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-[#9A6BFF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="w-full bg-[#111116] border border-gray-800 rounded-md px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-brand-purple transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                             placeholder="https://yourcompany.com"
                                         />
                                     </div>
@@ -202,7 +202,7 @@ export default function OrgSettingsPage() {
                                         <button
                                             onClick={handleSave}
                                             disabled={saveStatus === "saving" || !orgName.trim()}
-                                            className="flex items-center gap-1.5 bg-[#9A6BFF] hover:bg-[#8555e8] disabled:opacity-50 text-white text-xs font-medium px-4 py-2 rounded-md transition-colors"
+                                            className="flex items-center gap-1.5 bg-brand-purple hover:bg-[#0da372] disabled:opacity-50 text-white text-xs font-medium px-4 py-2 rounded-md transition-colors"
                                         >
                                             {saveStatus === "saving" ? (
                                                 <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Saving...</>
@@ -231,7 +231,7 @@ export default function OrgSettingsPage() {
 
                                 {membersLoading ? (
                                     <div className="flex items-center justify-center py-10">
-                                        <Loader2 className="w-6 h-6 animate-spin text-[#9A6BFF]" />
+                                        <Loader2 className="w-6 h-6 animate-spin text-brand-purple" />
                                     </div>
                                 ) : members.length === 0 ? (
                                     <div className="py-10 text-center text-gray-500 text-sm">No members found.</div>

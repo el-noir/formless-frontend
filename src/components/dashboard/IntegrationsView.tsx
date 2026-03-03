@@ -34,7 +34,7 @@ export function IntegrationsView() {
                 {/* Google Forms */}
                 <div className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-5 hover:border-gray-700/80 transition-colors flex flex-col shadow-sm group">
                     <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-[#1C1C22] border border-gray-800 rounded-md text-gray-400 group-hover:text-[#9A6BFF] transition-colors">
+                        <div className="p-2 bg-[#1C1C22] border border-gray-800 rounded-md text-gray-400 group-hover:text-brand-purple transition-colors">
                             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

@@ -31,7 +31,7 @@ export function PersonaTab({ name, tone, avatar, onChange }: PersonaTabProps) {
                     onChange={(e) => onChange({ name: e.target.value })}
                     placeholder="e.g. Alex"
                     maxLength={30}
-                    className="w-full bg-[#111116] border border-gray-800 rounded text-sm text-white px-3 py-2 focus:outline-none focus:border-[#9A6BFF] transition-colors placeholder-gray-600"
+                    className="w-full bg-[#111116] border border-gray-800 rounded text-sm text-white px-3 py-2 focus:outline-none focus:border-brand-purple transition-colors placeholder-gray-600"
                 />
                 <p className="text-[10px] text-gray-600 mt-1">This is the name users will see in the chat.</p>
             </div>
@@ -45,8 +45,8 @@ export function PersonaTab({ name, tone, avatar, onChange }: PersonaTabProps) {
                             key={emoji}
                             onClick={() => onChange({ avatar: emoji })}
                             className={`w-9 h-9 rounded text-lg transition-all flex items-center justify-center border ${avatar === emoji
-                                    ? "border-[#9A6BFF] bg-[#9A6BFF]/10 scale-110"
-                                    : "border-gray-800 bg-[#111116] hover:border-gray-600"
+                                ? "border-brand-purple bg-brand-purple/10 scale-110"
+                                : "border-gray-800 bg-[#111116] hover:border-gray-600"
                                 }`}
                         >
                             {emoji}
@@ -64,8 +64,8 @@ export function PersonaTab({ name, tone, avatar, onChange }: PersonaTabProps) {
                             key={t.value}
                             onClick={() => onChange({ tone: t.value })}
                             className={`w-full text-left px-3 py-2.5 rounded border transition-colors ${tone === t.value
-                                    ? "border-[#9A6BFF] bg-[#9A6BFF]/5 text-white"
-                                    : "border-gray-800 bg-[#111116] text-gray-400 hover:border-gray-700"
+                                ? "border-brand-purple bg-brand-purple/5 text-white"
+                                : "border-gray-800 bg-[#111116] text-gray-400 hover:border-gray-700"
                                 }`}
                         >
                             <span className="text-xs font-medium block">{t.label}</span>

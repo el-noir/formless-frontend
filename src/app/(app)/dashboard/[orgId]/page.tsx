@@ -71,7 +71,7 @@ function DashboardContent() {
           >
             Integrations
           </button>
-          <MagneticButton onClick={() => router.push(`/dashboard/${orgId}/forms`)} className="bg-[#9A6BFF] hover:bg-[#8555e8] text-white py-1.5 px-4 rounded-md text-sm font-medium transition-colors flex items-center gap-2">
+          <MagneticButton onClick={() => router.push(`/dashboard/${orgId}/forms`)} className="bg-brand-purple hover:bg-[#0da372] text-white py-1.5 px-4 rounded-md text-sm font-medium transition-colors flex items-center gap-2">
             <Plus className="w-4 h-4" />
             Import
           </MagneticButton>
@@ -121,7 +121,7 @@ export default function Dashboard() {
   return (
     <Suspense fallback={
       <div className="p-6 md:p-8 flex items-center justify-center">
-        <Loader2 className="w-6 h-6 text-[#9A6BFF] animate-spin" />
+        <Loader2 className="w-6 h-6 text-brand-purple animate-spin" />
       </div>
     }>
       <DashboardContent />

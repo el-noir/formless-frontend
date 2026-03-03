@@ -36,7 +36,7 @@ export function DashboardTopNav() {
         <header className="h-16 bg-[#0B0B0F] border-b border-gray-800/80 px-4 md:px-6 flex items-center justify-between sticky top-0 z-30">
             <div className="flex items-center gap-4">
                 <div className="md:hidden text-white font-bold flex items-center mr-2">
-                    <span className="w-5 h-5 bg-[#9A6BFF] rounded-sm"></span>
+                    <span className="w-5 h-5 bg-brand-purple rounded-sm"></span>
                 </div>
                 <div className="flex items-center text-sm font-medium">
                     <span className="text-gray-500 hidden sm:inline-block">Dashboard / </span>
@@ -51,7 +51,7 @@ export function DashboardTopNav() {
                     <input
                         type="text"
                         placeholder="Search..."
-                        className="bg-[#111116] border border-gray-800 hover:border-gray-700 text-gray-200 text-sm rounded-md pl-8 pr-10 py-1.5 focus:outline-none focus:border-[#9A6BFF] transition-colors w-56 placeholder:text-gray-600 focus:bg-[#0B0B0F]"
+                        className="bg-[#111116] border border-gray-800 hover:border-gray-700 text-gray-200 text-sm rounded-md pl-8 pr-10 py-1.5 focus:outline-none focus:border-brand-purple transition-colors w-56 placeholder:text-gray-600 focus:bg-[#0B0B0F]"
                     />
                     <div className="absolute right-2 px-1 text-[10px] font-medium text-gray-500 border border-gray-800 rounded bg-[#1C1C22]">
                         ⌘K

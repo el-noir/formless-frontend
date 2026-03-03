@@ -119,7 +119,7 @@ export function ChatMockup() {
 
                     <div className={`px-4 py-3 rounded-2xl max-w-[80%] text-sm leading-relaxed shadow-none ${msg.role === 'ai'
                       ? 'bg-brand-dark text-gray-200 border border-gray-800 rounded-bl-none'
-                      : 'bg-brand-purple text-white rounded-br-none border border-[#8555e8]'
+                      : 'bg-brand-purple text-white rounded-br-none border border-[#0da372]'
                       }`}>
                       {msg.content}
                     </div>

@@ -26,7 +26,7 @@ export function WelcomeTab({ message, formTitle, onChange }: WelcomeTabProps) {
                     placeholder={`Hi! I'm here to help you complete "${formTitle}". Let's get started!`}
                     rows={4}
                     maxLength={300}
-                    className="w-full bg-[#111116] border border-gray-800 rounded text-sm text-white px-3 py-2 focus:outline-none focus:border-[#9A6BFF] transition-colors placeholder-gray-600 resize-none leading-relaxed"
+                    className="w-full bg-[#111116] border border-gray-800 rounded text-sm text-white px-3 py-2 focus:outline-none focus:border-brand-purple transition-colors placeholder-gray-600 resize-none leading-relaxed"
                 />
                 <div className="flex justify-between mt-1">
                     <p className="text-[10px] text-gray-600">This is the first message users see when opening the chat.</p>

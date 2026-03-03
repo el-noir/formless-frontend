@@ -105,7 +105,7 @@ export default function GoogleFormsHub() {
 
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20">
-                        <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mb-4" />
+                        <Loader2 className="w-8 h-8 animate-spin text-brand-purple mb-4" />
                         <p className="text-gray-400">Loading your forms...</p>
                     </div>
                 ) : forms.length === 0 ? (
@@ -122,7 +122,7 @@ export default function GoogleFormsHub() {
                         </p>
                         <button
                             onClick={handleConnect}
-                            className="py-3 px-6 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-semibold rounded-xl transition-all shadow-lg shadow-[#9A6BFF]/20"
+                            className="py-3 px-6 bg-brand-purple hover:bg-[#0da372] text-white font-semibold rounded-xl transition-all shadow-lg shadow-brand-purple/20"
                         >
                             Connect Google Account
                         </button>

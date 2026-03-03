@@ -16,7 +16,7 @@ const FinalCTA = dynamic(() => import("@/components/FinalCTA").then(mod => mod.F
 
 export default function AppPage() {
   return (
-    <div className="relative min-h-screen bg-[#0B0B0F] text-white selection:bg-[#9A6BFF] selection:text-white overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#0B0B0F] text-white selection:bg-[#10B981] selection:text-white overflow-x-hidden">
       <Background />
 
       <main id="main-content">

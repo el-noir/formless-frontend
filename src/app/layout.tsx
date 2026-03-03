@@ -75,6 +75,10 @@ export const metadata: Metadata = {
     // google: 'your-google-verification-code',
     // yandex: 'your-yandex-verification-code',
   },
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({
@@ -85,7 +89,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} scroll-smooth`}>
       <body className={`${inter.className} antialiased`}>
-        <div className="relative min-h-screen bg-[#0B0B0F] text-white selection:bg-[#9A6BFF] selection:text-white overflow-x-hidden">
+        <div className="relative min-h-screen bg-[#0B0B0F] text-white selection:bg-[#10B981] selection:text-white overflow-x-hidden">
           {children}
           <Toaster />
         </div>

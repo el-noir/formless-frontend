@@ -80,7 +80,7 @@ export function Navbar() {
               href="/"
               className="flex items-center gap-2.5 group focus:outline-none focus:ring-2 focus:ring-brand-purple rounded-xl shrink-0 transition-all duration-300"
             >
-              <div className="relative w-8 h-8 rounded-[8px] overflow-hidden transition-all duration-300 shrink-0 flex items-center justify-center group-hover:scale-110 drop-shadow-[0_0_8px_rgba(154,107,255,0.4)] group-hover:drop-shadow-[0_0_15px_rgba(154,107,255,0.8)]">
+              <div className="relative w-8 h-8 rounded-[8px] overflow-hidden transition-all duration-300 shrink-0 flex items-center justify-center group-hover:scale-110 drop-shadow-[0_0_8px_rgba(16,185,129,0.4)] group-hover:drop-shadow-[0_0_15px_rgba(16,185,129,0.8)]">
                 <Image
                   src="/logo.png"
                   alt="Formless Logo"
@@ -105,7 +105,7 @@ export function Navbar() {
                       }`}
                   >
                     {item.name}
-                    <span className={`absolute -bottom-1 left-0 h-[2px] bg-[#9A6BFF] transition-all ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+                    <span className={`absolute -bottom-1 left-0 h-[2px] bg-brand-purple transition-all ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
                   </Link>
                 );
               })}
@@ -120,7 +120,7 @@ export function Navbar() {
                   </span>
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#9A6BFF] text-white font-semibold text-sm hover:bg-[#8B5CF6] transition-colors"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand-purple text-white font-semibold text-sm hover:bg-[#0da372] transition-colors"
                   >
                     <LogOut className="w-3.5 h-3.5" /> Logout
                   </button>
@@ -169,12 +169,12 @@ export function Navbar() {
                       href={item.href}
                       onClick={() => setDropdownOpen(false)}
                       className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors ${isActive
-                        ? 'bg-[#9A6BFF]/10 text-white font-medium'
+                        ? 'bg-brand-purple/10 text-white font-medium'
                         : 'text-gray-400 hover:text-white hover:bg-white/[0.04]'
                         }`}
                     >
                       {item.name}
-                      {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#9A6BFF]" />}
+                      {isActive && <span className="w-1.5 h-1.5 rounded-full bg-brand-purple" />}
                     </Link>
                   );
                 })}
@@ -185,7 +185,7 @@ export function Navbar() {
                 {isAuthenticated && !isLoading ? (
                   <>
                     <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/5">
-                      <div className="w-7 h-7 rounded-full bg-[#9A6BFF]/20 flex items-center justify-center text-xs font-semibold text-[#9A6BFF]">
+                      <div className="w-7 h-7 rounded-full bg-brand-purple/20 flex items-center justify-center text-xs font-semibold text-brand-purple">
                         {user?.firstName?.charAt(0)}
                       </div>
                       <span className="text-white text-sm font-medium">{user?.firstName} {user?.lastName}</span>

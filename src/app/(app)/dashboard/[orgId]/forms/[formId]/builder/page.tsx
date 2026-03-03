@@ -25,7 +25,7 @@ export default function BuilderPage() {
     if (loading) {
         return (
             <div className="flex-1 flex items-center justify-center">
-                <Loader2 className="w-6 h-6 animate-spin text-[#9A6BFF]" />
+                <Loader2 className="w-6 h-6 animate-spin text-brand-purple" />
             </div>
         );
     }

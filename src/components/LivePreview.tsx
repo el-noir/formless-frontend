@@ -81,11 +81,11 @@ export function LivePreview() {
 
             {/* AI Output */}
             <div className="flex gap-4 items-start">
-              <div className="w-10 h-10 rounded-md bg-[#9A6BFF] flex items-center justify-center shrink-0 mt-1">
+              <div className="w-10 h-10 rounded-md bg-brand-purple flex items-center justify-center shrink-0 mt-1">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div className="space-y-2 flex-1">
-                <div className="text-xs font-medium text-[#9A6BFF] uppercase tracking-wider">Structured Output</div>
+                <div className="text-xs font-medium text-brand-purple uppercase tracking-wider">Structured Output</div>
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={showOutput ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}

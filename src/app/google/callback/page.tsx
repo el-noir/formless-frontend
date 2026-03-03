@@ -10,7 +10,7 @@ const STORAGE_KEY = 'google_access_token';
 
 export default function GoogleCallbackPage() {
   const router = useRouter();
-  
+
   // Check for code immediately — if missing, start with error
   const code = typeof window !== 'undefined'
     ? new URLSearchParams(window.location.search).get('code')
@@ -59,14 +59,14 @@ export default function GoogleCallbackPage() {
             <p className="text-red-400 text-lg mb-4">{error}</p>
             <button
               onClick={() => router.replace('/dashboard')}
-              className="text-[#9A6BFF] underline text-sm"
+              className="text-brand-purple underline text-sm"
             >
               Go back to Dashboard
             </button>
           </>
         ) : (
           <>
-            <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
+            <Loader2 className="w-8 h-8 animate-spin text-brand-purple mx-auto mb-4" />
             <p className="text-gray-400">Connecting your Google account…</p>
           </>
         )}

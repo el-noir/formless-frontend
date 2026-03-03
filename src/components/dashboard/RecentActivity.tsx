@@ -26,7 +26,7 @@ export function RecentActivity() {
             title: 'Google Sheets sync active',
             time: '3 hours ago',
             icon: Zap,
-            color: 'text-[#9A6BFF]',
+            color: 'text-brand-purple',
         },
         {
             id: 4,

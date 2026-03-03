@@ -17,7 +17,7 @@ export default function DashboardLayout({
                 <div className="flex flex-col items-center">
                     <div className="relative w-8 h-8 mb-6">
                         <div className="absolute inset-0 border-2 border-gray-800 rounded-full"></div>
-                        <div className="absolute inset-0 border-t-2 border-[#9A6BFF] rounded-full animate-spin"></div>
+                        <div className="absolute inset-0 border-t-2 border-brand-purple rounded-full animate-spin"></div>
                     </div>
                 </div>
             </div>

@@ -98,7 +98,7 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
             {/* States */}
             {loadingForms ? (
                 <div className="flex flex-col items-center justify-center py-20 gap-3 border border-gray-800/50 rounded-2xl bg-[#0B0B0F]">
-                    <Loader2 className="w-7 h-7 animate-spin text-[#9A6BFF]" />
+                    <Loader2 className="w-7 h-7 animate-spin text-brand-purple" />
                     <p className="text-gray-400 text-sm">Loading your Google Forms...</p>
                 </div>
             ) : fetchError ? (
@@ -107,7 +107,7 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
                     <p className="text-gray-400 text-sm mb-5">{fetchError}</p>
                     <Link
                         href={`/dashboard/${currentOrgId}/integrations`}
-                        className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors"
+                        className="inline-flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors"
                     >
                         Connect Google Account
                     </Link>
@@ -166,7 +166,7 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
                                                 ? 'bg-transparent text-gray-500 border border-gray-800/50 cursor-wait'
                                                 : state === 'error'
                                                     ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20'
-                                                    : 'bg-white/[0.03] text-gray-400 hover:text-white border border-white/[0.05] hover:border-[#9A6BFF]/40 hover:bg-[#9A6BFF]/10 opacity-70 group-hover:opacity-100'
+                                                    : 'bg-white/[0.03] text-gray-400 hover:text-white border border-white/[0.05] hover:border-brand-purple/40 hover:bg-brand-purple/10 opacity-70 group-hover:opacity-100'
                                             }`}
                                     >
                                         {state === 'loading' ? (

@@ -14,7 +14,7 @@ import { ResponsesList } from "@/components/forms/ResponsesList";
 import { DashboardBreadcrumbs } from "@/components/dashboard/DashboardBreadcrumbs";
 
 const FIELD_TYPE_STYLES: Record<string, string> = {
-    MULTIPLE_CHOICE: 'bg-purple-500/10 text-purple-300 border-purple-500/20',
+    MULTIPLE_CHOICE: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
     CHECKBOXES: 'bg-blue-500/10 text-blue-300 border-blue-500/20',
     LINEAR_SCALE: 'bg-yellow-500/10 text-yellow-300 border-yellow-500/20',
     DATE: 'bg-green-500/10 text-green-300 border-green-500/20',
@@ -74,7 +74,7 @@ export default function OrgFormViewerPage() {
         return (
             <div className="flex items-center justify-center p-20">
                 <div className="text-center">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
+                    <Loader2 className="w-8 h-8 animate-spin text-brand-purple mx-auto mb-4" />
                     <p className="text-gray-400 text-sm">Loading form...</p>
                 </div>
             </div>
@@ -89,7 +89,7 @@ export default function OrgFormViewerPage() {
                     <p className="text-gray-400 mb-4">{error || 'Form not found'}</p>
                     <button
                         onClick={() => router.push(`/dashboard/${orgId}/forms`)}
-                        className="text-[#9A6BFF] hover:underline text-sm"
+                        className="text-brand-purple hover:underline text-sm"
                     >
                         ← Back to forms
                     </button>
@@ -109,7 +109,7 @@ export default function OrgFormViewerPage() {
     const estMinutes = form.metadata?.estimatedCompletionMinutes ?? Math.ceil(questionFields.length * 0.5);
 
     const stats = [
-        { label: 'Conversations', value: conversations, icon: MessageSquare, color: 'text-[#9A6BFF]', bg: 'bg-[#9A6BFF]/10' },
+        { label: 'Conversations', value: conversations, icon: MessageSquare, color: 'text-brand-purple', bg: 'bg-brand-purple/10' },
         { label: 'Submissions', value: submissions, icon: CheckCircle2, color: 'text-green-400', bg: 'bg-green-500/10' },
         { label: 'Completion Rate', value: `${completionRate}%`, icon: TrendingDown, color: completionRate >= 70 ? 'text-green-400' : completionRate >= 40 ? 'text-yellow-400' : 'text-red-400', bg: completionRate >= 70 ? 'bg-green-500/10' : completionRate >= 40 ? 'bg-yellow-500/10' : 'bg-red-500/10' },
         { label: 'Est. Time', value: `~${estMinutes}m`, icon: Clock, color: 'text-blue-400', bg: 'bg-blue-500/10' },
@@ -143,7 +143,7 @@ export default function OrgFormViewerPage() {
                     <div className="flex items-center gap-2">
                         <Link
                             href={`/dashboard/${orgId}/forms/${formId}/builder`}
-                            className="flex items-center gap-1.5 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-xs font-medium px-4 py-2 rounded-md transition-colors shrink-0"
+                            className="flex items-center gap-1.5 bg-brand-purple hover:bg-[#0da372] text-white text-xs font-medium px-4 py-2 rounded-md transition-colors shrink-0"
                         >
                             <Wand2 className="w-3.5 h-3.5" />
                             Configure AI Chat
@@ -187,11 +187,11 @@ export default function OrgFormViewerPage() {
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
-                            className={`px-4 py-2.5 text-xs font-medium relative transition-colors ${activeTab === tab.id ? 'text-[#9A6BFF]' : 'text-gray-500 hover:text-gray-300'}`}
+                            className={`px-4 py-2.5 text-xs font-medium relative transition-colors ${activeTab === tab.id ? 'text-brand-purple' : 'text-gray-500 hover:text-gray-300'}`}
                         >
                             {tab.label}
                             {activeTab === tab.id && (
-                                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#9A6BFF]" />
+                                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand-purple" />
                             )}
                         </button>
                     ))}
@@ -273,6 +273,5 @@ export default function OrgFormViewerPage() {
                     </div>
                 )}
             </div>
-        </div>
-    );
+            );
 }

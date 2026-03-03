@@ -24,7 +24,7 @@ export default function DashboardRootRedirect() {
 
   return (
     <div className="flex items-center justify-center p-20">
-      <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF]" />
+      <Loader2 className="w-8 h-8 animate-spin text-brand-purple" />
     </div>
   );
 }

@@ -87,7 +87,7 @@ export function ShareTab({
                     <button
                         onClick={onPublish}
                         disabled={isPublishing}
-                        className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#8555e8] disabled:opacity-60 text-white text-xs font-medium px-4 py-2 rounded transition-colors"
+                        className="inline-flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] disabled:opacity-60 text-white text-xs font-medium px-4 py-2 rounded transition-colors"
                     >
                         {isPublishing ? (
                             <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
@@ -122,8 +122,8 @@ export function ShareTab({
                                 onClick={handleCopy}
                                 title="Copy link"
                                 className={`flex items-center gap-1 px-2.5 py-2 rounded text-xs font-medium border transition-all ${copied
-                                        ? "bg-green-500/10 border-green-500/20 text-green-400"
-                                        : "bg-[#111116] border-gray-800 text-gray-400 hover:text-white hover:border-gray-700"
+                                    ? "bg-green-500/10 border-green-500/20 text-green-400"
+                                    : "bg-[#111116] border-gray-800 text-gray-400 hover:text-white hover:border-gray-700"
                                     }`}
                             >
                                 {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
@@ -141,8 +141,8 @@ export function ShareTab({
                                 onClick={() => setShowQR((v) => !v)}
                                 title="Show QR code"
                                 className={`flex items-center px-2.5 py-2 rounded border text-xs transition-colors ${showQR
-                                        ? "bg-[#9A6BFF]/10 border-[#9A6BFF]/30 text-[#9A6BFF]"
-                                        : "bg-[#111116] border-gray-800 text-gray-400 hover:text-white hover:border-gray-700"
+                                    ? "bg-brand-purple/10 border-brand-purple/30 text-brand-purple"
+                                    : "bg-[#111116] border-gray-800 text-gray-400 hover:text-white hover:border-gray-700"
                                     }`}
                             >
                                 <QrCode className="w-3 h-3" />
@@ -201,7 +201,7 @@ export function ShareTab({
                                 role="switch"
                                 aria-checked={expiryEnabled}
                                 onClick={() => handleToggleExpiry(!expiryEnabled)}
-                                className={`relative w-9 h-5 rounded-full transition-colors ${expiryEnabled ? "bg-[#9A6BFF]" : "bg-gray-800"
+                                className={`relative w-9 h-5 rounded-full transition-colors ${expiryEnabled ? "bg-brand-purple" : "bg-gray-800"
                                     }`}
                             >
                                 <span
@@ -217,7 +217,7 @@ export function ShareTab({
                                     type="date"
                                     value={expiryDate}
                                     onChange={(e) => setExpiryDate(e.target.value)}
-                                    className="w-full bg-[#111116] border border-gray-800 rounded px-3 py-2 text-xs text-gray-300 focus:outline-none focus:border-[#9A6BFF] transition-colors"
+                                    className="w-full bg-[#111116] border border-gray-800 rounded px-3 py-2 text-xs text-gray-300 focus:outline-none focus:border-brand-purple transition-colors"
                                 />
                                 {expiryIsInPast && (
                                     <p className="text-[10px] text-red-400 flex items-center gap-1">

@@ -123,13 +123,13 @@ function StartFreeContent() {
                 type="text"
                 placeholder="Enter Google Form URL"
                 {...register("url", { required: "URL is required" })}
-                className="w-full sm:flex-1 px-4 py-3 rounded-lg bg-[#1C1C24] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[#9A6BFF]"
+                className="w-full sm:flex-1 px-4 py-3 rounded-lg bg-[#1C1C24] border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-brand-purple"
               />
 
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-3 bg-[#1C1C24] text-white font-semibold rounded-lg border border-white/10 hover:border-[#9A6BFF]/50 transition-colors shadow-[0_0_20px_rgba(110,139,255,0.15)] flex items-center gap-2 disabled:opacity-50"
+                className="px-6 py-3 bg-[#1C1C24] text-white font-semibold rounded-lg border border-white/10 hover:border-brand-purple/50 transition-colors shadow-[0_0_20px_rgba(16,185,129,0.15)] flex items-center gap-2 disabled:opacity-50"
               >
                 {loading ? (
                   <>
@@ -184,7 +184,7 @@ function StartFreeContent() {
                 >
                   <div
                     className={`max-w-[85%] md:max-w-[75%] p-5 shadow-sm text-sm md:text-base ${msg.role === 'user'
-                      ? 'bg-gradient-to-br from-[#9A6BFF] to-[#5a76e8] text-white rounded-2xl rounded-tr-sm'
+                      ? 'bg-gradient-to-br from-brand-purple to-[#0da372] text-white rounded-2xl rounded-tr-sm'
                       : 'bg-[#1C1C24] text-gray-100 border border-white/5 rounded-2xl rounded-tl-sm shadow-[0_4px_20px_-4px_rgba(0,0,0,0.3)]'
                       }`}
                   >
@@ -196,9 +196,9 @@ function StartFreeContent() {
               {sendingMsg && (
                 <div className="flex justify-start animate-in fade-in duration-300">
                   <div className="bg-[#1C1C24] border border-white/5 py-4 px-5 rounded-2xl rounded-tl-sm flex gap-1.5 items-center shadow-[0_4px_20px_-4px_rgba(0,0,0,0.3)]">
-                    <span className="w-2 h-2 bg-[#9A6BFF]/70 rounded-full animate-bounce"></span>
-                    <span className="w-2 h-2 bg-[#9A6BFF]/70 rounded-full animate-bounce [animation-delay:0.15s]"></span>
-                    <span className="w-2 h-2 bg-[#9A6BFF]/70 rounded-full animate-bounce [animation-delay:0.3s]"></span>
+                    <span className="w-2 h-2 bg-brand-purple/70 rounded-full animate-bounce"></span>
+                    <span className="w-2 h-2 bg-brand-purple/70 rounded-full animate-bounce [animation-delay:0.15s]"></span>
+                    <span className="w-2 h-2 bg-brand-purple/70 rounded-full animate-bounce [animation-delay:0.3s]"></span>
                   </div>
                 </div>
               )}
@@ -212,9 +212,9 @@ function StartFreeContent() {
               )}
 
               {isComplete && (
-                <div className="mt-8 p-8 bg-gradient-to-br from-[#9A6BFF]/10 to-[#1C1C24]/50 border border-[#9A6BFF]/20 rounded-2xl text-center shadow-[0_0_40px_-10px_rgba(110,139,255,0.15)] animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="w-16 h-16 bg-[#9A6BFF]/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#9A6BFF]/30">
-                    <svg className="w-8 h-8 text-[#9A6BFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="mt-8 p-8 bg-gradient-to-br from-brand-purple/10 to-[#1C1C24]/50 border border-brand-purple/20 rounded-2xl text-center shadow-[0_0_40px_-10px_rgba(16,185,129,0.15)] animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <div className="w-16 h-16 bg-brand-purple/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-purple/30">
+                    <svg className="w-8 h-8 text-brand-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
@@ -245,12 +245,12 @@ function StartFreeContent() {
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Type your answer here..."
                   disabled={sendingMsg || isComplete}
-                  className="w-full bg-[#1C1C24] text-white rounded-2xl pl-6 pr-16 py-4 md:py-5 shadow-inner focus:outline-none focus:ring-2 focus:ring-[#9A6BFF]/50 border border-white/5 focus:border-[#9A6BFF]/50 transition-all placeholder:text-gray-500 text-base"
+                  className="w-full bg-[#1C1C24] text-white rounded-2xl pl-6 pr-16 py-4 md:py-5 shadow-inner focus:outline-none focus:ring-2 focus:ring-brand-purple/50 border border-white/5 focus:border-brand-purple/50 transition-all placeholder:text-gray-500 text-base"
                 />
                 <button
                   type="submit"
                   disabled={!inputValue.trim() || sendingMsg || isComplete}
-                  className="absolute right-3 p-2.5 md:p-3 bg-gradient-to-br from-brand-purple to-[#8B5CF6] text-white rounded-xl hover:shadow-[0_0_15px_theme(colors.brand.purple/40)] transition-all disabled:opacity-50 disabled:hover:shadow-none disabled:active:scale-100 active:scale-95 flex items-center justify-center"
+                  className="absolute right-3 p-2.5 md:p-3 bg-gradient-to-br from-brand-purple to-[#0da372] text-white rounded-xl hover:shadow-[0_0_15px_theme(colors.brand.purple/40)] transition-all disabled:opacity-50 disabled:hover:shadow-none disabled:active:scale-100 active:scale-95 flex items-center justify-center"
                 >
                   <Send className="w-5 h-5 ml-0.5" />
                 </button>
@@ -271,7 +271,7 @@ export default function StartFreePage() {
         <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
           <Background />
           <div className="text-center relative z-10">
-            <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
+            <Loader2 className="w-8 h-8 animate-spin text-brand-purple mx-auto mb-4" />
             <p className="text-gray-400">Loading...</p>
           </div>
         </div>

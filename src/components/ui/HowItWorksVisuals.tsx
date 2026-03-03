@@ -21,7 +21,7 @@ export function Step1Visual() {
         transition={{ duration: 0.8, delay: 2.5, repeat: Infinity, repeatDelay: 4.2 }}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
       >
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-purple to-brand-purple flex items-center justify-center shadow-[0_0_30px_theme(colors.brand.blue)]">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-purple to-brand-purple flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.5)]">
           <Sparkles className="w-6 h-6 text-white" />
         </div>
       </motion.div>
@@ -61,7 +61,7 @@ export function Step2Visual() {
         <motion.div
           animate={{ x: [-20, 20, -20], opacity: [0, 1, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-[#F4E7B8] w-8 h-8 rounded-full flex items-center justify-center shadow-[0_0_20px_#F4E7B8] z-10"
+          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-brand-purple w-8 h-8 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.5)] z-10"
         >
           <Sparkles className="w-4 h-4 text-black" />
         </motion.div>

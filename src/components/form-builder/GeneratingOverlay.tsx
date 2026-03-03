@@ -101,7 +101,7 @@ export function GeneratingOverlay({ form, totalMs }: GeneratingOverlayProps) {
                         className="relative z-10 w-full max-w-lg mx-4"
                     >
                         {/* Terminal window */}
-                        <div className="bg-[#0f0f14] border border-gray-800 rounded-2xl overflow-hidden shadow-[0_0_60px_rgba(154,107,255,0.08)]">
+                        <div className="bg-[#0f0f14] border border-gray-800 rounded-2xl overflow-hidden shadow-[0_0_60px_rgba(16,185,129,0.08)]">
 
                             {/* Window chrome */}
                             <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-800 bg-[#0B0B0F]">
@@ -109,8 +109,8 @@ export function GeneratingOverlay({ form, totalMs }: GeneratingOverlayProps) {
                                 <div className="w-3 h-3 rounded-full bg-yellow-500/40" />
                                 <div className="w-3 h-3 rounded-full bg-green-500/40" />
                                 <span className="ml-3 text-gray-600 text-xs font-mono">formless — ai-builder</span>
-                                <div className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-medium text-[#9A6BFF]">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#9A6BFF] animate-pulse" />
+                                <div className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-medium text-brand-purple">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-brand-purple animate-pulse" />
                                     {done ? "Ready" : "Processing"}
                                 </div>
                             </div>
@@ -128,16 +128,16 @@ export function GeneratingOverlay({ form, totalMs }: GeneratingOverlayProps) {
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ duration: 0.15 }}
                                                 className={`leading-relaxed ${isSuccess
-                                                        ? "text-green-400/80"
-                                                        : isCommand
-                                                            ? "text-gray-300"
-                                                            : "text-gray-500"
+                                                    ? "text-green-400/80"
+                                                    : isCommand
+                                                        ? "text-gray-300"
+                                                        : "text-gray-500"
                                                     }`}
                                             >
                                                 {line.text}
                                                 {/* Blinking cursor on last line */}
                                                 {i === shownLines.length - 1 && !done && (
-                                                    <span className="ml-0.5 inline-block w-[5px] h-[11px] bg-[#9A6BFF] align-middle animate-pulse" />
+                                                    <span className="ml-0.5 inline-block w-[5px] h-[11px] bg-brand-purple align-middle animate-pulse" />
                                                 )}
                                             </motion.div>
                                         );
@@ -151,10 +151,10 @@ export function GeneratingOverlay({ form, totalMs }: GeneratingOverlayProps) {
                             {/* Progress bar */}
                             <div className="h-[2px] w-full bg-gray-800/60">
                                 <div
-                                    className="h-full bg-[#9A6BFF] transition-all duration-75"
+                                    className="h-full bg-brand-purple transition-all duration-75"
                                     style={{
                                         width: `${progress}%`,
-                                        boxShadow: "0 0 8px rgba(154,107,255,0.5)",
+                                        boxShadow: "0 0 8px rgba(16,185,129,0.5)",
                                     }}
                                 />
                             </div>

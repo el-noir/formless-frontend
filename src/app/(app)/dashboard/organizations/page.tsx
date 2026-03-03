@@ -52,7 +52,7 @@ export default function OrganizationsPage() {
         return (
             <div className="flex items-center justify-center p-20">
                 <div className="text-center">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
+                    <Loader2 className="w-8 h-8 animate-spin text-brand-purple mx-auto mb-4" />
                     <p className="text-gray-400">Loading your organizations...</p>
                 </div>
             </div>
@@ -71,7 +71,7 @@ export default function OrganizationsPage() {
                     </div>
                     <Link
                         href="/dashboard/organizations/new"
-                        className="flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
+                        className="flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
                     >
                         <Plus className="w-4 h-4" /> New Organization
                     </Link>
@@ -93,18 +93,18 @@ export default function OrganizationsPage() {
                             return (
                                 <div
                                     key={org.id}
-                                    className={`bg-[#0f0f14] border rounded-xl p-5 hover:border-gray-700 transition-all cursor-pointer ${isActive ? 'border-[#9A6BFF]/50 ring-1 ring-[#9A6BFF]/20' : 'border-gray-800'}`}
+                                    className={`bg-[#0f0f14] border rounded-xl p-5 hover:border-gray-700 transition-all cursor-pointer ${isActive ? 'border-brand-purple/50 ring-1 ring-brand-purple/20' : 'border-gray-800'}`}
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#9A6BFF]/20 to-[#9A6BFF]/20 border border-[#9A6BFF]/20 flex items-center justify-center">
-                                                <Building2 className="w-6 h-6 text-[#9A6BFF]" />
+                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-purple/20 to-brand-purple/20 border border-brand-purple/20 flex items-center justify-center">
+                                                <Building2 className="w-6 h-6 text-brand-purple" />
                                             </div>
                                             <div>
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <h3 className="text-lg font-semibold text-white">{org.name}</h3>
                                                     {isActive && (
-                                                        <span className="text-xs bg-[#9A6BFF]/10 text-[#9A6BFF] border border-[#9A6BFF]/20 px-2 py-0.5 rounded-full">
+                                                        <span className="text-xs bg-brand-purple/10 text-brand-purple border border-brand-purple/20 px-2.5 py-0.5 rounded-full">
                                                             Active
                                                         </span>
                                                     )}
@@ -149,8 +149,8 @@ export default function OrganizationsPage() {
                     </div>
                 ) : (
                     <div className="border-2 border-dashed border-gray-800 rounded-xl p-16 text-center">
-                        <div className="w-16 h-16 bg-gradient-to-br from-[#9A6BFF]/10 to-[#9A6BFF]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Building2 className="w-8 h-8 text-[#9A6BFF]" />
+                        <div className="w-16 h-16 bg-gradient-to-br from-brand-purple/10 to-brand-purple/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Building2 className="w-8 h-8 text-brand-purple" />
                         </div>
                         <h3 className="text-xl font-medium text-white mb-2">No organizations yet</h3>
                         <p className="text-gray-400 mb-6 max-w-sm mx-auto">
@@ -158,7 +158,7 @@ export default function OrganizationsPage() {
                         </p>
                         <Link
                             href="/dashboard/organizations/new"
-                            className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-2.5 px-6 rounded-lg transition-colors"
+                            className="inline-flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white font-medium py-2.5 px-6 rounded-lg transition-colors"
                         >
                             <Plus className="w-4 h-4" /> Create Organization
                         </Link>

@@ -71,7 +71,7 @@ export function OrganizationSwitcher() {
         return (
             <Link href="/dashboard/organizations/new">
                 <button className="flex items-center gap-2 bg-[#1C1C22] hover:bg-[#252530] text-gray-200 text-sm font-medium px-4 py-2 rounded-lg border border-gray-800 transition-colors shadow-sm">
-                    <Plus className="w-4 h-4 text-[#9A6BFF]" />
+                    <Plus className="w-4 h-4 text-brand-purple" />
                     Create Organization
                 </button>
             </Link>
@@ -80,7 +80,7 @@ export function OrganizationSwitcher() {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center justify-between gap-3 bg-[#0B0B0F] hover:bg-[#111116] text-gray-200 text-sm font-medium px-4 py-2.5 rounded-lg border border-gray-800 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9A6BFF] focus:border-transparent min-w-[200px]">
+            <DropdownMenuTrigger className="flex items-center justify-between gap-3 bg-[#0B0B0F] hover:bg-[#111116] text-gray-200 text-sm font-medium px-4 py-2.5 rounded-lg border border-gray-800 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent min-w-[200px]">
                 <div className="flex items-center gap-2 truncate">
                     <div className="w-6 h-6 rounded bg-[#1C1C22] border border-gray-800 flex items-center justify-center shrink-0">
                         <Building2 className="w-3.5 h-3.5 text-gray-400" />
@@ -107,14 +107,14 @@ export function OrganizationSwitcher() {
                             router.push(`/dashboard/${org.id}`);
                         }}
                     >
-                        <div className={`w-6 h-6 rounded flex items-center justify-center shrink-0 ${String(currentOrgId) === String(org.id) ? "bg-[#9A6BFF] text-white" : "bg-[#1C1C22] border border-gray-800 text-gray-400"}`}>
+                        <div className={`w-6 h-6 rounded flex items-center justify-center shrink-0 ${String(currentOrgId) === String(org.id) ? "bg-brand-purple text-white" : "bg-[#1C1C22] border border-gray-800 text-gray-400"}`}>
                             {org.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="flex flex-col overflow-hidden">
                             <span className="truncate text-sm font-medium">{org.name}</span>
                         </div>
                         {String(currentOrgId) === String(org.id) && (
-                            <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#9A6BFF]" />
+                            <div className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-purple" />
                         )}
                     </DropdownMenuItem>
                 ))}

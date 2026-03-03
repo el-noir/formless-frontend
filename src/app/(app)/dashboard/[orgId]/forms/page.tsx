@@ -74,7 +74,7 @@ export default function FormsPage() {
     if (isLoading || loadingForms) {
         return (
             <div className="flex items-center justify-center p-20">
-                <Loader2 className="w-6 h-6 animate-spin text-[#9A6BFF]" />
+                <Loader2 className="w-6 h-6 animate-spin text-brand-purple" />
             </div>
         );
     }
@@ -92,7 +92,7 @@ export default function FormsPage() {
                     </p>
                     <Link
                         href="/dashboard/organizations"
-                        className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
+                        className="inline-flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
                     >
                         Go to Organizations
                     </Link>
@@ -122,7 +122,7 @@ export default function FormsPage() {
                 {isAdmin && (
                     <Link
                         href={`/dashboard/${currentOrgId}/forms/import`}
-                        className="flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
+                        className="flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
                     >
                         <Plus className="w-4 h-4" /> Import Form
                     </Link>
@@ -144,7 +144,7 @@ export default function FormsPage() {
                         >
                             {/* Card top */}
                             <div className="flex items-start justify-between mb-3">
-                                <div className="p-2 bg-[#1C1C22] border border-gray-800 rounded-md text-gray-400 group-hover:text-[#9A6BFF] transition-colors">
+                                <div className="p-2 bg-[#1C1C22] border border-gray-800 rounded-md text-gray-400 group-hover:text-brand-purple transition-colors">
                                     <FileText className="w-4 h-4" />
                                 </div>
                                 {form.status === 'ACTIVE' && (
@@ -211,7 +211,7 @@ export default function FormsPage() {
                     {isAdmin && (
                         <Link
                             href={`/dashboard/${currentOrgId}/forms/import`}
-                            className="inline-flex items-center gap-2 bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
+                            className="inline-flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
                         >
                             <Plus className="w-4 h-4" /> Import Google Form
                         </Link>
@@ -232,12 +232,12 @@ export default function FormsPage() {
                                 type="text"
                                 readOnly
                                 value={shareLink}
-                                className="flex-1 bg-[#111116] border border-gray-800 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-[#9A6BFF]"
+                                className="flex-1 bg-[#111116] border border-gray-800 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-brand-purple"
                                 onClick={(e) => e.currentTarget.select()}
                             />
                             <button
                                 onClick={copyToClipboard}
-                                className="bg-[#9A6BFF] hover:bg-[#8555e8] text-white text-xs px-4 py-2 rounded font-medium transition-colors"
+                                className="bg-brand-purple hover:bg-[#0da372] text-white text-xs px-4 py-2 rounded font-medium transition-colors"
                             >
                                 Copy
                             </button>

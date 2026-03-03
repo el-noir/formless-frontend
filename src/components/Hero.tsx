@@ -72,7 +72,7 @@ export function Hero() {
         >
           Turn Any Google Form Into an{' '}
           <span className="relative">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-[#B794F6] to-brand-purple">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-[#34D399] to-brand-purple">
               AI Conversation
             </span>
           </span>
@@ -96,7 +96,7 @@ export function Hero() {
           className="w-full max-w-2xl mt-10"
         >
           <form onSubmit={handleSubmit} className="relative">
-            <div className="flex items-center bg-brand-surface border border-white/10 rounded-2xl p-1.5 focus-within:border-brand-purple/50 focus-within:ring-2 focus-within:ring-brand-purple/20 transition-all shadow-[0_0_40px_-10px_rgba(154,107,255,0.15)]">
+            <div className="flex items-center bg-brand-surface border border-white/10 rounded-2xl p-1.5 focus-within:border-brand-purple/50 focus-within:ring-2 focus-within:ring-brand-purple/20 transition-all shadow-[0_0_40px_-10px_rgba(16,185,129,0.15)]">
               <input
                 type="url"
                 value={url}
@@ -108,7 +108,7 @@ export function Hero() {
               <button
                 type="submit"
                 disabled={loading || !url.trim()}
-                className="shrink-0 px-6 sm:px-8 py-3.5 bg-brand-purple hover:bg-[#8555e8] text-white font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm sm:text-base shadow-lg shadow-brand-purple/20 hover:shadow-brand-purple/30"
+                className="shrink-0 px-6 sm:px-8 py-3.5 bg-brand-purple hover:bg-[#0da372] text-white font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm sm:text-base shadow-lg shadow-brand-purple/20 hover:shadow-brand-purple/30"
               >
                 {loading ? (
                   <>

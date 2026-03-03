@@ -133,7 +133,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors relative ${activeTab === tab.id ? "text-[#9A6BFF]" : "text-gray-500 hover:text-gray-300"}`}
+                                    className={`flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors relative ${activeTab === tab.id ? "text-brand-purple" : "text-gray-500 hover:text-gray-300"}`}
                                 >
                                     <Icon className="w-3.5 h-3.5" />
                                     {tab.label}
@@ -141,7 +141,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                                         <span className="absolute top-2 right-3 w-1.5 h-1.5 rounded-full bg-green-400" />
                                     )}
                                     {activeTab === tab.id && (
-                                        <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#9A6BFF]" />
+                                        <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand-purple" />
                                     )}
                                 </button>
                             );

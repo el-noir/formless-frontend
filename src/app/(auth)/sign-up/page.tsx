@@ -49,7 +49,7 @@ function SignUp() {
       <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
         <Background />
         <div className="text-center relative z-10">
-          <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-purple mx-auto mb-4" />
           <p className="text-gray-400">Loading...</p>
         </div>
       </div>

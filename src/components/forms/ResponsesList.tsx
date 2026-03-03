@@ -78,7 +78,7 @@ export const ResponsesList: React.FC<ResponsesListProps> = ({ responses, loading
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-                <div className="w-8 h-8 border-2 border-t-[#9A6BFF] border-gray-800 rounded-full animate-spin mb-4" />
+                <div className="w-8 h-8 border-2 border-t-brand-purple border-gray-800 rounded-full animate-spin mb-4" />
                 <p className="text-sm">Loading responses...</p>
             </div>
         );
@@ -109,8 +109,8 @@ export const ResponsesList: React.FC<ResponsesListProps> = ({ responses, loading
                 <button
                     onClick={handleExport}
                     className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md border transition-all ${exported
-                            ? "bg-green-500/10 border-green-500/20 text-green-400"
-                            : "bg-[#111116] border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white"
+                        ? "bg-green-500/10 border-green-500/20 text-green-400"
+                        : "bg-[#111116] border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white"
                         }`}
                 >
                     {exported ? (
@@ -145,8 +145,8 @@ export const ResponsesList: React.FC<ResponsesListProps> = ({ responses, loading
                         </div>
                         <span
                             className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${resp.status === "SUCCESS"
-                                    ? "bg-green-500/10 text-green-500 border border-green-500/20"
-                                    : "bg-red-500/10 text-red-500 border border-red-500/20"
+                                ? "bg-green-500/10 text-green-500 border border-green-500/20"
+                                : "bg-red-500/10 text-red-500 border border-red-500/20"
                                 }`}
                         >
                             {resp.status}
@@ -183,7 +183,7 @@ export const ResponsesList: React.FC<ResponsesListProps> = ({ responses, loading
                                 href={resp.confirmationUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex items-center gap-1.5 text-xs text-[#9A6BFF] hover:underline mt-2"
+                                className="inline-flex items-center gap-1.5 text-xs text-brand-purple hover:underline mt-2"
                             >
                                 <ExternalLink className="w-3 h-3" />
                                 View Confirmation

@@ -9,8 +9,8 @@
   --color-brand-dark: #0B0B0F;
   --color-brand-surface: #111116;
   --color-brand-card: #1C1C24;
-  --color-brand-purple: #9A6BFF;
-  --color-brand-gold: #F5A623;
+  --color-brand-purple: #10B981;
+  --color-brand-gold: #10B981;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
@@ -46,12 +46,11 @@
   --color-card: var(--card);
 
   /* Formless Custom Theme Colors */
-  --color-brand-purple: #9A6BFF;
-  --color-brand-purple: #9A6BFF;
+  --color-brand-purple: #10B981;
   --color-brand-dark: #0B0B0F;
   --color-brand-card: #1C1C24;
   --color-brand-surface: #111116;
-  --color-brand-gold: #F4E7B8;
+  --color-brand-gold: #10B981;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

@@ -69,10 +69,10 @@ export function DashboardSidebar() {
                 <div className="bg-[#111116] rounded-md p-4 text-sm border border-gray-800">
                     <div className="flex items-center justify-between mb-2">
                         <h4 className="text-gray-200 font-medium text-xs">Pro Plan</h4>
-                        <span className="text-[#9A6BFF] text-xs font-semibold">12%</span>
+                        <span className="text-brand-purple text-xs font-semibold">12%</span>
                     </div>
                     <div className="w-full bg-gray-800 rounded-sm h-1 mb-2">
-                        <div className="bg-[#9A6BFF] h-full rounded-sm" style={{ width: "12%" }} />
+                        <div className="bg-brand-purple h-full rounded-sm" style={{ width: "12%" }} />
                     </div>
                     <p className="text-gray-500 text-[10px] uppercase tracking-wider">1,240 / 10,000</p>
                 </div>

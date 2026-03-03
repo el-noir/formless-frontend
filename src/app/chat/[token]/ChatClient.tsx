@@ -34,7 +34,7 @@ export function ChatClient({ token }: ChatClientProps) {
             <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center">
                 <Background />
                 <div className="text-center relative z-10">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#9A6BFF] mx-auto mb-4" />
+                    <Loader2 className="w-8 h-8 animate-spin text-brand-purple mx-auto mb-4" />
                     <p className="text-gray-400">Loading form...</p>
                 </div>
             </div>
@@ -80,7 +80,7 @@ export function ChatClient({ token }: ChatClientProps) {
                     <button
                         onClick={handleStart}
                         disabled={chatState === 'STARTING'}
-                        className="w-full bg-[#9A6BFF] hover:bg-[#5a72e0] text-white font-medium py-3 px-6 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                        className="w-full bg-brand-purple hover:bg-[#0da372] text-white font-medium py-3 px-6 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                         {chatState === 'STARTING' ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
                         {chatState === 'STARTING' ? 'Starting...' : 'Start Conversation'}

@@ -70,7 +70,7 @@ export function AnalyticsVisual() {
         className="absolute top-8 right-8 bg-brand-card border border-white/10 p-3 rounded-xl shadow-xl flex items-center gap-3"
       >
         <div className="w-8 h-8 rounded-lg bg-[#2A2A35] flex items-center justify-center">
-          <Activity className="w-4 h-4 text-[#F4E7B8]" />
+          <Activity className="w-4 h-4 text-brand-purple" />
         </div>
         <div>
           <div className="text-xs text-gray-400">Conversion</div>
@@ -93,7 +93,7 @@ export function SecurityVisual() {
           initial={{ top: '0%' }}
           animate={{ top: ['0%', '100%', '0%'] }}
           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          className="absolute left-0 right-0 h-[2px] bg-brand-purple shadow-[0_0_10px_theme(colors.brand.purple)] z-10"
+          className="absolute left-0 right-0 h-[2px] bg-brand-purple shadow-[0_0_10px_rgba(16,185,129,0.5)] z-10"
         />
 
         {/* Glow effect behind */}

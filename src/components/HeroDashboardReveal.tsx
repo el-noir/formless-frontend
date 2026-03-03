@@ -45,7 +45,7 @@ export function HeroDashboardReveal() {
                 {/* Ultra-Intense Aura Halo */}
                 <motion.div
                     style={{ opacity: auraOpacity }}
-                    className="absolute inset-x-0 w-[130%] h-[130%] left-1/2 -translate-x-1/2 bg-[radial-gradient(circle_at_center,rgba(154,107,255,0.35)_0%,transparent_65%)] blur-[100px] pointer-events-none z-0"
+                    className="absolute inset-x-0 w-[130%] h-[130%] left-1/2 -translate-x-1/2 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.35)_0%,transparent_65%)] blur-[100px] pointer-events-none z-0"
                 />
 
                 {/* Dashboard Preview Container */}
@@ -62,7 +62,7 @@ export function HeroDashboardReveal() {
                             ref={dashRef}
                             onMouseMove={handleMouseMove}
                             onMouseLeave={handleMouseLeave}
-                            className="relative w-full aspect-video rounded-[32px] overflow-hidden border border-brand-purple/40 bg-[#0B0B0F] shadow-[0_60px_120px_-30px_rgba(0,0,0,0.9),0_0_80px_-20px_rgba(154,107,255,0.4)] transition-transform duration-500 ease-out transform-gpu"
+                            className="relative w-full aspect-video rounded-[32px] overflow-hidden border border-brand-purple/40 bg-[#0B0B0F] shadow-[0_60px_120px_-30px_rgba(0,0,0,0.9),0_0_80px_-20px_rgba(16,185,129,0.4)] transition-transform duration-500 ease-out transform-gpu"
                             style={{ transformStyle: 'preserve-3d' }}
                         >
                             {/* Dashboard Image with Brightness & Contrast Filters - Anchored to Sidebar (Left) */}
@@ -83,7 +83,7 @@ export function HeroDashboardReveal() {
                     {/* Ground Glow Background */}
                     <motion.div
                         style={{ opacity: auraOpacity }}
-                        className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-full h-32 bg-brand-purple/30 blur-[120px] rounded-full pointer-events-none -z-10"
+                        className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-full h-32 bg-[rgba(16,185,129,0.3)] blur-[120px] rounded-full pointer-events-none -z-10"
                     />
                 </motion.div>
 
