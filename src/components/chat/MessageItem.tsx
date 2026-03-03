@@ -7,9 +7,10 @@ interface MessageItemProps {
     message: Message;
     aiName?: string;
     aiAvatar?: string;
+    isEmbed?: boolean;
 }
 
-export function MessageItem({ message, aiName, aiAvatar }: MessageItemProps) {
+export function MessageItem({ message, aiName, aiAvatar, isEmbed = false }: MessageItemProps) {
     const isUser = message.role === 'user';
 
     return (
@@ -21,7 +22,7 @@ export function MessageItem({ message, aiName, aiAvatar }: MessageItemProps) {
                         <span className="text-[10px] font-semibold text-gray-300">You</span>
                     </div>
                 ) : (
-                    <div className="w-7 h-7 rounded-full bg-brand-purple/15 border border-brand-purple/20 flex items-center justify-center text-sm leading-none">
+                    <div className="w-7 h-7 rounded-full bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-sm leading-none">
                         {aiAvatar || '✦'}
                     </div>
                 )}
@@ -37,13 +38,13 @@ export function MessageItem({ message, aiName, aiAvatar }: MessageItemProps) {
                 <div className={cn(
                     'rounded-2xl px-4 py-3 text-sm leading-relaxed',
                     isUser
-                        ? 'bg-brand-purple text-white rounded-tr-none'
+                        ? 'bg-emerald-600 text-white rounded-tr-none'
                         : 'bg-[#111116] border border-gray-800 text-gray-200 rounded-tl-none'
                 )}>
                     {isUser ? (
                         <p className="whitespace-pre-wrap">{message.content}</p>
                     ) : (
-                        <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-p:leading-relaxed prose-a:text-brand-purple prose-strong:text-white">
+                        <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-p:leading-relaxed prose-a:text-emerald-400 prose-strong:text-white">
                             <ReactMarkdown>{message.content}</ReactMarkdown>
                         </div>
                     )}
@@ -52,10 +53,12 @@ export function MessageItem({ message, aiName, aiAvatar }: MessageItemProps) {
                 {/* Answer summary */}
                 {message.fieldSummaries && message.fieldSummaries.length > 0 && (
                     <div className="w-full mt-1 rounded-xl border border-gray-800 overflow-hidden bg-[#0f0f14]">
-                        <div className="px-3 py-2 border-b border-gray-800 bg-[#111116]">
-                            <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Summary</span>
-                        </div>
-                        <div className="divide-y divide-gray-800/60">
+                        {!isEmbed && (
+                            <div className="px-3 py-2 border-b border-gray-800 bg-[#111116]">
+                                <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Summary</span>
+                            </div>
+                        )}
+                        <div className={cn("divide-y divide-gray-800/60", isEmbed && "mt-1")}>
                             {message.fieldSummaries.map((s, idx) => (
                                 <div key={s.fieldId || idx} className="flex items-baseline justify-between px-3 py-2.5 gap-4">
                                     <span className="text-[12px] text-gray-400 shrink-0 max-w-[45%] leading-snug">{s.label}</span>

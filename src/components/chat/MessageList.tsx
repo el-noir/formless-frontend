@@ -8,9 +8,10 @@ interface MessageListProps {
     messagesEndRef: React.RefObject<HTMLDivElement | null>;
     aiName?: string;
     aiAvatar?: string;
+    isEmbed?: boolean;
 }
 
-export function MessageList({ messages, isTyping, messagesEndRef, aiName, aiAvatar }: MessageListProps) {
+export function MessageList({ messages, isTyping, messagesEndRef, aiName, aiAvatar, isEmbed = false }: MessageListProps) {
     return (
         <main
             className="flex-1 overflow-y-auto relative z-10"
@@ -24,13 +25,14 @@ export function MessageList({ messages, isTyping, messagesEndRef, aiName, aiAvat
                         message={msg}
                         aiName={aiName}
                         aiAvatar={aiAvatar}
+                        isEmbed={isEmbed}
                     />
                 ))}
 
                 {/* Typing indicator */}
                 {isTyping && (
                     <div className="flex gap-3 items-start">
-                        <div className="w-7 h-7 rounded-full bg-brand-purple/15 border border-brand-purple/20 flex items-center justify-center text-sm shrink-0 pt-0.5">
+                        <div className="w-7 h-7 rounded-full bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-sm shrink-0 pt-0.5">
                             {aiAvatar || '✦'}
                         </div>
                         <div className="bg-[#111116] border border-gray-800 rounded-2xl rounded-tl-none px-4 py-3">

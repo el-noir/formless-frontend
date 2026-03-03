@@ -13,7 +13,7 @@ interface FormInfo {
 
 import { toast } from 'sonner';
 
-export function useChatSession(token: string) {
+export function useChatSession(token: string, isEmbed: boolean = false) {
     const [formInfo, setFormInfo] = useState<FormInfo | null>(null);
     const [loadingInfo, setLoadingInfo] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -52,9 +52,10 @@ export function useChatSession(token: string) {
         try {
             // Read page context injected by widget.js via URL search params
             const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-            const pageContext = (params?.get('pageTitle') || params?.get('pageUrl')) ? {
+            const pageContext = (params?.get('pageTitle') || params?.get('pageUrl') || isEmbed) ? {
                 pageTitle: params?.get('pageTitle') ?? undefined,
                 pageUrl: params?.get('pageUrl') ?? undefined,
+                isEmbed,
             } : undefined;
 
             const data = await startPublicChat(token, pageContext);

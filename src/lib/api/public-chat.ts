@@ -10,7 +10,7 @@ export const getPublicFormInfo = async (token: string) => {
 
 export const startPublicChat = async (
     token: string,
-    pageContext?: { pageTitle?: string; pageUrl?: string }
+    pageContext?: { pageTitle?: string; pageUrl?: string; isEmbed?: boolean }
 ) => {
     const res = await apiFetch(`${BASE}/${token}/start`, {
         method: 'POST',

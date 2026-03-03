@@ -299,12 +299,12 @@ export default function OrgFormViewerPage() {
                             <div>
                                 <h4 className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-3">Copy-Paste Snippet</h4>
                                 <div className="relative group">
-                                    <pre className="bg-black/40 border border-gray-800 rounded-lg p-5 text-[11px] text-brand-purple/90 overflow-x-auto font-mono leading-relaxed pr-12">
-                                        {`<script \n  src="${typeof window !== 'undefined' ? window.location.origin : 'https://formless.app'}/widget.js" \n  data-formless-token="${form.chatLinkToken}"\n></script>`}
+                                    <pre className="bg-black/40 border border-gray-800 rounded-lg p-5 text-[11px] text-emerald-400/90 overflow-x-auto font-mono leading-relaxed pr-12">
+                                        {`<script \n  src="${typeof window !== 'undefined' ? window.location.origin : 'https://formless.app'}/widget.js?v=2" \n  data-formless-token="${form.chatLinkToken}"\n></script>`}
                                     </pre>
                                     <button
                                         onClick={() => {
-                                            const code = `<script src="${typeof window !== 'undefined' ? window.location.origin : 'https://formless.app'}/widget.js" data-formless-token="${form.chatLinkToken}"></script>`;
+                                            const code = `<script src="${typeof window !== 'undefined' ? window.location.origin : 'https://formless.app'}/widget.js?v=2" data-formless-token="${form.chatLinkToken}"></script>`;
                                             navigator.clipboard.writeText(code);
                                             toast.success("Snippet copied!");
                                         }}
@@ -321,7 +321,7 @@ export default function OrgFormViewerPage() {
                                 <div className="flex items-center justify-between mb-4">
                                     <div>
                                         <h4 className="text-xs font-semibold text-gray-200">Allowed Domains</h4>
-                                        <p className="text-[11px] text-gray-500 mt-0.5">Leave empty to allow all domains. Use <code className="text-brand-purple">*.mysite.com</code> for wildcard subdomains.</p>
+                                        <p className="text-[11px] text-gray-500 mt-0.5">Leave empty to allow all domains. Use <code className="text-emerald-400">*.mysite.com</code> for wildcard subdomains.</p>
                                     </div>
                                     <button
                                         disabled={savingDomains}

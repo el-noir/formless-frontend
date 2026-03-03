@@ -8,9 +8,10 @@ interface ChatInputProps {
     isSubmitting: boolean;
     isTyping: boolean;
     chatState: string;
+    isEmbed?: boolean;
 }
 
-export function ChatInput({ input, setInput, handleSend, isSubmitting, isTyping, chatState }: ChatInputProps) {
+export function ChatInput({ input, setInput, handleSend, isSubmitting, isTyping, chatState, isEmbed = false }: ChatInputProps) {
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
     const onSend = (e?: React.FormEvent) => {
@@ -23,10 +24,10 @@ export function ChatInput({ input, setInput, handleSend, isSubmitting, isTyping,
             <div className="max-w-2xl mx-auto px-4 py-3">
                 {chatState === 'COMPLETED' ? (
                     <div className="flex items-center gap-3 bg-[#111116] border border-gray-800 rounded-xl px-4 py-3.5">
-                        <CheckCircle2 className="w-5 h-5 text-brand-purple shrink-0" />
+                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
                         <div>
-                            <p className="text-sm font-medium text-white">All responses submitted</p>
-                            <p className="text-xs text-gray-500 mt-0.5">You can close this tab.</p>
+                            <p className="text-sm font-medium text-white">{isEmbed ? "Got it, thanks!" : "All responses submitted"}</p>
+                            <p className="text-xs text-gray-500 mt-0.5">{isEmbed ? "We'll be in touch soon." : "You can close this tab."}</p>
                         </div>
                     </div>
                 ) : chatState === 'CONFIRMING' || chatState === 'READY_TO_SUBMIT' ? (
@@ -34,11 +35,11 @@ export function ChatInput({ input, setInput, handleSend, isSubmitting, isTyping,
                         <button
                             onClick={() => handleSend(undefined, 'submit')}
                             disabled={isSubmitting || isTyping}
-                            className="w-full bg-brand-purple hover:bg-[#0da372] disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm"
+                            className={`w-full ${isEmbed ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-emerald-600 hover:bg-emerald-500'} disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm`}
                         >
                             {isSubmitting
-                                ? <><Loader2 className="w-4 h-4 animate-spin" /> Submitting...</>
-                                : <><CheckCircle2 className="w-4 h-4" /> Confirm & Submit</>
+                                ? <><Loader2 className="w-4 h-4 animate-spin" /> {isEmbed ? 'Sending...' : 'Submitting...'}</>
+                                : <><CheckCircle2 className="w-4 h-4" /> {isEmbed ? 'Looks good!' : 'Confirm & Submit'}</>
                             }
                         </button>
                         <button
@@ -71,7 +72,7 @@ export function ChatInput({ input, setInput, handleSend, isSubmitting, isTyping,
                         <button
                             type="submit"
                             disabled={!input.trim() || isSubmitting || isTyping}
-                            className="shrink-0 w-8 h-8 bg-brand-purple hover:bg-[#0da372] disabled:opacity-30 disabled:hover:bg-brand-purple text-white rounded-lg flex items-center justify-center transition-colors mb-0.5"
+                            className="shrink-0 w-8 h-8 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-30 disabled:hover:bg-emerald-600 text-white rounded-lg flex items-center justify-center transition-colors mb-0.5"
                         >
                             <Send className="w-3.5 h-3.5" />
                         </button>

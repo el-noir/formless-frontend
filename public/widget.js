@@ -1,6 +1,8 @@
 (function () {
     const script = document.currentScript;
     const token = script ? script.getAttribute('data-formless-token') : null;
+    const autoOpen = script ? script.getAttribute('data-auto-open') !== 'false' : true; // default: auto-open
+    const autoOpenDelay = parseInt(script?.getAttribute('data-auto-open-delay') || '5000', 10);
     const baseUrl = (window.location.origin.includes('localhost') || window.location.protocol === 'file:')
         ? 'http://localhost:3000'
         : 'https://formless.app';
@@ -65,14 +67,14 @@
             border: 1px solid rgba(255,255,255,0.05);
             display: none;
             opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.2s ease, transform 0.2s ease;
+            transform: translateY(10px) scale(0.97);
+            transition: opacity 0.25s ease, transform 0.25s ease;
         }
 
         #formless-iframe-container.open {
             display: block;
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
         #formless-iframe {
@@ -99,16 +101,14 @@
 
     const iframe = document.createElement('iframe');
     iframe.id = 'formless-iframe';
-
-    // Capture the host page context to enable AI personalization
-    const pageTitle = encodeURIComponent(document.title || '');
-    const pageUrl = encodeURIComponent(window.location.href || '');
-    iframe.src = `${baseUrl}/chat/${token}/embed?pageTitle=${pageTitle}&pageUrl=${pageUrl}`;
+    // NOTE: iframe.src is NOT set here — it's lazy-loaded on first open
+    // This means zero network cost for users who never open the widget
 
     iframeContainer.appendChild(iframe);
 
     const button = document.createElement('button');
     button.id = 'formless-button';
+    button.setAttribute('aria-label', 'Open chat');
     button.innerHTML = `
         <svg viewBox="0 0 24 24">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -119,25 +119,51 @@
     container.appendChild(button);
     document.body.appendChild(container);
 
+    // Capture the host page context to enable AI personalization
+    const pageTitle = encodeURIComponent(document.title || '');
+    const pageUrl = encodeURIComponent(window.location.href || '');
+    const iframeSrc = `${baseUrl}/chat/${token}/embed?pageTitle=${pageTitle}&pageUrl=${pageUrl}`;
+
     // Logic
     let isOpen = false;
-    button.onclick = () => {
-        isOpen = !isOpen;
-        if (isOpen) {
-            iframeContainer.classList.add('open');
-            button.innerHTML = `
-                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            `;
-        } else {
-            iframeContainer.classList.remove('open');
-            button.innerHTML = `
-                <svg viewBox="0 0 24 24">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-            `;
+    let iframeLoaded = false;
+
+    function openWidget() {
+        isOpen = true;
+        // Lazy-load iframe on first open — no network cost until user interacts
+        if (!iframeLoaded) {
+            iframe.src = iframeSrc;
+            iframeLoaded = true;
         }
+        iframeContainer.classList.add('open');
+        button.setAttribute('aria-label', 'Close chat');
+        button.innerHTML = `
+            <svg viewBox="0 0 24 24" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        `;
+    }
+
+    function closeWidget() {
+        isOpen = false;
+        iframeContainer.classList.remove('open');
+        button.setAttribute('aria-label', 'Open chat');
+        button.innerHTML = `
+            <svg viewBox="0 0 24 24">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        `;
+    }
+
+    button.onclick = () => {
+        if (isOpen) closeWidget(); else openWidget();
     };
+
+    // Auto-open: proactively reach out to the user after a delay
+    if (autoOpen) {
+        setTimeout(() => {
+            if (!isOpen) openWidget();
+        }, autoOpenDelay);
+    }
 })();

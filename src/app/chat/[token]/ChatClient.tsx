@@ -1,9 +1,8 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Background } from '@/components/Background';
 import { Loader2 } from 'lucide-react';
-import Image from 'next/image';
 import { ChatHeader } from '@/components/chat/ChatHeader';
 import { MessageList } from '@/components/chat/MessageList';
 import { ChatInput } from '@/components/chat/ChatInput';
@@ -11,9 +10,10 @@ import { useChatSession } from '@/hooks/useChatSession';
 
 interface ChatClientProps {
     token: string;
+    isEmbed?: boolean;
 }
 
-export function ChatClient({ token }: ChatClientProps) {
+export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
     const {
         formInfo,
         loadingInfo,
@@ -28,16 +28,38 @@ export function ChatClient({ token }: ChatClientProps) {
         messagesEndRef,
         handleStart,
         handleSend,
-    } = useChatSession(token);
+    } = useChatSession(token, isEmbed);
 
-    /* ── Loading ─────────────────────────────────────── */
-    if (loadingInfo) {
+    // In embed mode: auto-start the conversation as soon as form info is loaded.
+    // No welcome screen, no "Start Conversation" button — just jump straight to the AI.
+    useEffect(() => {
+        if (isEmbed && !loadingInfo && formInfo && chatState === 'IDLE') {
+            handleStart();
+        }
+    }, [isEmbed, loadingInfo, formInfo, chatState]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    /* ── Loading / Auto-starting ─────────────────────── */
+    if (loadingInfo || (isEmbed && (chatState === 'IDLE' || chatState === 'STARTING'))) {
         return (
-            <div className="min-h-[100dvh] bg-[#0B0B0F] flex items-center justify-center">
-                <Background />
-                <div className="flex flex-col items-center gap-3 relative z-10">
-                    <Loader2 className="w-5 h-5 animate-spin text-brand-purple" />
-                    <p className="text-sm text-gray-500">Loading...</p>
+            <div className="h-[100dvh] bg-[#0B0B0F] flex flex-col">
+                {/* Slim AI header for embed */}
+                {isEmbed && formInfo && (
+                    <div className="flex items-center gap-3 px-4 py-3 border-b border-white/5">
+                        <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-base shrink-0">
+                            {formInfo.aiAvatar || '✦'}
+                        </div>
+                        <div>
+                            <p className="text-xs font-semibold text-white leading-none">{formInfo.aiName || 'Assistant'}</p>
+                            <p className="text-[10px] text-emerald-400 mt-0.5">● Online</p>
+                        </div>
+                    </div>
+                )}
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-3">
+                        <Loader2 className="w-5 h-5 animate-spin text-emerald-500" />
+                        {isEmbed && <p className="text-xs text-gray-600">Connecting...</p>}
+                        {!isEmbed && <p className="text-sm text-gray-500">Loading...</p>}
+                    </div>
                 </div>
             </div>
         );
@@ -46,8 +68,8 @@ export function ChatClient({ token }: ChatClientProps) {
     /* ── Error ──────────────────────────────────────── */
     if (error || !formInfo) {
         return (
-            <div className="min-h-[100dvh] bg-[#0B0B0F] flex items-center justify-center px-6 relative">
-                <Background />
+            <div className="h-[100dvh] bg-[#0B0B0F] flex items-center justify-center px-6 relative">
+                {!isEmbed && <Background />}
                 <div className="max-w-sm w-full relative z-10 text-center">
                     <p className="text-gray-400 text-sm mb-1">This link isn't available</p>
                     <p className="text-gray-600 text-xs">{error || 'The form may be expired or inactive.'}</p>
@@ -59,22 +81,15 @@ export function ChatClient({ token }: ChatClientProps) {
     const aiName: string = formInfo.aiName || 'Assistant';
     const aiAvatar: string | undefined = formInfo.aiAvatar as string | undefined;
 
-    /* ── Welcome screen ─────────────────────────────── */
-    if (chatState === 'IDLE' || chatState === 'STARTING') {
+    /* ── Standalone Welcome Screen (non-embed only) ── */
+    if (!isEmbed && (chatState === 'IDLE' || chatState === 'STARTING')) {
         return (
             <div className="min-h-[100dvh] bg-[#0B0B0F] flex flex-col items-center justify-center px-5 py-12 relative">
                 <Background />
-
                 <div className="max-w-sm w-full relative z-10 flex flex-col gap-8">
-                    {/* Formless mark */}
                     <div className="flex items-center gap-2">
-                        <div className="relative w-5 h-5">
-                            <Image src="/logo.png" alt="Formless" fill className="object-contain" />
-                        </div>
                         <span className="text-xs text-gray-500 font-medium">Formless</span>
                     </div>
-
-                    {/* Content */}
                     <div>
                         <div className="mb-5 flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-brand-purple/10 border border-brand-purple/20 flex items-center justify-center text-lg shrink-0">
@@ -85,21 +100,16 @@ export function ChatClient({ token }: ChatClientProps) {
                                 <p className="text-white text-sm font-semibold">Ready to chat</p>
                             </div>
                         </div>
-
                         <h1 className="text-2xl font-bold text-white mb-2 leading-tight">{formInfo.title}</h1>
                         <p className="text-gray-400 text-sm leading-relaxed">
                             {formInfo.description || `${aiName} will guide you through ${formInfo.questionCount} questions conversationally.`}
                         </p>
                     </div>
-
-                    {/* Meta */}
                     <div className="flex items-center gap-5 text-sm text-gray-500">
                         <span><span className="text-white font-medium">{formInfo.questionCount}</span> questions</span>
                         <span className="text-gray-700">·</span>
                         <span>~<span className="text-white font-medium">{formInfo.estimatedMinutes}</span> min</span>
                     </div>
-
-                    {/* CTA */}
                     <button
                         onClick={handleStart}
                         disabled={chatState === 'STARTING'}
@@ -117,15 +127,31 @@ export function ChatClient({ token }: ChatClientProps) {
 
     /* ── Active chat ────────────────────────────────── */
     return (
-        <div className="min-h-[100dvh] bg-[#0B0B0F] flex flex-col relative text-white">
-            <Background />
+        <div className={`${isEmbed ? 'h-[100dvh]' : 'min-h-[100dvh]'} bg-[#0B0B0F] flex flex-col relative text-white`}>
+            {!isEmbed && <Background />}
 
-            <ChatHeader
-                title={formInfo.title}
-                aiName={aiName}
-                chatState={chatState}
-                progress={progress}
-            />
+            {/* Embed: slim top bar instead of full ChatHeader */}
+            {isEmbed ? (
+                <div className="flex items-center gap-3 px-4 py-3 border-b border-white/5 shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-base shrink-0">
+                        {aiAvatar || '✦'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-white leading-none truncate">{aiName}</p>
+                        <p className="text-[10px] text-emerald-400 mt-0.5">● Online</p>
+                    </div>
+                    {progress > 0 && (
+                        <div className="text-[10px] text-gray-500">{progress}%</div>
+                    )}
+                </div>
+            ) : (
+                <ChatHeader
+                    title={formInfo.title}
+                    aiName={aiName}
+                    chatState={chatState}
+                    progress={progress}
+                />
+            )}
 
             <MessageList
                 messages={messages}
@@ -133,6 +159,7 @@ export function ChatClient({ token }: ChatClientProps) {
                 messagesEndRef={messagesEndRef}
                 aiName={aiName}
                 aiAvatar={aiAvatar}
+                isEmbed={isEmbed}
             />
 
             <ChatInput
@@ -142,6 +169,7 @@ export function ChatClient({ token }: ChatClientProps) {
                 isSubmitting={isSubmitting}
                 isTyping={isTyping}
                 chatState={chatState}
+                isEmbed={isEmbed}
             />
         </div>
     );
