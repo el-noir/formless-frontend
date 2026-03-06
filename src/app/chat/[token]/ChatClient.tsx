@@ -92,7 +92,7 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
                     </div>
                     <div>
                         <div className="mb-5 flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-brand-purple/10 border border-brand-purple/20 flex items-center justify-center text-lg shrink-0">
+                            <div className="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-lg shrink-0">
                                 {aiAvatar || '✦'}
                             </div>
                             <div>
@@ -113,7 +113,7 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
                     <button
                         onClick={handleStart}
                         disabled={chatState === 'STARTING'}
-                        className="w-full bg-brand-purple hover:bg-[#0da372] disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2"
+                        className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2"
                     >
                         {chatState === 'STARTING'
                             ? <><Loader2 className="w-4 h-4 animate-spin" /> Starting...</>

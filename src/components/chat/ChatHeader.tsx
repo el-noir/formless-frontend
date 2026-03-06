@@ -26,7 +26,7 @@ export function ChatHeader({ title, aiName, chatState, progress }: ChatHeaderPro
                 {/* Right: progress or done state */}
                 <div className="shrink-0 text-xs text-gray-500 font-medium">
                     {isCompleted ? (
-                        <span className="text-brand-purple">Completed</span>
+                        <span className="text-emerald-400">Completed</span>
                     ) : (
                         <span>{progress}% complete</span>
                     )}
@@ -37,7 +37,7 @@ export function ChatHeader({ title, aiName, chatState, progress }: ChatHeaderPro
             {!isCompleted && (
                 <div className="h-[1px] bg-gray-800">
                     <div
-                        className="h-full bg-brand-purple transition-all duration-500 ease-out"
+                        className="h-full bg-emerald-500 transition-all duration-500 ease-out"
                         style={{ width: `${progress}%` }}
                     />
                 </div>

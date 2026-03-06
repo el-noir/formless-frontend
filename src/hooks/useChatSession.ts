@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { getPublicFormInfo, startPublicChat, sendPublicChatMessage } from '@/lib/api/public-chat';
 import { Message } from '@/components/chat/types';
 
@@ -46,7 +46,7 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, isTyping]);
 
-    const handleStart = async () => {
+    const handleStart = useCallback(async () => {
         setChatState('STARTING');
         setIsTyping(true);
         try {
@@ -80,7 +80,13 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
         } finally {
             setIsTyping(false);
         }
-    };
+    }, [token, isEmbed]);
+
+    useEffect(() => {
+        if (isEmbed && !loadingInfo && formInfo && chatState === 'IDLE') {
+            handleStart();
+        }
+    }, [isEmbed, loadingInfo, formInfo, chatState, handleStart]);
 
     const handleSend = async (e?: React.FormEvent, messageOverride?: string) => {
         e?.preventDefault();

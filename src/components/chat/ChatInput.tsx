@@ -35,7 +35,7 @@ export function ChatInput({ input, setInput, handleSend, isSubmitting, isTyping,
                         <button
                             onClick={() => handleSend(undefined, 'submit')}
                             disabled={isSubmitting || isTyping}
-                            className={`w-full ${isEmbed ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-emerald-600 hover:bg-emerald-500'} disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm`}
+                            className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm"
                         >
                             {isSubmitting
                                 ? <><Loader2 className="w-4 h-4 animate-spin" /> {isEmbed ? 'Sending...' : 'Submitting...'}</>
