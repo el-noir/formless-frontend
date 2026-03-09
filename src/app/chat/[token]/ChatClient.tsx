@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { ChatHeader } from '@/components/chat/ChatHeader';
 import { MessageList } from '@/components/chat/MessageList';
 import { ChatInput } from '@/components/chat/ChatInput';
+import { ChatProgressCompact } from '@/components/chat/ChatProgress';
 import { useChatSession } from '@/hooks/useChatSession';
 
 interface ChatClientProps {
@@ -24,6 +25,7 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
         isTyping,
         chatState,
         progress,
+        progressDetail,
         isSubmitting,
         messagesEndRef,
         handleStart,
@@ -127,7 +129,7 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
 
     /* ── Active chat ────────────────────────────────── */
     return (
-        <div className={`${isEmbed ? 'h-[100dvh]' : 'min-h-[100dvh]'} bg-[#0B0B0F] flex flex-col relative text-white`}>
+        <div className="h-[100dvh] bg-[#0B0B0F] flex flex-col relative text-white">
             {!isEmbed && <Background />}
 
             {/* Embed: slim top bar instead of full ChatHeader */}
@@ -140,9 +142,11 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
                         <p className="text-xs font-semibold text-white leading-none truncate">{aiName}</p>
                         <p className="text-[10px] text-emerald-400 mt-0.5">● Online</p>
                     </div>
-                    {progress > 0 && (
+                    {progressDetail ? (
+                        <ChatProgressCompact progressDetail={progressDetail} chatState={chatState} />
+                    ) : progress > 0 ? (
                         <div className="text-[10px] text-gray-500">{progress}%</div>
-                    )}
+                    ) : null}
                 </div>
             ) : (
                 <ChatHeader
@@ -150,6 +154,7 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
                     aiName={aiName}
                     chatState={chatState}
                     progress={progress}
+                    progressDetail={progressDetail}
                 />
             )}
 

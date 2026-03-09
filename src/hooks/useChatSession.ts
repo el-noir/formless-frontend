@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { getPublicFormInfo, startPublicChat, sendPublicChatMessage } from '@/lib/api/public-chat';
-import { Message } from '@/components/chat/types';
+import { Message, ProgressDetail } from '@/components/chat/types';
 
 interface FormInfo {
     title?: string;
@@ -24,6 +24,7 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
     const [isTyping, setIsTyping] = useState(false);
     const [chatState, setChatState] = useState<string>('IDLE'); // IDLE, STARTING, IN_PROGRESS, COMPLETED
     const [progress, setProgress] = useState(0);
+    const [progressDetail, setProgressDetail] = useState<ProgressDetail | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -61,6 +62,10 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
             const data = await startPublicChat(token, pageContext);
             setSessionId(data.sessionId);
             setChatState(data.state);
+            if (data.progressDetail) {
+                setProgressDetail(data.progressDetail);
+                setProgress(data.progressDetail.percentage);
+            }
             if (data.greeting) {
                 setMessages([
                     {
@@ -105,7 +110,10 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
             const result = await sendPublicChatMessage(token, sessionId, userMsg);
             setChatState(result.state);
 
-            if (result.state === 'READY_TO_SUBMIT' || result.state === 'COMPLETED') {
+            if (result.progressDetail) {
+                setProgressDetail(result.progressDetail);
+                setProgress(result.progressDetail.percentage);
+            } else if (result.state === 'READY_TO_SUBMIT' || result.state === 'COMPLETED') {
                 setProgress(100);
             } else if (result.reply?.metadata?.progress) {
                 setProgress(result.reply.metadata.progress);
@@ -166,6 +174,7 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
         isTyping,
         chatState,
         progress,
+        progressDetail,
         isSubmitting,
         messagesEndRef,
         handleStart,

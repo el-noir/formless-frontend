@@ -1,14 +1,17 @@
 ﻿import React from 'react';
 import Image from 'next/image';
+import { ChatProgress } from './ChatProgress';
+import { ProgressDetail } from './types';
 
 interface ChatHeaderProps {
     title?: string;
     aiName?: string;
     chatState: string;
     progress: number;
+    progressDetail?: ProgressDetail | null;
 }
 
-export function ChatHeader({ title, aiName, chatState, progress }: ChatHeaderProps) {
+export function ChatHeader({ title, aiName, chatState, progress, progressDetail }: ChatHeaderProps) {
     const isCompleted = chatState === 'COMPLETED';
 
     return (
@@ -33,14 +36,19 @@ export function ChatHeader({ title, aiName, chatState, progress }: ChatHeaderPro
                 </div>
             </header>
 
-            {/* Progress bar */}
-            {!isCompleted && (
-                <div className="h-[1px] bg-gray-800">
-                    <div
-                        className="h-full bg-emerald-500 transition-all duration-500 ease-out"
-                        style={{ width: `${progress}%` }}
-                    />
-                </div>
+            {/* Detailed progress panel */}
+            {progressDetail ? (
+                <ChatProgress progressDetail={progressDetail} chatState={chatState} />
+            ) : (
+                /* Fallback: simple progress bar */
+                !isCompleted && (
+                    <div className="h-[1px] bg-gray-800">
+                        <div
+                            className="h-full bg-emerald-500 transition-all duration-500 ease-out"
+                            style={{ width: `${progress}%` }}
+                        />
+                    </div>
+                )
             )}
         </div>
     );
