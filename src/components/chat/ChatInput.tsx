@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { Send, CheckCircle2, Loader2 } from 'lucide-react';
+import { Send, CheckCircle2, Loader2, AlertCircle, RotateCcw } from 'lucide-react';
 
 interface ChatInputProps {
     input: string;
@@ -29,6 +29,23 @@ export function ChatInput({ input, setInput, handleSend, isSubmitting, isTyping,
                             <p className="text-sm font-medium text-white">{isEmbed ? "Got it, thanks!" : "All responses submitted"}</p>
                             <p className="text-xs text-gray-500 mt-0.5">{isEmbed ? "We'll be in touch soon." : "You can close this tab."}</p>
                         </div>
+                    </div>
+                ) : chatState === 'ERROR' ? (
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-3 bg-red-500/5 border border-red-500/20 rounded-xl px-4 py-3">
+                            <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
+                            <p className="text-sm text-red-300/80 flex-1">Submission failed — see the message above for details.</p>
+                        </div>
+                        <button
+                            onClick={() => handleSend(undefined, 'retry')}
+                            disabled={isSubmitting || isTyping}
+                            className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm"
+                        >
+                            {isSubmitting
+                                ? <><Loader2 className="w-4 h-4 animate-spin" /> Retrying...</>
+                                : <><RotateCcw className="w-4 h-4" /> Try Again</>
+                            }
+                        </button>
                     </div>
                 ) : chatState === 'CONFIRMING' || chatState === 'READY_TO_SUBMIT' ? (
                     <div className="flex flex-col gap-2">

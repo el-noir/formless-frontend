@@ -23,7 +23,7 @@ function StartFreeContent() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isComplete, setIsComplete] = useState(false);
-  const [collectedData, setCollectedData] = useState<any>(null);
+  const [collectedData, setCollectedData] = useState<Record<string, string> | null>(null);
   const [sendingMsg, setSendingMsg] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const searchParams = useSearchParams();
@@ -168,7 +168,7 @@ function StartFreeContent() {
                 </div>
               </div>
               <button
-                onClick={() => { setSessionId(null); setMessages([]); setIsComplete(false); }}
+                onClick={() => { setSessionId(null); setMessages([]); setIsComplete(false); setCollectedData(null); setError(''); }}
                 className="text-xs text-gray-300 hover:text-white transition-all px-4 py-2 border border-white/10 rounded-lg bg-[#252530]/50 hover:bg-[#252530] flex items-center gap-2"
               >
                 Restart Session

@@ -9,7 +9,7 @@ export interface StartChatResponse {
 export interface ReplyChatResponse {
     message: string;
     isComplete: boolean;
-    collectedData: any;
+    collectedData: Record<string, string>;
 }
 
 export async function startChat(url: string): Promise<StartChatResponse> {

@@ -22,7 +22,7 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
-    const [chatState, setChatState] = useState<string>('IDLE'); // IDLE, STARTING, IN_PROGRESS, COMPLETED
+    const [chatState, setChatState] = useState<string>('IDLE'); // IDLE, STARTING, IN_PROGRESS, CLARIFYING, CONFIRMING, READY_TO_SUBMIT, COMPLETED, ERROR, ABANDONED
     const [progress, setProgress] = useState(0);
     const [progressDetail, setProgressDetail] = useState<ProgressDetail | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -135,17 +135,8 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
 
             if (result.state === 'COMPLETED') {
                 toast.success("Form submitted successfully!");
-                if (!result.nextMessage) {
-                    setMessages((prev) => [
-                        ...prev,
-                        {
-                            role: 'assistant',
-                            content: 'Done! Your form has been submitted successfully.',
-                            state: 'COMPLETED',
-                            timestamp: new Date().toISOString(),
-                        },
-                    ]);
-                }
+            } else if (result.state === 'ERROR') {
+                toast.error(result.reply?.content || "Submission failed. Please try again.");
             }
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : 'Failed to send message.';

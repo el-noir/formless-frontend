@@ -13,6 +13,7 @@ interface ChatHeaderProps {
 
 export function ChatHeader({ title, aiName, chatState, progress, progressDetail }: ChatHeaderProps) {
     const isCompleted = chatState === 'COMPLETED';
+    const isError = chatState === 'ERROR';
 
     return (
         <div className="shrink-0">
@@ -30,6 +31,8 @@ export function ChatHeader({ title, aiName, chatState, progress, progressDetail 
                 <div className="shrink-0 text-xs text-gray-500 font-medium">
                     {isCompleted ? (
                         <span className="text-emerald-400">Completed</span>
+                    ) : isError ? (
+                        <span className="text-red-400">Submission failed</span>
                     ) : (
                         <span>{progress}% complete</span>
                     )}

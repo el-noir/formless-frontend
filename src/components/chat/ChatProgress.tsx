@@ -179,6 +179,7 @@ export function ChatProgress({ progressDetail, chatState }: ChatProgressProps) {
 /** Compact inline progress for embed mode headers */
 export function ChatProgressCompact({ progressDetail, chatState }: ChatProgressProps) {
     const isDone = chatState === 'COMPLETED';
+    const isError = chatState === 'ERROR';
 
     return (
         <div className="flex items-center gap-2.5">
@@ -202,9 +203,9 @@ export function ChatProgressCompact({ progressDetail, chatState }: ChatProgressP
             </div>
             <span className={cn(
                 'text-[10px] tabular-nums',
-                isDone ? 'text-emerald-400' : 'text-gray-500',
+                isDone ? 'text-emerald-400' : isError ? 'text-red-400' : 'text-gray-500',
             )}>
-                {isDone ? 'Done' : `${progressDetail.percentage}%`}
+                {isDone ? 'Done' : isError ? 'Failed' : `${progressDetail.percentage}%`}
             </span>
         </div>
     );
