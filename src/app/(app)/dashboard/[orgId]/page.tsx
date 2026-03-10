@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense, useCallback, useMemo } from "react";
 import { useAuthStore } from "@/stores/authStore";
 import { useOrgStore } from "@/stores/orgStore";
 import { getOrgForms, getDashboardStats } from "@/lib/api/organizations";
@@ -35,13 +35,13 @@ function DashboardContent() {
   const [loadingStats, setLoadingStats] = useState(false);
   const router = useRouter();
 
-  // Fetch forms
-  const fetchForms = async (id: string) => {
+  // Fetch forms — stable reference so the useEffect below doesn't loop
+  const fetchForms = useCallback(async () => {
     setForms(null);
     setLoadingForms(true);
     setError(null);
     try {
-      const data = await getOrgForms(id);
+      const data = await getOrgForms(orgId);
       setForms(data.forms || []);
     } catch (err: any) {
       console.error("Error fetching forms:", err);
@@ -49,32 +49,33 @@ function DashboardContent() {
     } finally {
       setLoadingForms(false);
     }
-  };
+  }, [orgId]);
 
-  // Fetch dashboard stats
-  const fetchStats = async (id: string) => {
+  // Fetch dashboard stats — stable reference so the useEffect below doesn't loop
+  const fetchStats = useCallback(async () => {
     setLoadingStats(true);
     try {
-      const data = await getDashboardStats(id, { days: 30 });
+      const data = await getDashboardStats(orgId, { days: 30 });
       setStats(data);
     } catch (err: any) {
       console.error("Error fetching dashboard stats:", err);
     } finally {
       setLoadingStats(false);
     }
-  };
+  }, [orgId]);
 
   useEffect(() => {
     if (accessToken && orgId) {
-      fetchForms(orgId);
-      fetchStats(orgId);
+      fetchForms();
+      fetchStats();
     } else {
       setForms([]);
       setStats(null);
     }
-  }, [accessToken, orgId]);
+  }, [accessToken, orgId, fetchForms, fetchStats]);
 
-  const isLoading = loadingStats || loadingForms;
+  const isLoading = useMemo(() => loadingStats || loadingForms, [loadingStats, loadingForms]);
+  const isAdmin = useMemo(() => isAdminOfCurrentOrg(), [isAdminOfCurrentOrg]);
 
   return (
     <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
@@ -219,7 +220,7 @@ function DashboardContent() {
               isLoading={loadingForms}
               error={error}
               currentOrgId={currentOrgId}
-              isAdmin={isAdminOfCurrentOrg()}
+              isAdmin={isAdmin}
               setForms={setForms}
             />
           )}
