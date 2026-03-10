@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getOrgForms, getFormResponses } from "@/lib/api/organizations";
-import { ResponsesList } from "@/components/forms/ResponsesList";
+import { getOrgForms } from "@/lib/api/organizations";
+import { AnalyticsView } from "@/components/forms/AnalyticsView";
 import { ChevronLeft, Loader2, FileText, Inbox } from "lucide-react";
 
 interface Form {
@@ -21,8 +21,6 @@ export default function SubmissionsPage() {
     const [forms, setForms] = useState<Form[]>([]);
     const [loadingForms, setLoadingForms] = useState(true);
     const [selectedForm, setSelectedForm] = useState<Form | null>(null);
-    const [responses, setResponses] = useState<any[]>([]);
-    const [loadingResponses, setLoadingResponses] = useState(false);
 
     // Fetch all forms in the org
     useEffect(() => {
@@ -36,22 +34,6 @@ export default function SubmissionsPage() {
             })
             .catch(console.error)
             .finally(() => setLoadingForms(false));
-    }, [orgId]);
-
-    // Fetch responses for a selected form
-    const openForm = useCallback(async (form: Form) => {
-        setSelectedForm(form);
-        setResponses([]);
-        setLoadingResponses(true);
-        try {
-            const data = await getFormResponses(orgId, form.id);
-            setResponses(Array.isArray(data) ? data : []);
-        } catch (e) {
-            console.error(e);
-            setResponses([]);
-        } finally {
-            setLoadingResponses(false);
-        }
     }, [orgId]);
 
     /* ── Detail view ─────────────────────────────────────────────── */
@@ -69,12 +51,12 @@ export default function SubmissionsPage() {
 
                 <div className="mb-6">
                     <h1 className="text-xl font-semibold text-white mb-1">{selectedForm.title}</h1>
-                    <p className="text-gray-500 text-sm">Form responses</p>
+                    <p className="text-gray-500 text-sm">Analytics &amp; responses</p>
                 </div>
 
-                <ResponsesList
-                    responses={responses}
-                    loading={loadingResponses}
+                <AnalyticsView
+                    orgId={orgId}
+                    formId={selectedForm.id}
                     formTitle={selectedForm.title}
                 />
             </div>
@@ -105,7 +87,7 @@ export default function SubmissionsPage() {
                     {forms.map((form) => (
                         <button
                             key={form.id}
-                            onClick={() => openForm(form)}
+                            onClick={() => setSelectedForm(form)}
                             className="w-full flex items-center justify-between gap-4 bg-[#111116] hover:bg-[#1C1C24] border border-gray-800 hover:border-gray-700 rounded-xl px-5 py-4 transition-colors text-left group"
                         >
                             <div className="flex items-center gap-3 min-w-0">

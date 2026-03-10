@@ -147,6 +147,46 @@ export const getFormResponses = async (orgId: string, formId: string) => {
     return data.data;
 };
 
+// ─── Analytics ────────────────────────────────────────────────────────────────
+
+export const getFormAnalyticsOverview = async (
+    orgId: string,
+    formId: string,
+    params?: { period?: 'day' | 'week' | 'month'; days?: number },
+) => {
+    const query = new URLSearchParams();
+    if (params?.period) query.set('period', params.period);
+    if (params?.days) query.set('days', String(params.days));
+    const qs = query.toString() ? `?${query}` : '';
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/analytics${qs}`);
+    if (!res.ok) throw new Error('Failed to fetch analytics overview');
+    const data = await res.json();
+    return data.data;
+};
+
+export const getFormAnalyticsFields = async (orgId: string, formId: string) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/analytics/fields`);
+    if (!res.ok) throw new Error('Failed to fetch field analytics');
+    const data = await res.json();
+    return data.data;
+};
+
+export const getFormAnalyticsFieldDetail = async (
+    orgId: string,
+    formId: string,
+    fieldId: string,
+    params?: { page?: number; pageSize?: number },
+) => {
+    const query = new URLSearchParams();
+    if (params?.page) query.set('page', String(params.page));
+    if (params?.pageSize) query.set('pageSize', String(params.pageSize));
+    const qs = query.toString() ? `?${query}` : '';
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/analytics/fields/${fieldId}${qs}`);
+    if (!res.ok) throw new Error('Failed to fetch field detail');
+    const data = await res.json();
+    return data.data;
+};
+
 export const saveChatConfig = async (
     orgId: string,
     formId: string,
