@@ -3,6 +3,7 @@ import axios from "axios";
 import { RegisterDto, RegisterUserResponse, LoginDto, LoginResponse, User } from "@/app/types/Auth";
 import { useAuthStore } from "@/stores/authStore";
 import { API_BASE_URL } from "./config";
+import { apiFetch } from "./apiFetch";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -106,19 +107,16 @@ export function loginWithGoogle(): void {
  * Get the latest user profile from the server
  */
 export async function fetchUserProfile(): Promise<User> {
-  try {
-    const response = await api.get<User>('/users/me');
-    if (response.data) {
-      useAuthStore.getState().updateUser(response.data);
-    }
-    return response.data;
-  } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      const message = error.response?.data?.message || error.message || 'Failed to fetch profile';
-      throw new Error(message);
-    }
-    throw new Error('An unexpected error occurred');
+  const res = await apiFetch('/users/me');
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || 'Failed to fetch profile');
   }
+  const data = await res.json();
+  if (data) {
+    useAuthStore.getState().updateUser(data);
+  }
+  return data;
 }
 
 export { api };
