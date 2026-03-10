@@ -18,6 +18,7 @@ export interface ReplyChatResponse {
     collectedData: Record<string, string>;
     state?: string;
     progressDetail?: ProgressDetail;
+    progress?: number;
 }
 
 export async function startChat(url: string): Promise<StartChatResponse> {
@@ -28,14 +29,19 @@ export async function startChat(url: string): Promise<StartChatResponse> {
     // Backend wraps: { success, data: { sessionId, message, progressDetail, ... } }
     const payload = response.data?.data ?? response.data;
 
+    const progressDetail: ProgressDetail | undefined =
+        payload.progressDetail
+        ?? payload.greeting?.metadata?.progressDetail
+        ?? undefined;
+
     return {
         sessionId: payload.sessionId,
         message: payload.message ?? payload.greeting?.content ?? '',
         formTitle: payload.formTitle,
-        totalFields: payload.totalFields ?? payload.progressDetail?.totalFields,
+        totalFields: payload.totalFields ?? progressDetail?.totalFields,
         estimatedMinutes: payload.estimatedMinutes,
         state: payload.state,
-        progressDetail: payload.progressDetail,
+        progressDetail,
     };
 }
 
@@ -49,11 +55,17 @@ export async function replyChat(sessionId: string, message: string): Promise<Rep
     // Backend wraps: { success, data: { reply, state, progressDetail, isComplete, ... } }
     const payload = response.data?.data ?? response.data;
 
+    const progressDetail: ProgressDetail | undefined =
+        payload.progressDetail
+        ?? payload.reply?.metadata?.progressDetail
+        ?? undefined;
+
     return {
         message: payload.message ?? payload.reply?.content ?? '',
         isComplete: payload.isComplete ?? (payload.state === 'COMPLETED'),
         collectedData: payload.collectedData ?? payload.reply?.metadata?.collectedData ?? {},
         state: payload.state,
-        progressDetail: payload.progressDetail,
+        progressDetail,
+        progress: payload.progress ?? payload.reply?.metadata?.progress,
     };
 }

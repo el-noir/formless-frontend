@@ -1,13 +1,13 @@
 ﻿'use client';
 
-import React, { useState, useRef, useEffect, Suspense } from 'react';
+import React, { useState, useRef, useEffect, useCallback, Suspense } from 'react';
 import { ArrowRight, Send, Loader2, RotateCcw } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from 'next/navigation';
 import { Background } from '@/components/Background';
 import { startChat, replyChat } from '@/lib/api/chat';
 import { ChatProgress } from '@/components/chat/ChatProgress';
-import { ProgressDetail } from '@/components/chat/types';
+import { ProgressDetail, FieldProgress } from '@/components/chat/types';
 
 type CheckFreeForm = {
   url: string;
@@ -31,7 +31,31 @@ function StartFreeContent() {
   const [chatState, setChatState] = useState<string>('IDLE');
   const [progressDetail, setProgressDetail] = useState<ProgressDetail | null>(null);
   const [formTitle, setFormTitle] = useState<string>('');
+  const [totalFields, setTotalFields] = useState<number>(0);
+  const [answeredCount, setAnsweredCount] = useState<number>(0);
   const searchParams = useSearchParams();
+
+  /** Build a synthetic ProgressDetail from message count when backend doesn't provide one */
+  const buildSyntheticProgress = useCallback((answered: number, total: number): ProgressDetail => {
+    const clamped = Math.min(answered, total);
+    const percentage = total > 0 ? Math.round((clamped / total) * 100) : 0;
+    const fields: FieldProgress[] = Array.from({ length: total }, (_, i) => ({
+      fieldId: `field-${i}`,
+      label: `Question ${i + 1}`,
+      status: i < clamped ? 'completed' : i === clamped ? 'current' : 'upcoming',
+      questionNumber: i + 1,
+      sectionIndex: 0,
+    }));
+    return {
+      percentage,
+      answeredCount: clamped,
+      totalFields: total,
+      currentFieldIndex: clamped,
+      fields,
+      totalPages: 1,
+      currentPage: 1,
+    };
+  }, []);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -60,8 +84,13 @@ function StartFreeContent() {
       setSessionId(response.sessionId);
       setChatState(response.state || 'IN_PROGRESS');
       setFormTitle(response.formTitle || '');
+      const total = response.totalFields ?? response.progressDetail?.totalFields ?? 0;
+      setTotalFields(total);
+      setAnsweredCount(0);
       if (response.progressDetail) {
         setProgressDetail(response.progressDetail);
+      } else if (total > 0) {
+        setProgressDetail(buildSyntheticProgress(0, total));
       }
       setMessages([{ id: Date.now().toString(), role: 'assistant', content: response.message }]);
     } catch (err: any) {
@@ -101,13 +130,22 @@ function StartFreeContent() {
       if (response.state) {
         setChatState(response.state);
       }
+
+      const newAnswered = answeredCount + 1;
       if (response.progressDetail) {
         setProgressDetail(response.progressDetail);
+        setAnsweredCount(response.progressDetail.answeredCount);
+      } else if (totalFields > 0) {
+        setAnsweredCount(newAnswered);
+        setProgressDetail(buildSyntheticProgress(newAnswered, totalFields));
       }
 
       if (response.isComplete) {
         setIsComplete(true);
         setChatState('COMPLETED');
+        if (totalFields > 0 && !response.progressDetail) {
+          setProgressDetail(buildSyntheticProgress(totalFields, totalFields));
+        }
         setCollectedData(response.collectedData);
       }
     } catch (err: any) {
@@ -126,6 +164,8 @@ function StartFreeContent() {
     setChatState('IDLE');
     setProgressDetail(null);
     setFormTitle('');
+    setTotalFields(0);
+    setAnsweredCount(0);
     setError('');
   };
 
@@ -202,9 +242,9 @@ function StartFreeContent() {
                       ) : chatState === 'ERROR' ? (
                         <span className="text-red-400">Submission failed</span>
                       ) : progressDetail ? (
-                        <span>{progressDetail.percentage}% complete</span>
+                        <span>Question {progressDetail.currentFieldIndex + 1} of {progressDetail.totalFields} &middot; {progressDetail.percentage}%</span>
                       ) : (
-                        'Session active'
+                        <span>Session active</span>
                       )}
                     </p>
                   </div>
@@ -218,9 +258,27 @@ function StartFreeContent() {
                 </button>
               </div>
 
-              {/* Progress panel */}
+              {/* Progress panel — always show when session is active */}
               {progressDetail && chatState !== 'COMPLETED' && (
                 <ChatProgress progressDetail={progressDetail} chatState={chatState} />
+              )}
+              {!progressDetail && chatState !== 'COMPLETED' && chatState !== 'IDLE' && totalFields > 0 && (
+                <div className="px-4 py-2 border-b border-gray-800/60 bg-[#0B0B0F]/80">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-xs text-gray-400">
+                      Question {Math.min(answeredCount + 1, totalFields)} of {totalFields}
+                    </span>
+                    <span className="text-[10px] text-gray-600 tabular-nums">
+                      {totalFields > 0 ? Math.round((answeredCount / totalFields) * 100) : 0}%
+                    </span>
+                  </div>
+                  <div className="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full transition-all duration-700 ease-out"
+                      style={{ width: `${totalFields > 0 ? Math.round((answeredCount / totalFields) * 100) : 0}%` }}
+                    />
+                  </div>
+                </div>
               )}
             </div>
 
