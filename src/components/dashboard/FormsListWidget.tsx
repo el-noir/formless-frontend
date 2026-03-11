@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { MoreHorizontal, Plus, Database, ExternalLink, Wand2, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { FormsListSkeleton } from "@/components/dashboard/skeletons/FormsListSkeleton";
 import Link from "next/link";
 import {
@@ -53,8 +54,9 @@ export function FormsListWidget({
             const { deleteOrgForm } = await import('@/lib/api/organizations');
             await deleteOrgForm(currentOrgId, id);
             setForms(prev => prev ? prev.filter((f) => f.id !== id) : []);
+            toast.success("Form removed");
         } catch {
-            alert("Failed to delete form");
+            toast.error("Failed to delete form");
         }
     };
 

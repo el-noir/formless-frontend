@@ -6,8 +6,9 @@ import {
     ExternalLink, Plus
 } from "lucide-react";
 import { DashboardBreadcrumbs } from "./DashboardBreadcrumbs";
-import { getGoogleForms } from "@/lib/api/integrations";
-import { importOrgForm } from "@/lib/api/organizations";
+import { getGoogleForms, getIntegrationsGoogleAuthUrl } from "@/lib/api/integrations";
+import { importOrgForm, getOrgForms } from "@/lib/api/organizations";
+import { apiFetch } from "@/lib/api/apiFetch";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -38,7 +39,6 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
                 setForms(list);
 
                 // Fetch existing org forms to mark imported ones
-                const { getOrgForms } = await import('@/lib/api/organizations');
                 const orgFormsData = await getOrgForms(currentOrgId, { limit: 1000 });
                 const orgFormsList = orgFormsData.forms || [];
                 const importedIds = new Set<string>();
@@ -93,17 +93,10 @@ export function FormsView({ currentOrgId }: { currentOrgId: string }) {
             setFetchError(null);
             setLoadingForms(true);
 
-            const { getIntegrationsGoogleAuthUrl } = await import("@/lib/api/integrations");
-            const { useAuthStore } = await import("@/stores/authStore");
-            const { accessToken } = useAuthStore.getState();
-
-            const response = await fetch(getIntegrationsGoogleAuthUrl(currentOrgId, window.location.pathname), {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            });
-
+            const url = getIntegrationsGoogleAuthUrl(currentOrgId, window.location.pathname);
+            // Strip the base URL prefix so apiFetch can prepend it correctly
+            const endpoint = url.replace(/^https?:\/\/[^/]+/, '');
+            const response = await apiFetch(endpoint);
             const data = await response.json();
 
             if (data.url) {

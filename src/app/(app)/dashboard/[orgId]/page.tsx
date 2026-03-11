@@ -53,6 +53,7 @@ function DashboardContent() {
 
   // Fetch dashboard stats — stable reference so the useEffect below doesn't loop
   const fetchStats = useCallback(async () => {
+    setStats(null);
     setLoadingStats(true);
     try {
       const data = await getDashboardStats(orgId, { days: 30 });
@@ -74,7 +75,7 @@ function DashboardContent() {
     }
   }, [accessToken, orgId, fetchForms, fetchStats]);
 
-  const isLoading = useMemo(() => loadingStats || loadingForms, [loadingStats, loadingForms]);
+  const isLoading = loadingStats || loadingForms;
   const isAdmin = useMemo(() => isAdminOfCurrentOrg(), [isAdminOfCurrentOrg]);
 
   return (
@@ -94,7 +95,7 @@ function DashboardContent() {
           >
             Integrations
           </button>
-          <MagneticButton onClick={() => router.push(`/dashboard/${orgId}/forms`)} className="bg-brand-purple hover:bg-[#0da372] text-white py-1.5 px-4 rounded-md text-sm font-medium transition-colors flex items-center gap-2">
+          <MagneticButton onClick={() => router.push(`/dashboard/${orgId}/forms`)} className="bg-emerald-500 hover:bg-[#0da372] text-white py-1.5 px-4 rounded-md text-sm font-medium transition-colors flex items-center gap-2">
             <Plus className="w-4 h-4" />
             Import
           </MagneticButton>
@@ -191,7 +192,7 @@ function DashboardContent() {
                   </thead>
                   <tbody className="divide-y divide-gray-800/40">
                     {stats.topForms.map((f: any) => (
-                      <tr key={f.formId} className="hover:bg-[#111116] transition-colors group">
+                      <tr key={f.formId} onClick={() => router.push(`/dashboard/${orgId}/forms/${f.formId}`)} className="hover:bg-[#111116] transition-colors group cursor-pointer">
                         <td className="px-5 py-3.5 max-w-[300px] truncate">
                           <span className="text-gray-200 font-medium">{f.title}</span>
                         </td>
@@ -255,7 +256,7 @@ export default function Dashboard() {
   return (
     <Suspense fallback={
       <div className="p-6 md:p-8 flex items-center justify-center">
-        <Loader2 className="w-6 h-6 text-brand-purple animate-spin" />
+        <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
       </div>
     }>
       <DashboardContent />
