@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Loader2, Plus, FileText, Trash2, Building2, Wand2, ExternalLink, Clock } from "lucide-react";
+import { Loader2, Plus, FileText, Trash2, Building2, Wand2, ExternalLink, Clock, Sparkles } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
 import { useOrgStore } from "@/stores/orgStore";
@@ -120,12 +120,20 @@ export default function FormsPage() {
                     </p>
                 </div>
                 {isAdmin && (
-                    <Link
-                        href={`/dashboard/${currentOrgId}/forms/import`}
-                        className="flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
-                    >
-                        <Plus className="w-4 h-4" /> Import Form
-                    </Link>
+                    <div className="flex items-center gap-2">
+                        <Link
+                            href={`/dashboard/${currentOrgId}/forms/create`}
+                            className="flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
+                        >
+                            <Plus className="w-4 h-4" /> Create Form
+                        </Link>
+                        <Link
+                            href={`/dashboard/${currentOrgId}/forms/import`}
+                            className="flex items-center gap-2 bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 text-gray-400 hover:text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
+                        >
+                            <Sparkles className="w-4 h-4" /> Import
+                        </Link>
+                    </div>
                 )}
             </div>
 
@@ -152,12 +160,22 @@ export default function FormsPage() {
                                         Active
                                     </span>
                                 )}
+                                {form.status === 'DRAFT' && (
+                                    <span className="text-[10px] font-semibold uppercase tracking-wider bg-gray-500/10 border border-gray-500/20 text-gray-400 px-2 py-0.5 rounded-full">
+                                        Draft
+                                    </span>
+                                )}
                             </div>
 
                             {/* Title & meta */}
                             <h3 className="text-sm font-medium text-white mb-1 line-clamp-1">{form.title}</h3>
                             <p className="text-xs text-gray-500 mb-3 line-clamp-1">
                                 {form.questionCount ?? 0} questions
+                                {form.source && form.source !== 'GOOGLE_FORMS' && (
+                                    <span className="ml-1.5 text-[10px] text-gray-600">
+                                        · {form.source === 'AI_GENERATED' ? '✨ AI' : form.source === 'TEMPLATE' ? '📋 Template' : '🏠 Custom'}
+                                    </span>
+                                )}
                             </p>
 
                             {/* Divider + actions */}
@@ -205,16 +223,24 @@ export default function FormsPage() {
                     <h3 className="text-sm font-medium text-gray-200 mb-1">No forms yet</h3>
                     <p className="text-gray-500 text-xs mb-5 max-w-xs mx-auto">
                         {isAdmin
-                            ? "Import a Google Form to get started."
-                            : "No forms have been imported yet. Ask an admin to import one."}
+                            ? "Create a new form or import from Google Forms to get started."
+                            : "No forms have been created yet. Ask an admin to create one."}
                     </p>
                     {isAdmin && (
-                        <Link
-                            href={`/dashboard/${currentOrgId}/forms/import`}
-                            className="inline-flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
-                        >
-                            <Plus className="w-4 h-4" /> Import Google Form
-                        </Link>
+                        <div className="flex items-center justify-center gap-2">
+                            <Link
+                                href={`/dashboard/${currentOrgId}/forms/create`}
+                                className="inline-flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
+                            >
+                                <Plus className="w-4 h-4" /> Create Form
+                            </Link>
+                            <Link
+                                href={`/dashboard/${currentOrgId}/forms/import`}
+                                className="inline-flex items-center gap-2 bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 text-gray-400 hover:text-white text-sm font-medium py-1.5 px-4 rounded-md transition-colors"
+                            >
+                                Import Google Form
+                            </Link>
+                        </div>
                     )}
                 </div>
             )}
