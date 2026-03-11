@@ -1,4 +1,16 @@
 import { apiFetch } from "./apiFetch";
+import type {
+    CreateFormPayload,
+    CreateFromTemplatePayload,
+    AiGeneratePayload,
+    AiRefinePayload,
+    AiSavePayload,
+    UpdateFormPayload,
+    ToneOption,
+    TemplateSummary,
+    FormResponse,
+    AiGeneratedFormPreview,
+} from "@/app/types/Form";
 
 const BASE = (orgId: string) => `/organizations/${orgId}`;
 
@@ -143,6 +155,135 @@ export const generateChatLink = async (orgId: string, formId: string) => {
 export const getFormResponses = async (orgId: string, formId: string) => {
     const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/responses`);
     if (!res.ok) throw new Error('Failed to fetch form responses');
+    const data = await res.json();
+    return data.data;
+};
+
+// ─── Config (Tones & Templates) ──────────────────────────────────────────────
+
+export const getFormTones = async (orgId: string): Promise<ToneOption[]> => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/config/tones`);
+    if (!res.ok) throw new Error('Failed to fetch tones');
+    const data = await res.json();
+    return data.data;
+};
+
+export const getFormTemplates = async (orgId: string, category?: string): Promise<TemplateSummary[]> => {
+    const query = new URLSearchParams();
+    if (category) query.set('category', category);
+    const qs = query.toString() ? `?${query}` : '';
+    const res = await apiFetch(`${BASE(orgId)}/forms/config/templates${qs}`);
+    if (!res.ok) throw new Error('Failed to fetch templates');
+    const data = await res.json();
+    return data.data;
+};
+
+// ─── Create Forms ─────────────────────────────────────────────────────────────
+
+export const createForm = async (orgId: string, payload: CreateFormPayload): Promise<FormResponse> => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/create`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to create form');
+    }
+    const data = await res.json();
+    return data.data;
+};
+
+export const createFormFromTemplate = async (orgId: string, payload: CreateFromTemplatePayload): Promise<FormResponse> => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/create-from-template`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to create form from template');
+    }
+    const data = await res.json();
+    return data.data;
+};
+
+export const aiGenerateForm = async (orgId: string, payload: AiGeneratePayload): Promise<AiGeneratedFormPreview> => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/ai-generate`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to generate form');
+    }
+    const data = await res.json();
+    return data.data;
+};
+
+export const aiRefineForm = async (orgId: string, payload: AiRefinePayload): Promise<AiGeneratedFormPreview> => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/ai-refine`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to refine form');
+    }
+    const data = await res.json();
+    return data.data;
+};
+
+export const aiSaveForm = async (orgId: string, payload: AiSavePayload): Promise<FormResponse> => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/ai-save`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to save AI form');
+    }
+    const data = await res.json();
+    return data.data;
+};
+
+// ─── Update & Lifecycle ───────────────────────────────────────────────────────
+
+export const updateForm = async (orgId: string, formId: string, payload: UpdateFormPayload): Promise<FormResponse> => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to update form');
+    }
+    const data = await res.json();
+    return data.data;
+};
+
+export const publishForm = async (orgId: string, formId: string) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/publish`, { method: 'POST' });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to publish form');
+    }
+    return res.json();
+};
+
+export const unpublishForm = async (orgId: string, formId: string) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/unpublish`, { method: 'POST' });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to unpublish form');
+    }
+    return res.json();
+};
+
+export const duplicateForm = async (orgId: string, formId: string): Promise<FormResponse> => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/duplicate`, { method: 'POST' });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to duplicate form');
+    }
     const data = await res.json();
     return data.data;
 };
