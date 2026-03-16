@@ -1,5 +1,6 @@
 import React from 'react';
-import { Send, CheckCircle2, Loader2, AlertCircle, RotateCcw } from 'lucide-react';
+import { Send, CheckCircle2, Loader2, AlertCircle, RotateCcw, Paperclip } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ChatInputProps {
     input: string;
@@ -12,6 +13,7 @@ interface ChatInputProps {
     removeBranding?: boolean;
     themeColor?: string;
     buttonStyle?: 'rounded' | 'square';
+    activeFieldType?: string | null;
 }
 
 export function ChatInput({ 
@@ -24,13 +26,46 @@ export function ChatInput({
     isEmbed = false, 
     removeBranding,
     themeColor = "#10b981",
-    buttonStyle = "rounded"
+    buttonStyle = "rounded",
+    activeFieldType = null
 }: ChatInputProps) {
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const [isUploading, setIsUploading] = React.useState(false);
 
     const onSend = (e?: React.FormEvent) => {
         handleSend(e);
         setTimeout(() => textareaRef.current?.focus(), 10);
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+            const res = await fetch(`${apiUrl}/storage/upload`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!res.ok) throw new Error('Upload failed');
+            const data = await res.json();
+            
+            // Send the file URL as a hidden message
+            handleSend(undefined, data.url);
+            toast.success('File uploaded successfully');
+        } catch (err) {
+            toast.error('Failed to upload file');
+            console.error(err);
+        } finally {
+            setIsUploading(false);
+            if (fileInputRef.current) fileInputRef.current.value = '';
+        }
     };
 
     return (
@@ -102,9 +137,33 @@ export function ChatInput({
                                 }
                             }}
                         />
+                        
+                        {(activeFieldType === 'FILE_UPLOAD' || activeFieldType === 'FILE') && (
+                            <>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                />
+                                <button
+                                    type="button"
+                                    disabled={isSubmitting || isTyping || isUploading}
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="shrink-0 w-8 h-8 rounded-lg hover:bg-white/5 flex items-center justify-center transition-all mb-0.5 text-gray-400 disabled:opacity-30"
+                                >
+                                    {isUploading ? (
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                        <Paperclip className="w-4 h-4" />
+                                    )}
+                                </button>
+                            </>
+                        )}
+
                         <button
                             type="submit"
-                            disabled={!input.trim() || isSubmitting || isTyping}
+                            disabled={!input.trim() || isSubmitting || isTyping || isUploading}
                             className={`shrink-0 w-8 h-8 hover:opacity-90 disabled:opacity-30 text-white flex items-center justify-center transition-all mb-0.5 ${buttonStyle === 'rounded' ? 'rounded-lg' : 'rounded'}`}
                             style={{ backgroundColor: themeColor }}
                         >

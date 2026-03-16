@@ -12,6 +12,23 @@ interface MessageItemProps {
     themeColor?: string;
 }
 
+const isImageUrl = (url: string) => {
+    return typeof url === 'string' && url.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i) != null;
+};
+
+const isFileUrl = (url: string) => {
+    return typeof url === 'string' && url.startsWith('http') && (url.includes('/uploads/') || url.match(/\.[a-z0-9]{2,5}$/i));
+};
+
+const getFileName = (url: string) => {
+    try {
+        const parts = url.split('/');
+        return parts[parts.length - 1];
+    } catch {
+        return 'file';
+    }
+};
+
 export function MessageItem({ message, aiName, aiAvatar, isEmbed = false, themeColor = "#10b981" }: MessageItemProps) {
     const isUser = message.role === 'user';
 
@@ -44,7 +61,7 @@ export function MessageItem({ message, aiName, aiAvatar, isEmbed = false, themeC
 
                 {/* Bubble */}
                 <div className={cn(
-                    'rounded-2xl px-4 py-3 text-sm leading-relaxed',
+                    'rounded-2xl px-4 py-3 text-sm leading-relaxed relative overflow-hidden',
                     isUser
                         ? 'text-white rounded-tr-none shadow-lg'
                         : 'bg-[#111116] border border-gray-800 text-gray-200 rounded-tl-none'
@@ -52,7 +69,41 @@ export function MessageItem({ message, aiName, aiAvatar, isEmbed = false, themeC
                 style={isUser ? { backgroundColor: themeColor } : {}}
                 >
                     {isUser ? (
-                        <p className="whitespace-pre-wrap">{message.content}</p>
+                        <>
+                            {isFileUrl(message.content) ? (
+                                <div className="flex flex-col gap-2 min-w-[120px]">
+                                    {isImageUrl(message.content) ? (
+                                        <div className="rounded-lg overflow-hidden border border-white/10 bg-black/20">
+                                            <img 
+                                                src={message.content} 
+                                                alt="Uploaded file" 
+                                                className="max-w-full h-auto max-h-60 object-contain mx-auto"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center gap-2 p-2 rounded-lg bg-black/20 border border-white/10">
+                                            <div className="w-8 h-8 rounded bg-white/10 flex items-center justify-center">
+                                                <span className="text-[10px] font-bold">FILE</span>
+                                            </div>
+                                            <div className="flex-1 min-w-0 pr-2">
+                                                <p className="text-[11px] font-medium truncate opacity-90">{getFileName(message.content)}</p>
+                                                <p className="text-[9px] opacity-60 uppercase font-bold tracking-wider">File Attachment</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <a 
+                                        href={message.content} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-[10px] underline opacity-70 hover:opacity-100 transition-opacity self-start"
+                                    >
+                                        View full size
+                                    </a>
+                                </div>
+                            ) : (
+                                <p className="whitespace-pre-wrap">{message.content}</p>
+                            )}
+                        </>
                     ) : (
                         <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-p:leading-relaxed prose-a:text-emerald-400 prose-strong:text-white">
                             <ReactMarkdown>{message.content}</ReactMarkdown>

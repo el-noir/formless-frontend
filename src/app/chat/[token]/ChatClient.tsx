@@ -27,6 +27,7 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
         progress,
         progressDetail,
         isSubmitting,
+        activeFieldType,
         messagesEndRef,
         handleStart,
         handleSend,
@@ -199,6 +200,7 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
                 removeBranding={formInfo.removeBranding}
                 themeColor={formInfo.themeColor}
                 buttonStyle={formInfo.buttonStyle}
+                activeFieldType={activeFieldType}
             />
         </div>
     );

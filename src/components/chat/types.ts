@@ -35,6 +35,8 @@ export interface Message {
     timestamp?: string;
     progress?: number;
     state?: string;
+    fieldType?: string; // New: the type of field this message is asking about
+    fileUrl?: string;   // New: if the user uploaded a file
     fieldSummaries?: Array<{
         label: string;
         value: string;

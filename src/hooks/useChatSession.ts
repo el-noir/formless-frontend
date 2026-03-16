@@ -29,6 +29,7 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
     const [progress, setProgress] = useState(0);
     const [progressDetail, setProgressDetail] = useState<ProgressDetail | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [activeFieldType, setActiveFieldType] = useState<string | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -77,8 +78,12 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
                         state: data.greeting.metadata?.state,
                         progress: data.greeting.metadata?.progress || 0,
                         timestamp: data.greeting.timestamp,
+                        fieldType: data.greeting.metadata?.fieldType,
                     },
                 ]);
+                if (data.greeting.metadata?.fieldType) {
+                    setActiveFieldType(data.greeting.metadata.fieldType);
+                }
             }
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : 'Failed to start conversation.';
@@ -132,8 +137,14 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
                         progress: result.reply.metadata?.progress,
                         timestamp: result.reply.timestamp,
                         fieldSummaries: result.reply.metadata?.fieldSummaries,
+                        fieldType: result.reply.metadata?.fieldType,
                     },
                 ]);
+                if (result.reply.metadata?.fieldType) {
+                    setActiveFieldType(result.reply.metadata.fieldType);
+                } else {
+                    setActiveFieldType(null);
+                }
             }
 
             if (result.state === 'COMPLETED') {
@@ -170,6 +181,7 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
         progress,
         progressDetail,
         isSubmitting,
+        activeFieldType,
         messagesEndRef,
         handleStart,
         handleSend: (e?: React.FormEvent, msg?: string) => handleSend(e, msg),
