@@ -87,15 +87,20 @@ export interface FieldValidation {
   message?: string;
 }
 
-export interface ConditionalLogic {
+export interface LogicRule {
+  operator: 'equals' | 'not_equals' | 'contains' | 'not_contains' | 'greater_than' | 'less_than';
+  value: any;
+  targetFieldId: string;
+}
+
+export interface FormLogic {
   fieldId: string;
-  operator: 'equals' | 'not_equals' | 'contains' | 'greater_than' | 'less_than' | 'is_empty' | 'is_not_empty';
-  value?: string | number | string[];
-  action: 'show' | 'hide' | 'skip_to';
-  targetFieldId?: string;
+  rules: LogicRule[];
 }
 
 export interface FormField {
+  id: string;
+  entryId: string;
   label: string;
   type: FieldType;
   required: boolean;
@@ -104,7 +109,6 @@ export interface FormField {
   options?: FieldOption[];
   scaleConfig?: ScaleConfig;
   validation?: FieldValidation;
-  conditionalLogic?: ConditionalLogic;
 }
 
 // ─── Chat Config ─────────────────────────────────────────────────────────────
@@ -205,6 +209,7 @@ export interface UpdateFormPayload {
   chatConfig?: ChatConfig;
   settings?: FormSettings;
   branding?: FormBranding;
+  logic?: FormLogic[];
   tags?: string[];
 }
 
@@ -222,6 +227,7 @@ export interface FormResponse {
   chatLinkToken: string | null;
   settings: FormSettings | null;
   branding: FormBranding | null;
+  logic: FormLogic[] | null;
   tags: string[];
   version: number;
   createdAt: string;

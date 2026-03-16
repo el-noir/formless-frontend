@@ -406,3 +406,16 @@ export const syncFormAutomations = async (orgId: string, formId: string, automat
     return res.json();
 };
 
+export const updateOrgForm = async (orgId: string, formId: string, payload: any) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}`, {
+        method: 'PATCH',
+        body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to update form');
+    }
+    return res.json();
+};
+
+
