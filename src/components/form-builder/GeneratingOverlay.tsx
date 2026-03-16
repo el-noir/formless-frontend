@@ -16,29 +16,29 @@ function buildLogLines(form: any): { text: string; delay: number }[] {
 
     const base = [
         { text: `> Initializing AI Chat Builder...`, delay: 0 },
-        { text: `> Connecting to form registry`, delay: 180 },
-        { text: `> Fetching "${name}"`, delay: 340 },
-        { text: `> Parsing ${fields.length || 0} field${fields.length !== 1 ? "s" : ""}...`, delay: 260 },
+        { text: `> Connecting to form registry`, delay: 60 },
+        { text: `> Fetching "${name}"`, delay: 100 },
+        { text: `> Parsing ${fields.length || 0} field${fields.length !== 1 ? "s" : ""}...`, delay: 80 },
     ];
 
     // Show up to 5 real field names
     const fieldLines = fields.slice(0, 5).map((f: any, i: number) => ({
         text: `  ✓ ${f.label ?? f.title ?? `Field ${i + 1}`} (${(f.type ?? "text").toUpperCase().replace(/_/g, " ")})`,
-        delay: 90 + Math.floor(Math.random() * 60),
+        delay: 30 + Math.floor(Math.random() * 20),
     }));
 
     if (fields.length > 5) {
         fieldLines.push({
             text: `  ... and ${fields.length - 5} more`,
-            delay: 80,
+            delay: 30,
         });
     }
 
     const tail = [
-        { text: `> Setting up AI conversation layer...`, delay: 320 },
-        { text: `> Configuring language model context...`, delay: 260 },
-        { text: `> Building live preview...`, delay: 300 },
-        { text: `> Ready. Opening builder ✓`, delay: 220 },
+        { text: `> Setting up AI conversation layer...`, delay: 90 },
+        { text: `> Configuring language model context...`, delay: 80 },
+        { text: `> Building live preview...`, delay: 90 },
+        { text: `> Ready. Opening builder ✓`, delay: 60 },
     ];
 
     return [...base, ...fieldLines, ...tail];

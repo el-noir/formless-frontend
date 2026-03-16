@@ -24,7 +24,7 @@ const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
     { id: "share", label: "Publish", icon: Share2 },
 ];
 
-const TOTAL_GENERATE_MS = 2600;
+const TOTAL_GENERATE_MS = 1200;
 const AUTOSAVE_DEBOUNCE_MS = 1200;
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";

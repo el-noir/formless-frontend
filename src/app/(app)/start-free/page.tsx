@@ -1,9 +1,10 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useRef, useEffect, useCallback, Suspense } from 'react';
-import { ArrowRight, Send, Loader2, RotateCcw } from "lucide-react";
+import { ArrowRight, Send, Loader2, RotateCcw, Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { Background } from '@/components/Background';
 import { startChat, replyChat } from '@/lib/api/chat';
 import { ChatProgress } from '@/components/chat/ChatProgress';
@@ -319,19 +320,39 @@ function StartFreeContent() {
               )}
 
               {isComplete && (
-                <div className="mt-8 p-8 bg-gradient-to-br from-brand-purple/10 to-[#1C1C24]/50 border border-brand-purple/20 rounded-2xl text-center shadow-[0_0_40px_-10px_rgba(16,185,129,0.15)] animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="w-16 h-16 bg-brand-purple/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-purple/30">
+                <div className="mt-8 p-8 bg-gradient-to-br from-brand-purple/10 to-[#1C1C24]/50 border border-brand-purple/20 rounded-2xl text-center shadow-[0_0_40px_-10px_rgba(16,185,129,0.15)] animate-in fade-in slide-in-from-bottom-4 duration-500 relative overflow-hidden">
+                  
+                  {/* Decorative background glow */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[200px] bg-brand-purple/20 blur-[100px] rounded-full pointer-events-none" />
+
+                  <div className="w-16 h-16 bg-brand-purple/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-purple/30 relative z-10">
                     <svg className="w-8 h-8 text-brand-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h3 className="text-white font-semibold text-2xl mb-2 tracking-tight">Form Completed!</h3>
-                  <p className="text-gray-400 mb-6 max-w-md mx-auto">All required information has been successfully collected.</p>
+                  <h3 className="text-white font-semibold text-2xl mb-2 tracking-tight relative z-10">Magic Complete! ✨</h3>
+                  <p className="text-gray-400 mb-8 max-w-md mx-auto relative z-10">
+                    You just experienced how much better a conversational form feels. Imagine if your clients saw this instead of a static page.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
+                    <Link 
+                      href={`/sign-up?url=${encodeURIComponent(searchParams.get('url') || '')}`}
+                      className="w-full sm:w-auto px-8 py-3.5 bg-brand-purple hover:bg-[#0da372] text-white font-semibold rounded-xl transition-all shadow-lg shadow-brand-purple/25 hover:shadow-brand-purple/40 flex items-center justify-center gap-2 group"
+                    >
+                      <Save className="w-4 h-4" />
+                      Save & Publish this Form
+                      <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
 
                   {collectedData && (
-                    <div className="bg-black/50 border border-white/5 rounded-xl overflow-hidden mt-4">
+                    <div className="bg-black/50 border border-white/5 rounded-xl overflow-hidden mt-8 relative z-10">
                       <div className="bg-white/5 px-4 py-2 border-b border-white/5 flex items-center justify-between">
-                        <span className="text-xs font-mono text-gray-400 uppercase tracking-widest">Captured Data</span>
+                        <span className="text-xs font-mono text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                           <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+                           Captured Data Payload
+                        </span>
                       </div>
                       <div className="p-4 text-left overflow-x-auto text-sm text-gray-300 font-mono">
                         <pre>{JSON.stringify(collectedData, null, 2)}</pre>
