@@ -35,7 +35,8 @@ const NEEDS_OPTIONS: FieldType[] = ["MULTIPLE_CHOICE", "DROPDOWN", "CHECKBOXES",
 const NEEDS_SCALE: FieldType[] = ["LINEAR_SCALE", "RATING"];
 
 function getDefaultField(): FormField {
-    return { label: "", type: "SHORT_TEXT", required: false };
+    const id = Math.random().toString(36).substring(2, 9);
+    return { id, entryId: id, label: "", type: "SHORT_TEXT", required: false };
 }
 
 // ─── Single Field Card ───────────────────────────────────────────────────────
