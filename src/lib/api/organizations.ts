@@ -142,6 +142,17 @@ export const deleteOrgForm = async (orgId: string, formId: string) => {
     return res.json();
 };
 
+export const syncOrgForm = async (orgId: string, formId: string) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/sync`, {
+        method: 'POST',
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to sync form');
+    }
+    return res.json();
+};
+
 export const generateChatLink = async (orgId: string, formId: string) => {
     const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/chat-link`, {
         method: 'POST',

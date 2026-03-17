@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, Wand2, Eye, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, Wand2, Eye, Check, Loader2, Save } from "lucide-react";
 
 interface BuilderHeaderProps {
     formTitle: string;
@@ -14,6 +14,9 @@ interface BuilderHeaderProps {
     previewMode: boolean;
     onTogglePreview: () => void;
     saveStatus: "idle" | "saving" | "saved" | "error";
+    isGoogleForm?: boolean;
+    onSync?: () => void;
+    isSyncing?: boolean;
 }
 
 export function BuilderHeader({
@@ -26,6 +29,9 @@ export function BuilderHeader({
     previewMode,
     onTogglePreview,
     saveStatus,
+    isGoogleForm,
+    onSync,
+    isSyncing,
 }: BuilderHeaderProps) {
     return (
         <header className="flex items-center justify-between px-4 h-12 border-b border-gray-800/80 shrink-0 bg-[#0B0B0F] gap-2">
@@ -84,6 +90,22 @@ export function BuilderHeader({
                     >
                         Open link ↗
                     </a>
+                )}
+
+                {isGoogleForm && (
+                    <button
+                        onClick={onSync}
+                        disabled={isSyncing}
+                        className="flex items-center gap-1.5 bg-[#0B0B0F] hover:bg-gray-800 border border-gray-800 text-gray-300 hover:text-white text-xs font-medium px-4 py-1.5 rounded transition-colors mr-2"
+                        title="Update fields from Google Forms"
+                    >
+                        {isSyncing ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                            <Save className="w-3.5 h-3.5" />
+                        )}
+                        <span className="hidden lg:inline">Sync Source</span>
+                    </button>
                 )}
 
                 <button

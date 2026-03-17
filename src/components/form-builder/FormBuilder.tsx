@@ -8,8 +8,9 @@ import { DesignTab } from "./config/DesignTab";
 import { ShareTab } from "./config/ShareTab";
 import { ChatPreview } from "./preview/ChatPreview";
 import { GeneratingOverlay } from "./GeneratingOverlay";
-import { generateChatLink, saveChatConfig, publishForm } from "@/lib/api/organizations";
-import { User, MessageCircle, Share2, Save, Palette } from "lucide-react";
+import { generateChatLink, saveChatConfig, publishForm, syncOrgForm } from "@/lib/api/organizations";
+import { User, MessageCircle, Share2, Palette } from "lucide-react";
+import { toast } from "sonner";
 
 interface FormBuilderProps {
     form: any;
@@ -57,6 +58,10 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
 
     // Mobile preview toggle
     const [previewMode, setPreviewMode] = useState(false);
+
+    // Sync state
+    const [isSyncing, setIsSyncing] = useState(false);
+    const [currentForm, setCurrentForm] = useState(form);
 
     // Auto-dismiss generating overlay
     const mounted = useRef(true);
@@ -114,6 +119,19 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
         }
     };
 
+    const handleSync = async () => {
+        setIsSyncing(true);
+        try {
+            const result = await syncOrgForm(orgId, formId);
+            setCurrentForm(result.data);
+            toast.success("Form fields synced with Google Forms");
+        } catch (e: any) {
+            toast.error(e.message || "Failed to sync form");
+        } finally {
+            setIsSyncing(false);
+        }
+    };
+
     const handlePersonaChange = (updates: { name?: string; tone?: Tone; avatar?: string }) => {
         if (updates.name !== undefined) setAiName(updates.name);
         if (updates.tone !== undefined) setTone(updates.tone);
@@ -127,7 +145,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
             )}
 
             <BuilderHeader
-                formTitle={form.title}
+                formTitle={currentForm.title}
                 orgId={orgId}
                 formId={formId}
                 onPublish={handlePublish}
@@ -136,6 +154,9 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                 previewMode={previewMode}
                 onTogglePreview={() => setPreviewMode((p) => !p)}
                 saveStatus={saveStatus}
+                isGoogleForm={currentForm.source === "GOOGLE_FORMS"}
+                onSync={handleSync}
+                isSyncing={isSyncing}
             />
 
             {/* Split pane */}
@@ -207,12 +228,12 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                 {/* RIGHT: Preview Panel */}
                 <div className={`flex-1 overflow-hidden ${!previewMode ? "hidden md:block" : "block"}`}>
                     <ChatPreview
-                        formTitle={form.title}
+                        formTitle={currentForm.title}
                         aiName={aiName}
                         aiAvatar={avatar}
                         welcomeMessage={welcomeMessage}
                         tone={tone}
-                        fields={form.fields ?? []}
+                        fields={currentForm.fields ?? []}
                         removeBranding={removeBranding}
                         themeColor={themeColor}
                         buttonStyle={buttonStyle}
