@@ -429,4 +429,28 @@ export const updateOrgForm = async (orgId: string, formId: string, payload: any)
     return res.json();
 };
 
+// ─── Billing & Stripe ─────────────────────────────────────────────────────────
 
+export const createStripeCheckoutSession = async (orgId: string, priceId: string, successUrl: string, cancelUrl: string) => {
+    const res = await apiFetch('/stripe/checkout', {
+        method: 'POST',
+        body: JSON.stringify({ organizationId: orgId, priceId, successUrl, cancelUrl }),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to create checkout session');
+    }
+    return res.json();
+};
+
+export const createStripePortalSession = async (orgId: string, returnUrl: string) => {
+    const res = await apiFetch('/stripe/portal', {
+        method: 'POST',
+        body: JSON.stringify({ organizationId: orgId, returnUrl }),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to create portal session');
+    }
+    return res.json();
+};
