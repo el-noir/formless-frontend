@@ -34,8 +34,21 @@ export function MessageList({ messages, isTyping, messagesEndRef, aiName, aiAvat
 
                 {/* Typing indicator */}
                 {isTyping && (
-                    <div className="flex gap-3 items-start">
-                        <div 
+                    <div
+                        className="flex gap-3 items-start"
+                        style={{ animation: 'fadeSlideIn 0.2s ease-out both' }}
+                    >
+                        <style>{`
+                            @keyframes fadeSlideIn {
+                                from { opacity: 0; transform: translateY(6px); }
+                                to   { opacity: 1; transform: translateY(0); }
+                            }
+                            @keyframes typingPulse {
+                                0%, 60%, 100% { opacity: 0.25; transform: scale(0.75); }
+                                30%            { opacity: 1;    transform: scale(1); }
+                            }
+                        `}</style>
+                        <div
                             className="w-7 h-7 rounded-full border flex items-center justify-center text-sm shrink-0 pt-0.5 overflow-hidden"
                             style={{ backgroundColor: `${themeColor}20`, borderColor: `${themeColor}30` }}
                         >
@@ -44,11 +57,20 @@ export function MessageList({ messages, isTyping, messagesEndRef, aiName, aiAvat
                                 : (aiAvatar ? <span className="text-base">{aiAvatar}</span> : <Sparkles className="w-3.5 h-3.5" style={{ color: themeColor }} />)
                             }
                         </div>
-                        <div className="bg-[#111116] border border-gray-800 rounded-2xl rounded-tl-none px-4 py-3">
-                            <div className="flex gap-1 items-center h-4">
-                                <div className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '0ms' }} />
-                                <div className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '150ms' }} />
-                                <div className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+                        <div className="bg-[#111116] border border-gray-800/80 rounded-2xl rounded-tl-none px-4 py-3.5 shadow-sm">
+                            <div className="flex gap-1.5 items-center h-4">
+                                {[0, 160, 320].map((delay) => (
+                                    <div
+                                        key={delay}
+                                        className="w-2 h-2 rounded-full"
+                                        style={{
+                                            backgroundColor: themeColor,
+                                            opacity: 0.25,
+                                            animation: `typingPulse 1.2s ease-in-out infinite`,
+                                            animationDelay: `${delay}ms`,
+                                        }}
+                                    />
+                                ))}
                             </div>
                         </div>
                     </div>
