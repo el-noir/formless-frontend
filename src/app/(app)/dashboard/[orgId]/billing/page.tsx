@@ -25,7 +25,7 @@ const PLANS = [
     price: "$49",
     description: "For small businesses and solo agencies.",
     limits: "10 Forms, 500 AI Conversations/mo",
-    priceId: "price_1ProFakeId", 
+    priceId: "price_1TEw2aRz2Cw1jDmVTtatJcGu",
   },
   {
     id: "enterprise",
@@ -33,7 +33,7 @@ const PLANS = [
     price: "$149",
     description: "High volume lead gen.",
     limits: "Unlimited Forms, 3000 AI Conversations/mo",
-    priceId: "price_1BusinessFakeId",
+    priceId: "price_1TEw3DRz2Cw1jDmVAvIwGReA",
   }
 ];
 
@@ -122,8 +122,8 @@ export default function BillingPage() {
                     <Button variant="secondary" className="w-full" disabled>Active</Button>
                   )
                 ) : (
-                  <Button 
-                    className="w-full" 
+                  <Button
+                    className="w-full"
                     variant={plan.id === "enterprise" ? "outline" : "default"}
                     onClick={() => plan.priceId && handleUpgrade(plan.priceId)}
                     disabled={!plan.priceId || loading !== null}

@@ -13,6 +13,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useParams, useRouter } from "next/navigation";
+import { useOrgStore } from "@/stores/orgStore";
 
 export function FormsListWidget({
     forms,
@@ -32,6 +33,11 @@ export function FormsListWidget({
     const params = useParams();
     const router = useRouter();
     const orgId = params.orgId as string;
+    const { getCurrentOrg } = useOrgStore();
+    const currentOrg = getCurrentOrg();
+
+    const maxForms = currentOrg?.plan === 'pro' ? 10 : currentOrg?.plan === 'enterprise' ? Infinity : 1;
+    const hasReachedLimit = forms && forms.length >= maxForms;
 
     if (isLoading) {
         return <FormsListSkeleton />;
@@ -67,12 +73,20 @@ export function FormsListWidget({
                 <h3 className="text-gray-200 font-medium text-sm">Active Forms</h3>
 
                 <div className="flex items-center gap-2">
-                    <Link href={`/dashboard/${orgId}/forms/import`}>
-                        <button className="text-xs flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors border border-gray-800 hover:border-gray-700 bg-[#1C1C22] px-2 py-1 rounded">
-                            <Plus className="w-3.5 h-3.5" />
-                            New
-                        </button>
-                    </Link>
+                    {hasReachedLimit ? (
+                        <Link href={`/dashboard/${orgId}/billing`}>
+                            <button className="text-xs flex items-center gap-1.5 text-brand-purple hover:text-white transition-colors border border-brand-purple/50 bg-[#1C1C22] px-2 py-1 rounded">
+                                Upgrade to Add More
+                            </button>
+                        </Link>
+                    ) : (
+                        <Link href={`/dashboard/${orgId}/forms/import`}>
+                            <button className="text-xs flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors border border-gray-800 hover:border-gray-700 bg-[#1C1C22] px-2 py-1 rounded">
+                                <Plus className="w-3.5 h-3.5" />
+                                New
+                            </button>
+                        </Link>
+                    )}
                 </div>
             </div>
 

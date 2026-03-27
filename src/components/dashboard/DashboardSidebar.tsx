@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { LayoutDashboard, FormInput, Inbox, Blocks, Settings } from "lucide-react";
+import { LayoutDashboard, FormInput, Inbox, Blocks, Settings, CreditCard } from "lucide-react";
 import { Suspense } from "react";
 import Image from "next/image";
+import { useOrgStore } from "@/stores/orgStore";
 
 function SidebarLinks() {
     const pathname = usePathname();
@@ -16,6 +17,7 @@ function SidebarLinks() {
         { name: "Forms", href: `/dashboard/${orgId}/forms`, icon: FormInput },
         { name: "Submissions", href: `/dashboard/${orgId}/submissions`, icon: Inbox },
         { name: "Integrations", href: `/dashboard/${orgId}/integrations`, icon: Blocks },
+        { name: "Billing", href: `/dashboard/${orgId}/billing`, icon: CreditCard },
         { name: "Settings", href: `/dashboard/${orgId}/settings`, icon: Settings },
     ];
 
@@ -44,6 +46,14 @@ function SidebarLinks() {
 }
 
 export function DashboardSidebar() {
+    const params = useParams();
+    const orgId = params.orgId as string;
+    const { getCurrentOrg } = useOrgStore();
+    const currentOrg = getCurrentOrg();
+    
+    // We get limits from currentOrg. (Assuming standard = 10 forms).
+    const planName = currentOrg?.plan === 'pro' ? 'Pro Plan' : currentOrg?.plan === 'enterprise' ? 'Business Plan' : 'Starter Plan';
+    const isStarter = !currentOrg?.plan || currentOrg?.plan === 'standard';
 
     return (
         <aside className="w-64 flex-shrink-0 bg-[#0B0B0F] border-r border-gray-800/80 hidden md:flex flex-col h-full">
@@ -68,13 +78,17 @@ export function DashboardSidebar() {
             <div className="p-4 border-t border-gray-800/80 shrink-0">
                 <div className="bg-[#111116] rounded-md p-4 text-sm border border-gray-800">
                     <div className="flex items-center justify-between mb-2">
-                        <h4 className="text-gray-200 font-medium text-xs">Pro Plan</h4>
-                        <span className="text-brand-purple text-xs font-semibold">12%</span>
+                        <h4 className="text-gray-200 font-medium text-xs">{planName}</h4>
+                        {isStarter && (
+                            <Link href={`/dashboard/${orgId || ''}/billing`} className="text-brand-purple hover:text-white transition-colors text-[10px] uppercase font-semibold">
+                                Upgrade
+                            </Link>
+                        )}
                     </div>
-                    <div className="w-full bg-gray-800 rounded-sm h-1 mb-2">
-                        <div className="bg-brand-purple h-full rounded-sm" style={{ width: "12%" }} />
+                    {/* Placeholder for actual monthly API interaction usage later! */}
+                    <div className="w-full bg-gray-800 rounded-sm h-1 mt-2">
+                        <div className="bg-brand-purple h-full rounded-sm" style={{ width: "0%" }} />
                     </div>
-                    <p className="text-gray-500 text-[10px] uppercase tracking-wider">1,240 / 10,000</p>
                 </div>
             </div>
         </aside>
