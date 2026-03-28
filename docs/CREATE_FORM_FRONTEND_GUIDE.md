@@ -1531,7 +1531,7 @@ Optional `conditionalLogic` on any field (show/hide/skip based on another field'
 | `logoUrl` | URL string | null | Company logo in chat header |
 | `fontFamily` | string | `Inter` | Font for the chat UI |
 | `buttonStyle` | `rounded`\|`sharp`\|`pill` | `rounded` | Send button shape |
-| `removeBranding` | boolean | false | Hide "Powered by Formless" (premium) |
+| `removeBranding` | boolean | false | Hide "Powered by ZeroFill" (premium) |
 
 ---
 
@@ -1604,7 +1604,7 @@ await api.post(`/organizations/${orgId}/forms/${form.data.id}/publish`);
 // 4. Get the shareable link
 const link = await api.post(`/organizations/${orgId}/forms/${form.data.id}/chat-link`);
 // → link.data = { token: "abc123", url: "/chat/abc123" }
-// → Full URL: https://app.formless.ai/chat/abc123
+// → Full URL: https://app.ZeroFill.ai/chat/abc123
 ```
 
 ### Flow 2: Quick Template Creation

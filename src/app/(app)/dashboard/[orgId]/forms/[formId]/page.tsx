@@ -269,21 +269,21 @@ export default function OrgFormViewerPage() {
 
                 {/* Automations Tab */}
                 {activeTab === 'automations' && (
-                    <AutomationPanel 
-                        orgId={orgId} 
-                        formId={formId} 
-                        form={form} 
-                        onUpdate={(updatedForm) => setForm(updatedForm)} 
+                    <AutomationPanel
+                        orgId={orgId}
+                        formId={formId}
+                        form={form}
+                        onUpdate={(updatedForm) => setForm(updatedForm)}
                     />
                 )}
 
                 {/* Logic Jumps Tab */}
                 {activeTab === 'logic' && (
                     <LogicPanel
-                        orgId={orgId} 
-                        formId={formId} 
-                        form={form} 
-                        onUpdate={(updatedForm) => setForm(updatedForm)} 
+                        orgId={orgId}
+                        formId={formId}
+                        form={form}
+                        onUpdate={(updatedForm) => setForm(updatedForm)}
                     />
                 )}
 
@@ -314,7 +314,7 @@ export default function OrgFormViewerPage() {
                                 <Code className="w-5 h-5 text-brand-purple" />
                             </div>
                             <div>
-                                <h3 className="text-white font-medium text-sm">Add 0Fill to your website</h3>
+                                <h3 className="text-white font-medium text-sm">Add ZeroFill to your website</h3>
                                 <p className="text-gray-500 text-[11px]">One script tag. Full conversational AI.</p>
                             </div>
                         </div>
@@ -324,11 +324,11 @@ export default function OrgFormViewerPage() {
                                 <h4 className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-3">Copy-Paste Snippet</h4>
                                 <div className="relative group">
                                     <pre className="bg-black/40 border border-gray-800 rounded-lg p-5 text-[11px] text-emerald-400/90 overflow-x-auto font-mono leading-relaxed pr-12">
-                                        {`<script \n  src="${typeof window !== 'undefined' ? window.location.origin : 'https://formless.app'}/widget.js?v=2" \n  data-formless-token="${form.chatLinkToken}"\n></script>`}
+                                        {`<script \n  src="${typeof window !== 'undefined' ? window.location.origin : 'https://zerofill.app'}/widget.js?v=2" \n  data-zerofill-token="${form.chatLinkToken}"\n></script>`}
                                     </pre>
                                     <button
                                         onClick={() => {
-                                            const code = `<script src="${typeof window !== 'undefined' ? window.location.origin : 'https://formless.app'}/widget.js?v=2" data-formless-token="${form.chatLinkToken}"></script>`;
+                                            const code = `<script src="${typeof window !== 'undefined' ? window.location.origin : 'https://zerofill.app'}/widget.js?v=2" data-zerofill-token="${form.chatLinkToken}"></script>`;
                                             navigator.clipboard.writeText(code);
                                             toast.success("Snippet copied!");
                                         }}

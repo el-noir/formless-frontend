@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
                         color: 'white',
                     }}
                 >
-                    <h1 style={{ fontSize: 60, fontWeight: 'bold' }}>0Fill</h1>
+                    <h1 style={{ fontSize: 60, fontWeight: 'bold' }}>ZeroFill</h1>
                     <p style={{ fontSize: 32, color: '#a1a1aa' }}>Intelligent AI Forms</p>
                 </div>
             ),
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
     const aiName = formInfo.aiName || '0Fill Assistant';
     const title = formInfo.title || 'Untitled Form';
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://formless-frontend.vercel.app';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://ZeroFill-frontend.vercel.app';
     const logoSrc = `${appUrl}/logo.png`;
 
     return new ImageResponse(
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
                         <img src={logoSrc} width={60} height={60} style={{ objectFit: 'contain' }} alt="0Fill" />
                     </div>
                     <span style={{ color: '#0da372', fontSize: 40, fontWeight: 'bold', letterSpacing: '-0.02em' }}>
-                        0Fill
+                        ZeroFill
                     </span>
                 </div>
 

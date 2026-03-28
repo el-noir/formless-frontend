@@ -32,17 +32,21 @@ async function attemptTokenRefresh(): Promise<string | null> {
         });
 
         if (!res.ok) {
-            clearAuth();
-            window.location.href = "/sign-in";
+            // Only clear auth if the server explicitly rejects the refresh (401/403)
+            if (res.status === 401 || res.status === 403) {
+                clearAuth();
+                window.location.href = "/sign-in";
+            }
             return null;
         }
 
         const data = await res.json();
         setAccessToken(data.accessToken);
         return data.accessToken;
-    } catch {
-        clearAuth();
-        window.location.href = "/sign-in";
+    } catch (error) {
+        // Network errors or unexpected issues should NOT trigger a logout.
+        // We just return null so the current action fails, but the session stays alive.
+        console.error("Token refresh failed due to network/unexpected error:", error);
         return null;
     }
 }

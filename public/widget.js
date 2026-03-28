@@ -1,21 +1,21 @@
 (function () {
     const script = document.currentScript;
-    const token = script ? script.getAttribute('data-formless-token') : null;
+    const token = script ? script.getAttribute('data-zerofill-token') : null;
     const autoOpen = script ? script.getAttribute('data-auto-open') !== 'false' : true; // default: auto-open
     const autoOpenDelay = parseInt(script?.getAttribute('data-auto-open-delay') || '5000', 10);
     const baseUrl = (window.location.origin.includes('localhost') || window.location.protocol === 'file:')
         ? 'http://localhost:3000'
-        : 'https://formless.app';
+        : 'https://zerofill.app';
 
     if (!token || token === 'undefined') {
-        console.error('Formless Widget: Missing or invalid data-formless-token attribute. Please copy the code from your dashboard.');
+        console.error('ZeroFill Widget: Missing or invalid data-zerofill-token attribute. Please copy the code from your dashboard.');
         return;
     }
 
     // Styles
     const style = document.createElement('style');
     style.innerHTML = `
-        #formless-widget-container {
+        #zerofill-widget-container {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -23,7 +23,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        #formless-button {
+        #zerofill-button {
             width: 60px;
             height: 60px;
             border-radius: 30px;
@@ -38,21 +38,21 @@
             outline: none;
         }
 
-        #formless-button:hover {
+        #zerofill-button:hover {
             transform: scale(1.05);
         }
 
-        #formless-button:active {
+        #zerofill-button:active {
             transform: scale(0.95);
         }
 
-        #formless-button svg {
+        #zerofill-button svg {
             width: 28px;
             height: 28px;
             fill: white;
         }
 
-        #formless-iframe-container {
+        #zerofill-iframe-container {
             position: absolute;
             bottom: 80px;
             right: 0;
@@ -71,20 +71,20 @@
             transition: opacity 0.25s ease, transform 0.25s ease;
         }
 
-        #formless-iframe-container.open {
+        #zerofill-iframe-container.open {
             display: block;
             opacity: 1;
             transform: translateY(0) scale(1);
         }
 
-        #formless-iframe {
+        #zerofill-iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
 
         @media (max-width: 480px) {
-            #formless-iframe-container {
+            #zerofill-iframe-container {
                 width: calc(100vw - 40px);
                 height: calc(100vh - 120px);
             }
@@ -94,20 +94,20 @@
 
     // Elements
     const container = document.createElement('div');
-    container.id = 'formless-widget-container';
+    container.id = 'zerofill-widget-container';
 
     const iframeContainer = document.createElement('div');
-    iframeContainer.id = 'formless-iframe-container';
+    iframeContainer.id = 'zerofill-iframe-container';
 
     const iframe = document.createElement('iframe');
-    iframe.id = 'formless-iframe';
+    iframe.id = 'zerofill-iframe';
     // NOTE: iframe.src is NOT set here — it's lazy-loaded on first open
     // This means zero network cost for users who never open the widget
 
     iframeContainer.appendChild(iframe);
 
     const button = document.createElement('button');
-    button.id = 'formless-button';
+    button.id = 'zerofill-button';
     button.setAttribute('aria-label', 'Open chat');
     button.innerHTML = `
         <svg viewBox="0 0 24 24">

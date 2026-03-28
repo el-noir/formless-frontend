@@ -25,18 +25,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!form) {
         return {
-            title: 'Form Not Found | 0Fill',
+            title: 'Form Not Found | ZeroFill',
             description: 'The requested form could not be found or is inactive.',
         };
     }
 
-    const title = `${form.title} | 0Fill`;
+    const title = `${form.title} | ZeroFill`;
     const description = form.description || 'Complete this form via an intelligent AI conversation.';
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://formless-frontend.vercel.app';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://ZeroFill-frontend.vercel.app';
     const imageUrl = `${appUrl}/api/og?token=${token}`;
 
     return {
-        title: `${form.title} | 0Fill Chat`,
+        title: `${form.title} | ZeroFill Chat`,
         description,
         openGraph: {
             title,

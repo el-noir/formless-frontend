@@ -40,7 +40,7 @@ function buildLogLines(form: any): { text: string; delay: number }[] {
         { text: `> Generating personality (tone: Friendly)`, delay: 70 },
         { text: `> Injecting brand identity...`, delay: 90 },
         { text: `> Optimizing for human interaction...`, delay: 110 },
-        { text: `> Build complete. Formless AI is ready.`, delay: 60 },
+        { text: `> Build complete. ZeroFill AI is ready.`, delay: 60 },
     ];
 
     return [...base, ...fieldLines, ...tail];
@@ -110,7 +110,7 @@ export function GeneratingOverlay({ form, totalMs }: GeneratingOverlayProps) {
                                 <div className="w-3 h-3 rounded-full bg-red-500/40" />
                                 <div className="w-3 h-3 rounded-full bg-yellow-500/40" />
                                 <div className="w-3 h-3 rounded-full bg-green-500/40" />
-                                <span className="ml-3 text-gray-600 text-xs font-mono">formless — ai-builder</span>
+                                <span className="ml-3 text-gray-600 text-xs font-mono">zerofill — ai-builder</span>
                                 <div className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-medium text-brand-purple">
                                     <span className="w-1.5 h-1.5 rounded-full bg-brand-purple animate-pulse" />
                                     {done ? "Ready" : "Processing"}
