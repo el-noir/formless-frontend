@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { getPublicFormInfo, startPublicChat, sendPublicChatMessage } from '@/lib/api/public-chat';
+import { getPublicFormInfo, startPublicChat, sendPublicChatMessage, sendPublicChatMessageStream } from '@/lib/api/public-chat';
 import { Message, ProgressDetail } from '@/components/chat/types';
 
 interface FormInfo {
@@ -114,60 +114,122 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
         setIsSubmitting(true);
         setIsTyping(true);
 
+        // ── Streaming path ─────────────────────────────────────────────
+        // Insert a blank placeholder assistant message, then fill it token-by-token.
+        const streamingMsgId = Date.now().toString();
+        let streamingContent = '';
+        let streamFailed = false;
+
         try {
-            const result = await sendPublicChatMessage(token, sessionId, userMsg);
-            setChatState(result.state);
+            // Add empty placeholder immediately so the typing bubble disappears on first token
+            setIsTyping(false);
+            setMessages((prev) => [
+                ...prev,
+                {
+                    role: 'assistant' as const,
+                    content: '',
+                    timestamp: new Date().toISOString(),
+                    _streamId: streamingMsgId,
+                },
+            ]);
 
-            if (result.progressDetail) {
-                setProgressDetail(result.progressDetail);
-                setProgress(result.progressDetail.percentage);
-            } else if (result.state === 'READY_TO_SUBMIT' || result.state === 'COMPLETED') {
-                setProgress(100);
-            } else if (result.reply?.metadata?.progress) {
-                setProgress(result.reply.metadata.progress);
-            }
+            await sendPublicChatMessageStream(
+                token,
+                sessionId,
+                userMsg,
+                // onToken — append each delta to the streaming message
+                (delta) => {
+                    streamingContent += delta;
+                    setMessages((prev) =>
+                        prev.map((m) =>
+                            (m as any)._streamId === streamingMsgId
+                                ? { ...m, content: streamingContent }
+                                : m,
+                        ),
+                    );
+                },
+                // onMetadata — update state/progress once the stream is done
+                (meta) => {
+                    setChatState(meta.state);
+                    setProgress(meta.progress);
+                    // Remove the _streamId marker — message is now final
+                    setMessages((prev) =>
+                        prev.map((m) =>
+                            (m as any)._streamId === streamingMsgId
+                                ? { ...m, content: streamingContent, _streamId: undefined, state: meta.state }
+                                : m,
+                        ),
+                    );
+                    if (meta.state === 'COMPLETED') {
+                        toast.success('Form submitted successfully!');
+                    }
+                },
+            );
+        } catch (streamErr) {
+            streamFailed = true;
+            // Remove the empty placeholder before falling back
+            setMessages((prev) => prev.filter((m) => (m as any)._streamId !== streamingMsgId));
+            setIsTyping(true);
+        }
 
-            if (result.reply) {
+        // ── Fallback: regular non-streaming request ────────────────────
+        if (streamFailed) {
+            try {
+                const result = await sendPublicChatMessage(token, sessionId, userMsg);
+                setChatState(result.state);
+
+                if (result.progressDetail) {
+                    setProgressDetail(result.progressDetail);
+                    setProgress(result.progressDetail.percentage);
+                } else if (result.state === 'READY_TO_SUBMIT' || result.state === 'COMPLETED') {
+                    setProgress(100);
+                } else if (result.reply?.metadata?.progress) {
+                    setProgress(result.reply.metadata.progress);
+                }
+
+                if (result.reply) {
+                    setMessages((prev) => [
+                        ...prev,
+                        {
+                            role: 'assistant',
+                            content: result.reply.content,
+                            state: result.state,
+                            progress: result.reply.metadata?.progress,
+                            timestamp: result.reply.timestamp,
+                            fieldSummaries: result.reply.metadata?.fieldSummaries,
+                            fieldType: result.reply.metadata?.fieldType,
+                        },
+                    ]);
+                    if (result.reply.metadata?.fieldType) {
+                        setActiveFieldType(result.reply.metadata.fieldType);
+                    } else {
+                        setActiveFieldType(null);
+                    }
+                }
+
+                if (result.state === 'COMPLETED') {
+                    toast.success('Form submitted successfully!');
+                } else if (result.state === 'ERROR') {
+                    toast.error(result.reply?.content || 'Submission failed. Please try again.');
+                }
+            } catch (err: unknown) {
+                const msg = err instanceof Error ? err.message : 'Failed to send message.';
+                toast.error(msg);
                 setMessages((prev) => [
                     ...prev,
                     {
                         role: 'assistant',
-                        content: result.reply.content,
-                        state: result.state,
-                        progress: result.reply.metadata?.progress,
-                        timestamp: result.reply.timestamp,
-                        fieldSummaries: result.reply.metadata?.fieldSummaries,
-                        fieldType: result.reply.metadata?.fieldType,
+                        content: `Error: ${msg}`,
+                        timestamp: new Date().toISOString(),
                     },
                 ]);
-                if (result.reply.metadata?.fieldType) {
-                    setActiveFieldType(result.reply.metadata.fieldType);
-                } else {
-                    setActiveFieldType(null);
-                }
             }
-
-            if (result.state === 'COMPLETED') {
-                toast.success("Form submitted successfully!");
-            } else if (result.state === 'ERROR') {
-                toast.error(result.reply?.content || "Submission failed. Please try again.");
-            }
-        } catch (err: unknown) {
-            const msg = err instanceof Error ? err.message : 'Failed to send message.';
-            toast.error(msg);
-            setMessages((prev) => [
-                ...prev,
-                {
-                    role: 'assistant',
-                    content: `Error: ${msg}`,
-                    timestamp: new Date().toISOString(),
-                },
-            ]);
-        } finally {
-            setIsSubmitting(false);
-            setIsTyping(false);
         }
+
+        setIsSubmitting(false);
+        setIsTyping(false);
     };
+
 
     return {
         formInfo,

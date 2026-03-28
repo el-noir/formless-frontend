@@ -42,4 +42,5 @@ export interface Message {
         value: string;
         fieldId: string;
     }>;
+    _streamId?: string; // Internal: marks an in-progress streaming message
 }
