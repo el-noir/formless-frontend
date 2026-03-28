@@ -62,12 +62,12 @@ export function DashboardSidebar() {
                     <div className="relative w-6 h-6 rounded-md overflow-hidden group-hover:scale-110 transition-transform shrink-0">
                         <Image
                             src="/logo.png"
-                            alt="0Fill Logo"
+                            alt="ZeroFill Logo"
                             fill
                             className="object-contain"
                         />
                     </div>
-                    0Fill
+                    ZeroFill
                 </Link>
             </div>
 
@@ -78,16 +78,20 @@ export function DashboardSidebar() {
             <div className="p-4 border-t border-gray-800/80 shrink-0">
                 <div className="bg-[#111116] rounded-md p-4 text-sm border border-gray-800">
                     <div className="flex items-center justify-between mb-2">
-                        <h4 className="text-gray-200 font-medium text-xs">{planName}</h4>
+                        <h4 className="text-gray-200 font-medium text-xs">
+                            {currentOrg?.formCount ?? 0} / {currentOrg?.limits?.maxForms ?? 10} Forms
+                        </h4>
                         {isStarter && (
                             <Link href={`/dashboard/${orgId || ''}/billing`} className="text-brand-purple hover:text-white transition-colors text-[10px] uppercase font-semibold">
                                 Upgrade
                             </Link>
                         )}
                     </div>
-                    {/* Placeholder for actual monthly API interaction usage later! */}
                     <div className="w-full bg-gray-800 rounded-sm h-1 mt-2">
-                        <div className="bg-brand-purple h-full rounded-sm" style={{ width: "0%" }} />
+                        <div 
+                            className="bg-brand-purple h-full rounded-sm transition-all duration-500" 
+                            style={{ width: `${Math.min(100, ((currentOrg?.formCount ?? 0) / (currentOrg?.limits?.maxForms ?? 10)) * 100)}%` }} 
+                        />
                     </div>
                 </div>
             </div>

@@ -8,6 +8,11 @@ export interface OrgSummary {
     plan: string;
     myRole: 'owner' | 'admin' | 'member';
     memberCount: number;
+    formCount: number;
+    limits: {
+        maxForms: number;
+        maxMembers: number;
+    };
 }
 
 interface OrgState {
