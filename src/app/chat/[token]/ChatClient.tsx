@@ -46,7 +46,7 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
     /* ── Loading / Auto-starting ─────────────────────── */
     if (loadingInfo || (isEmbed && (chatState === 'IDLE' || chatState === 'STARTING'))) {
         return (
-            <div className="h-[100dvh] bg-[#0B0B0F] flex flex-col">
+            <div className="h-dvh bg-brand-dark flex flex-col">
                 {/* Slim AI header for embed */}
                 {isEmbed && formInfo && (
                     <div className="flex items-center gap-3 px-4 py-3 border-b border-white/5">
@@ -79,7 +79,7 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
     /* ── Error ──────────────────────────────────────── */
     if (error || !formInfo) {
         return (
-            <div className="h-[100dvh] bg-[#0B0B0F] flex items-center justify-center px-6 relative">
+            <div className="h-dvh bg-brand-dark flex items-center justify-center px-6 relative">
                 {!isEmbed && <Background />}
                 <div className="max-w-sm w-full relative z-10 text-center">
                     <p className="text-gray-400 text-sm mb-1">This link isn't available</p>
@@ -92,7 +92,7 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
     /* ── Standalone Welcome Screen (non-embed only) ── */
     if (!isEmbed && (chatState === 'IDLE' || chatState === 'STARTING')) {
         return (
-            <div className="min-h-[100dvh] bg-[#0B0B0F] flex flex-col items-center justify-center px-5 py-12 relative">
+            <div className="min-h-dvh bg-brand-dark flex flex-col items-center justify-center px-5 py-12 relative">
                 <Background />
                 <div className="max-w-sm w-full relative z-10 flex flex-col gap-8">
                     <div className="flex items-center gap-2">
@@ -142,7 +142,7 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
 
     /* ── Active chat ────────────────────────────────── */
     return (
-        <div className="h-[100dvh] bg-[#0B0B0F] flex flex-col relative text-white">
+        <div className="h-dvh bg-brand-dark flex flex-col relative text-white">
             {!isEmbed && <Background />}
 
             {/* Embed: slim top bar instead of full ChatHeader */}
@@ -198,6 +198,8 @@ export function ChatClient({ token, isEmbed = false }: ChatClientProps) {
                 chatState={chatState}
                 isEmbed={isEmbed}
                 removeBranding={formInfo.removeBranding}
+                showPoweredByBadge={formInfo.showPoweredByBadge}
+                badgeLandingUrl={formInfo.badgeLandingUrl}
                 themeColor={formInfo.themeColor}
                 buttonStyle={formInfo.buttonStyle}
                 activeFieldType={activeFieldType}

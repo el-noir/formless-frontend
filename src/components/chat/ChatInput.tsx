@@ -1,6 +1,7 @@
 import React from 'react';
 import { Send, CheckCircle2, Loader2, AlertCircle, RotateCcw, Paperclip } from 'lucide-react';
 import { toast } from 'sonner';
+import { PoweredByBadge } from './PoweredByBadge';
 
 interface ChatInputProps {
     input: string;
@@ -11,6 +12,8 @@ interface ChatInputProps {
     chatState: string;
     isEmbed?: boolean;
     removeBranding?: boolean;
+    showPoweredByBadge?: boolean;
+    badgeLandingUrl?: string;
     themeColor?: string;
     buttonStyle?: 'rounded' | 'square';
     activeFieldType?: string | null;
@@ -25,6 +28,8 @@ export function ChatInput({
     chatState, 
     isEmbed = false, 
     removeBranding,
+    showPoweredByBadge = false,
+    badgeLandingUrl,
     themeColor = "#10b981",
     buttonStyle = "rounded",
     activeFieldType = null
@@ -69,10 +74,10 @@ export function ChatInput({
     };
 
     return (
-        <footer className="shrink-0 border-t border-gray-800/60 bg-[#0B0B0F] pb-safe relative z-10">
+        <footer className="shrink-0 border-t border-gray-800/60 bg-brand-dark pb-safe relative z-10">
             <div className="max-w-2xl mx-auto px-4 py-3">
                 {chatState === 'COMPLETED' ? (
-                    <div className="flex items-center gap-3 bg-[#111116] border border-gray-800 rounded-xl px-4 py-3.5">
+                    <div className="flex items-center gap-3 bg-brand-surface border border-gray-800 rounded-xl px-4 py-3.5">
                         <CheckCircle2 className="w-5 h-5 shrink-0" style={{ color: themeColor }} />
                         <div>
                             <p className="text-sm font-medium text-white">{isEmbed ? "Got it, thanks!" : "All responses submitted"}</p>
@@ -120,7 +125,7 @@ export function ChatInput({
                 ) : (
                     <form
                         onSubmit={onSend}
-                        className="flex items-end gap-2 bg-[#111116] border border-gray-800 rounded-xl focus-within:border-gray-700 transition-colors px-3 pt-2.5 pb-2"
+                        className="flex items-end gap-2 bg-brand-surface border border-gray-800 rounded-xl focus-within:border-gray-700 transition-colors px-3 pt-2.5 pb-2"
                     >
                         <textarea
                             ref={textareaRef}
@@ -128,7 +133,7 @@ export function ChatInput({
                             onChange={(e) => setInput(e.target.value)}
                             placeholder="Type your response..."
                             disabled={isSubmitting || isTyping}
-                            className="flex-1 max-h-28 min-h-[36px] bg-transparent text-sm text-white placeholder-gray-600 focus:outline-none resize-none disabled:opacity-50 leading-relaxed py-0.5"
+                            className="flex-1 max-h-28 min-h-9 bg-transparent text-sm text-white placeholder-gray-600 focus:outline-none resize-none disabled:opacity-50 leading-relaxed py-0.5"
                             rows={1}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -171,10 +176,8 @@ export function ChatInput({
                         </button>
                     </form>
                 )}
-                {!removeBranding && (
-                    <p className="text-center text-[10px] text-gray-700 mt-2">
-                        Powered by <span className="text-gray-600">0Fill</span>
-                    </p>
+                {showPoweredByBadge && !removeBranding && (
+                    <PoweredByBadge href={badgeLandingUrl} isEmbed={isEmbed} />
                 )}
             </div>
         </footer>

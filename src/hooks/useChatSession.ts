@@ -10,6 +10,9 @@ interface FormInfo {
     aiName?: string;
     aiAvatar?: string;
     removeBranding?: boolean;
+    showPoweredByBadge?: boolean;
+    badgeLandingUrl?: string;
+    nicheSlug?: string;
     themeColor?: string;
     buttonStyle?: 'rounded' | 'square';
 }

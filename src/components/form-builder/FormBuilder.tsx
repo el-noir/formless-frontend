@@ -9,6 +9,7 @@ import { ShareTab } from "./config/ShareTab";
 import { ChatPreview } from "./preview/ChatPreview";
 import { GeneratingOverlay } from "./GeneratingOverlay";
 import { generateChatLink, saveChatConfig, publishForm, syncOrgForm } from "@/lib/api/organizations";
+import { useOrgStore } from "@/stores/orgStore";
 import { User, MessageCircle, Share2, Palette } from "lucide-react";
 import { toast } from "sonner";
 
@@ -33,6 +34,9 @@ const AUTOSAVE_DEBOUNCE_MS = 1200;
 type SaveStatus = "idle" | "saving" | "saved" | "error";
 
 export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
+    const currentOrg = useOrgStore((s) => s.getCurrentOrg());
+    const canRemoveBranding = currentOrg?.plan === 'pro' || currentOrg?.plan === 'enterprise';
+
     const [isGenerating, setIsGenerating] = useState(true);
     const [activeTab, setActiveTab] = useState<Tab>("persona");
 
@@ -102,6 +106,12 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
         return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
     }, [aiName, tone, avatar, welcomeMessage, removeBranding, themeColor, buttonStyle, doSave]);
 
+    useEffect(() => {
+        if (!canRemoveBranding && removeBranding) {
+            setRemoveBranding(false);
+        }
+    }, [canRemoveBranding, removeBranding]);
+
     const handlePublish = async () => {
         setIsPublishing(true);
         setPublishError(null);
@@ -162,7 +172,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
             {/* Split pane */}
             <div className="flex flex-1 overflow-hidden">
                 {/* LEFT: Config Panel */}
-                <div className={`w-full md:w-[360px] md:min-w-[320px] flex flex-col border-r border-gray-800/80 ${previewMode ? "hidden md:flex" : "flex"}`}>
+                <div className={`w-full md:w-90 md:min-w-[320px] flex flex-col border-r border-gray-800/80 ${previewMode ? "hidden md:flex" : "flex"}`}>
                     {/* Tabs */}
                     <div className="flex border-b border-gray-800/80 shrink-0">
                         {TABS.map((tab) => {
@@ -179,7 +189,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                                         <span className="absolute top-2 right-3 w-1.5 h-1.5 rounded-full bg-green-400" />
                                     )}
                                     {activeTab === tab.id && (
-                                        <span className="absolute bottom-0 left-0 w-full h-[2px] bg-brand-purple" />
+                                        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-purple" />
                                     )}
                                 </button>
                             );
@@ -202,6 +212,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                         {activeTab === "design" && (
                             <DesignTab
                                 removeBranding={removeBranding}
+                                canRemoveBranding={canRemoveBranding}
                                 avatar={avatar}
                                 themeColor={themeColor}
                                 buttonStyle={buttonStyle}
