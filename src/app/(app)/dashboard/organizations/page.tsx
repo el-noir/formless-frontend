@@ -39,6 +39,8 @@ export default function OrganizationsPage() {
                     plan: o.plan,
                     myRole: o.myRole,
                     memberCount: o.memberCount,
+                    formCount: o.formCount || 0,
+                    limits: o.limits || { maxForms: 10, maxMembers: 5 },
                 })));
             } catch (e: any) {
                 setError(e.message || 'Failed to load organizations');

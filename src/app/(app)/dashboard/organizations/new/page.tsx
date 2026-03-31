@@ -48,6 +48,8 @@ export default function NewOrganizationPage() {
                 plan: org.plan,
                 myRole: org.myRole,
                 memberCount: org.memberCount,
+                formCount: org.formCount || 0,
+                limits: org.limits || { maxForms: 10, maxMembers: 5 },
             });
             setCurrentOrg(org.id);
 

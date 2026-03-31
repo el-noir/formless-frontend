@@ -43,7 +43,9 @@ export function OrganizationSwitcher() {
                     name: o.name,
                     plan: o.plan || 'free',
                     myRole: o.myRole || 'owner',
-                    memberCount: o.memberCount || 1
+                    memberCount: o.memberCount || 1,
+                    formCount: o.formCount || 0,
+                    limits: o.limits || { maxForms: 10, maxMembers: 5 },
                 }));
 
                 setOrganizations(summaries);
