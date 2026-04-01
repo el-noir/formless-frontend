@@ -33,7 +33,9 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
     const [templates, setTemplates] = useState<TemplateSummary[]>([]);
     const [loading, setLoading] = useState(true);
     const [tonesLoading, setTonesLoading] = useState(false);
-    const [category, setCategory] = useState<TemplateCategory | "all">("all");
+    const [objective, setObjective] = useState<TemplateCategory | "all">("all");
+    const [niche, setNiche] = useState<string>("all");
+    const [complexity, setComplexity] = useState<string>("all");
     const [search, setSearch] = useState("");
     const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummary | null>(null);
 
@@ -45,11 +47,26 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
 
     useEffect(() => {
         setLoading(true);
-        getFormTemplates(orgId, category === "all" ? undefined : category)
-            .then(setTemplates)
+        getFormTemplates(orgId, objective === "all" ? undefined : objective)
+            .then((loadedTemplates) => {
+                setTemplates(loadedTemplates);
+                // Track template view
+                const signatureCount = loadedTemplates.filter((t) => t.signature).length;
+                console.log('[A2-Tracking] Templates Loaded:', {
+                    category: objective === "all" ? "all" : objective,
+                    totalCount: loadedTemplates.length,
+                    signatureCount,
+                    templates: loadedTemplates.map((t) => ({
+                        id: t.id,
+                        name: t.name,
+                        signature: t.signature,
+                        nicheSlug: t.nicheSlug,
+                    })),
+                });
+            })
             .catch(() => toast.error("Failed to load templates"))
             .finally(() => setLoading(false));
-    }, [orgId, category]);
+    }, [orgId, objective]);
 
     // Load tones when entering customize step
     useEffect(() => {
@@ -67,16 +84,40 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
         }
     }, [selectedTemplate]);
 
-    const filtered = templates.filter((t) =>
-        t.name.toLowerCase().includes(search.toLowerCase()) ||
-        t.description.toLowerCase().includes(search.toLowerCase()) ||
-        t.tags.some((tag) => tag.toLowerCase().includes(search.toLowerCase()))
-    );
+    const filtered = templates.filter((t) => {
+        const matchesSearch = t.name.toLowerCase().includes(search.toLowerCase()) ||
+            t.description.toLowerCase().includes(search.toLowerCase()) ||
+            t.tags.some((tag) => tag.toLowerCase().includes(search.toLowerCase()));
+
+        const matchesNiche = niche === "all" || (t.nicheSlug && t.nicheSlug.includes(niche));
+
+        // Basic skeleton logic for complexity (fieldCount)
+        const matchesComplexity = complexity === "all" ||
+            (complexity === "short" && t.fieldCount <= 3) ||
+            (complexity === "medium" && t.fieldCount > 3 && t.fieldCount <= 8) ||
+            (complexity === "long" && t.fieldCount > 8);
+
+        return matchesSearch && matchesNiche && matchesComplexity;
+    });
+
+    const filteredSignature = filtered.filter((t) => t.signature === true);
+    const filteredRegular = filtered.filter((t) => t.signature !== true);
 
     const handleCreate = async () => {
         if (!selectedTemplate) return;
         setIsSubmitting(true);
         try {
+            // Track template selection
+            const trackingData = {
+                templateId: selectedTemplate.id,
+                templateName: selectedTemplate.name,
+                isSignature: selectedTemplate.signature || false,
+                nicheSlug: selectedTemplate.nicheSlug || null,
+                customTone: customTone,
+                hasCustomTitle: customTitle.length > 0,
+            };
+            console.log('[A2-Tracking] Template Selected:', trackingData);
+            
             const result = await createFormFromTemplate(orgId, {
                 templateId: selectedTemplate.id,
                 title: customTitle.trim() || undefined,
@@ -207,21 +248,45 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                 />
             </div>
 
-            {/* Categories */}
-            <div className="flex gap-1.5 flex-wrap mb-5">
-                {CATEGORIES.map((cat) => (
-                    <button
-                        key={cat.value}
-                        onClick={() => setCategory(cat.value)}
-                        className={`text-[10px] font-medium px-2.5 py-1 rounded-full border transition-colors ${
-                            category === cat.value
-                                ? "border-brand-purple bg-brand-purple/10 text-brand-purple"
-                                : "border-gray-800 bg-[#111116] text-gray-500 hover:text-gray-400"
-                        }`}
+            {/* Filters Skeleton */}
+            <div className="flex flex-col sm:flex-row gap-3 mb-6 bg-[#111116] border border-gray-800 rounded-xl p-3">
+                <div className="flex-1">
+                    <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-1.5">Objective</label>
+                    <select
+                        value={objective}
+                        onChange={(e) => setObjective(e.target.value as any)}
+                        className="w-full bg-[#0B0B0F] border border-gray-800 rounded-lg text-xs text-white px-3 py-2 focus:outline-none focus:border-brand-purple"
                     >
-                        {cat.label}
-                    </button>
-                ))}
+                        {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                    </select>
+                </div>
+                <div className="flex-1">
+                    <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-1.5">Niche</label>
+                    <select
+                        value={niche}
+                        onChange={(e) => setNiche(e.target.value)}
+                        className="w-full bg-[#0B0B0F] border border-gray-800 rounded-lg text-xs text-white px-3 py-2 focus:outline-none focus:border-brand-purple"
+                    >
+                        <option value="all">All Niches</option>
+                        <option value="lead">Lead Generation</option>
+                        <option value="support">Customer Support</option>
+                        <option value="hr">HR & Operations</option>
+                        <option value="education">Education</option>
+                    </select>
+                </div>
+                <div className="flex-1">
+                    <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-1.5">Complexity</label>
+                    <select
+                        value={complexity}
+                        onChange={(e) => setComplexity(e.target.value)}
+                        className="w-full bg-[#0B0B0F] border border-gray-800 rounded-lg text-xs text-white px-3 py-2 focus:outline-none focus:border-brand-purple"
+                    >
+                        <option value="all">Any Length</option>
+                        <option value="short">Quick (1-3 qs)</option>
+                        <option value="medium">Standard (4-8 qs)</option>
+                        <option value="long">Deep Dive (9+ qs)</option>
+                    </select>
+                </div>
             </div>
 
             {/* Templates grid */}
@@ -234,30 +299,74 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                     <p className="text-gray-500 text-xs">No templates found.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {filtered.map((tmpl) => (
-                        <button
-                            key={tmpl.id}
-                            onClick={() => setSelectedTemplate(tmpl)}
-                            className="text-left bg-[#0B0B0F] border border-gray-800/80 rounded-lg p-4 hover:border-gray-700 transition-all group"
-                        >
-                            <div className="flex items-start gap-3">
-                                <span className="text-2xl shrink-0">{tmpl.icon}</span>
-                                <div className="min-w-0">
-                                    <h3 className="text-sm font-medium text-white mb-0.5 group-hover:text-brand-purple transition-colors">
-                                        {tmpl.name}
-                                    </h3>
-                                    <p className="text-[10px] text-gray-500 line-clamp-2 mb-2">{tmpl.description}</p>
-                                    <div className="flex items-center gap-2 text-[10px] text-gray-600">
-                                        <span>{tmpl.fieldCount} questions</span>
-                                        <span>·</span>
-                                        <span className="capitalize">{tmpl.recommendedTone}</span>
-                                    </div>
+                <>
+                    {/* Featured Signature Templates */}
+                    {filteredSignature.length > 0 && (
+                        <>
+                            <div className="mb-6">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <h3 className="text-xs font-semibold text-gray-300">⭐ Featured Templates</h3>
+                                    <span className="text-[8px] px-1.5 py-0.5 bg-brand-purple/20 text-brand-purple rounded-full">
+                                        {filteredSignature.length} picked
+                                    </span>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 pb-4 border-b border-gray-800">
+                                    {filteredSignature.map((tmpl) => (
+                                        <button
+                                            key={tmpl.id}
+                                            onClick={() => setSelectedTemplate(tmpl)}
+                                            className="text-left bg-gradient-to-br from-[#1a1a20] to-[#0B0B0F] border border-brand-purple/30 rounded-lg p-4 hover:border-brand-purple hover:from-[#2a1a2f] transition-all group relative"
+                                        >
+                                            <span className="absolute top-2 right-2 text-[8px] font-semibold px-2 py-1 bg-brand-purple/20 text-brand-purple rounded-full">
+                                                Featured
+                                            </span>
+                                            <div className="flex items-start gap-3 pr-12">
+                                                <span className="text-2xl shrink-0">{tmpl.icon}</span>
+                                                <div className="min-w-0">
+                                                    <h3 className="text-sm font-medium text-white mb-0.5 group-hover:text-brand-purple transition-colors">
+                                                        {tmpl.name}
+                                                    </h3>
+                                                    <p className="text-[10px] text-gray-500 line-clamp-2 mb-2">{tmpl.description}</p>
+                                                    <div className="flex items-center gap-2 text-[10px] text-gray-600">
+                                                        <span>{tmpl.fieldCount} questions</span>
+                                                        <span>·</span>
+                                                        <span className="capitalize">{tmpl.recommendedTone}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
-                        </button>
-                    ))}
-                </div>
+                        </>
+                    )}
+
+                    {/* All Templates */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {filteredRegular.map((tmpl) => (
+                            <button
+                                key={tmpl.id}
+                                onClick={() => setSelectedTemplate(tmpl)}
+                                className="text-left bg-[#0B0B0F] border border-gray-800/80 rounded-lg p-4 hover:border-gray-700 transition-all group"
+                            >
+                                <div className="flex items-start gap-3">
+                                    <span className="text-2xl shrink-0">{tmpl.icon}</span>
+                                    <div className="min-w-0">
+                                        <h3 className="text-sm font-medium text-white mb-0.5 group-hover:text-brand-purple transition-colors">
+                                            {tmpl.name}
+                                        </h3>
+                                        <p className="text-[10px] text-gray-500 line-clamp-2 mb-2">{tmpl.description}</p>
+                                        <div className="flex items-center gap-2 text-[10px] text-gray-600">
+                                            <span>{tmpl.fieldCount} questions</span>
+                                            <span>·</span>
+                                            <span className="capitalize">{tmpl.recommendedTone}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                </>
             )}
         </div>
     );

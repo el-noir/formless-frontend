@@ -62,6 +62,10 @@ export interface TemplateSummary {
   recommendedTone: FormTone;
   fieldCount: number;
   tags: string[];
+  signature?: boolean;
+  nicheSlug?: string;
+  suggestedAiName?: string;
+  suggestedWelcomeMessage?: string;
 }
 
 // ─── Field ───────────────────────────────────────────────────────────────────
