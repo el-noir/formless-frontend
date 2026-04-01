@@ -67,5 +67,8 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ### B1: Real-time WYSIWYG Split Builder (In Progress)
 - `docs/B1_WYSIWYG_WORKSTREAMS_AND_TICKETS.md` — workstreams, 16 Jira tickets, risk matrix, sequencing
 
+### B2: Context-Aware AI Follow-ups (Planned)
+- `docs/B2_CONTEXT_AWARE_AI_FOLLOWUPS_WORKSTREAMS_AND_TICKETS.md` — workstreams, 16 Jira tickets, dependencies, sequencing
+
 ## 📄 License
 Private / Proprietary.
