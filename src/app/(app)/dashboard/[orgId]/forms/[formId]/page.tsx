@@ -13,6 +13,7 @@ import { getOrgForm, getFormResponses, saveChatConfig } from "@/lib/api/organiza
 import { ResponsesList } from "@/components/forms/ResponsesList";
 import { AutomationPanel } from "@/components/forms/AutomationPanel";
 import { LogicPanel } from "@/components/forms/LogicPanel";
+import { SummaryTab } from "@/components/forms/SummaryTab";
 import { DashboardBreadcrumbs } from "@/components/dashboard/DashboardBreadcrumbs";
 import { toast } from "sonner";
 
@@ -40,7 +41,7 @@ export default function OrgFormViewerPage() {
     const [loading, setLoading] = useState(true);
     const [responsesLoading, setResponsesLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<'fields' | 'responses' | 'logic' | 'details' | 'embed' | 'automations'>('fields');
+    const [activeTab, setActiveTab] = useState<'fields' | 'responses' | 'logic' | 'details' | 'embed' | 'automations' | 'summary'>('fields');
 
     // Domain whitelist state
     const [allowedDomains, setAllowedDomains] = useState<string[]>([]);
@@ -192,11 +193,13 @@ export default function OrgFormViewerPage() {
                     {[
                         { id: 'fields', label: `Fields (${fields.length})` },
                         { id: 'responses', label: `Responses (${form.submissionCount ?? 0})` },
+                        { id: 'summary', label: '✦ AI Summary' },
                         { id: 'logic', label: 'Logic Jumps' },
                         { id: 'embed', label: 'Embed' },
                         { id: 'automations', label: 'Automations' },
                         { id: 'details', label: 'Details' },
                     ].map((tab) => (
+
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
@@ -265,6 +268,11 @@ export default function OrgFormViewerPage() {
                 {/* Responses Tab */}
                 {activeTab === 'responses' && (
                     <ResponsesList responses={responses} loading={responsesLoading} formTitle={form?.title} />
+                )}
+
+                {/* AI Summary Tab */}
+                {activeTab === 'summary' && (
+                    <SummaryTab orgId={orgId} formId={formId} />
                 )}
 
                 {/* Automations Tab */}

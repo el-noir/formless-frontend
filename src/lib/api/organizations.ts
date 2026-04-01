@@ -552,3 +552,24 @@ export const createStripePortalSession = async (orgId: string, returnUrl: string
     }
     return res.json();
 };
+
+// ─── C1: AI Analytics Insights ───────────────────────────────────────────────
+
+export const getFormInsights = async (
+    orgId: string,
+    formId: string,
+    days = 30,
+    regenerate = false,
+): Promise<any> => {
+    const params = new URLSearchParams({ days: String(days) });
+    if (regenerate) params.set('regenerate', 'true');
+    const res = await apiFetch(
+        `${BASE(orgId)}/forms/${formId}/analytics/insights?${params.toString()}`,
+    );
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to fetch AI insights');
+    }
+    const data = await res.json();
+    return data.data;
+};
