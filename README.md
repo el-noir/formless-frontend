@@ -70,5 +70,8 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ### B2: Context-Aware AI Follow-ups (Planned)
 - `docs/B2_CONTEXT_AWARE_AI_FOLLOWUPS_WORKSTREAMS_AND_TICKETS.md` — workstreams, 16 Jira tickets, dependencies, sequencing
 
+### C1: AI Sentiment & Summary Engine (Planned)
+- `docs/C1_AI_SENTIMENT_SUMMARY_ENGINE_WORKSTREAMS_AND_TICKETS.md` — workstreams, Jira-ready tickets, caching/async controls, trust & safety
+
 ## 📄 License
 Private / Proprietary.
