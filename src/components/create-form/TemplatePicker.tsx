@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, Loader2, Search, Check } from "lucide-react";
 import { getFormTemplates, getFormTones, createFormFromTemplate } from "@/lib/api/organizations";
+import { trackEvent } from "@/lib/analytics";
 import { useFormCreationStore } from "@/stores/formCreationStore";
 import { TonePicker } from "./TonePicker";
 import { toast } from "sonner";
@@ -52,7 +53,7 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                 setTemplates(loadedTemplates);
                 // Track template view
                 const signatureCount = loadedTemplates.filter((t) => t.signature).length;
-                console.log('[A2-Tracking] Templates Loaded:', {
+                trackEvent('template_gallery_viewed', {
                     objective,
                     niche,
                     complexity,
@@ -110,7 +111,7 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                 customTone: customTone,
                 hasCustomTitle: customTitle.length > 0,
             };
-            console.log('[A2-Tracking] Template Selected:', trackingData);
+            trackEvent('template_selected', trackingData);
             
             const result = await createFormFromTemplate(orgId, {
                 templateId: selectedTemplate.id,
