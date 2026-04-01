@@ -76,5 +76,8 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ### C2: Deep Integration Ecosystem (Planned)
 - `docs/C2_DEEP_INTEGRATION_ECOSYSTEM_WORKSTREAMS_AND_TICKETS.md` — subtasks + Jira tickets for webhooks, Zapier/Make, SLO, and delivery ops
 
+### C3: Partial Response Recovery (Planned)
+- `docs/C3_PARTIAL_RESPONSE_RECOVERY_WORKSTREAMS_AND_TICKETS.md` — workstreams, 16 Jira tickets, recovery metrics, abandoned lead reclamation, resume links, ROI tracking
+
 ## 📄 License
 Private / Proprietary.

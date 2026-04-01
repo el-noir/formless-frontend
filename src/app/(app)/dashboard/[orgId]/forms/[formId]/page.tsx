@@ -14,6 +14,7 @@ import { ResponsesList } from "@/components/forms/ResponsesList";
 import { AutomationPanel } from "@/components/forms/AutomationPanel";
 import { LogicPanel } from "@/components/forms/LogicPanel";
 import { SummaryTab } from "@/components/forms/SummaryTab";
+import { RecoveryPanel } from "@/components/forms/RecoveryPanel";
 import { DashboardBreadcrumbs } from "@/components/dashboard/DashboardBreadcrumbs";
 import { toast } from "sonner";
 
@@ -41,7 +42,7 @@ export default function OrgFormViewerPage() {
     const [loading, setLoading] = useState(true);
     const [responsesLoading, setResponsesLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<'fields' | 'responses' | 'logic' | 'details' | 'embed' | 'automations' | 'summary'>('fields');
+    const [activeTab, setActiveTab] = useState<'fields' | 'responses' | 'logic' | 'details' | 'embed' | 'automations' | 'summary' | 'recovery'>('fields');
 
     // Domain whitelist state
     const [allowedDomains, setAllowedDomains] = useState<string[]>([]);
@@ -197,6 +198,7 @@ export default function OrgFormViewerPage() {
                         { id: 'logic', label: 'Logic Jumps' },
                         { id: 'embed', label: 'Embed' },
                         { id: 'automations', label: 'Automations' },
+                        { id: 'recovery', label: '✦ Recovery' },
                         { id: 'details', label: 'Details' },
                     ].map((tab) => (
 
@@ -282,6 +284,15 @@ export default function OrgFormViewerPage() {
                         formId={formId}
                         form={form}
                         onUpdate={(updatedForm) => setForm(updatedForm)}
+                    />
+                )}
+
+                {/* Recovery Tab */}
+                {activeTab === 'recovery' && (
+                    <RecoveryPanel
+                        orgId={orgId}
+                        formId={formId}
+                        formTitle={form.title}
                     />
                 )}
 

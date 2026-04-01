@@ -615,3 +615,31 @@ export const getFormInsights = async (
     const data = await res.json();
     return data.data;
 };
+// ─── C3: Partial Response Recovery ──────────────────────────────────────────
+
+export const getRecoveryStats = async (orgId: string, formId: string) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/recovery/stats`);
+    if (!res.ok) throw new Error('Failed to fetch recovery stats');
+    return res.json();
+};
+
+export const getRecoverableLeads = async (orgId: string, formId: string) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/recovery/leads`);
+    if (!res.ok) throw new Error('Failed to fetch recoverable leads');
+    return res.json();
+};
+
+export const recoverLead = async (orgId: string, formId: string, submissionId: string, recovered: boolean) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/recovery/leads/${submissionId}/recover`, {
+        method: 'POST',
+        body: JSON.stringify({ recovered }),
+    });
+    if (!res.ok) throw new Error('Failed to update recovery status');
+    return res.json();
+};
+
+export const getResumeLink = async (orgId: string, formId: string, sessionId: string) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/recovery/leads/${sessionId}/resume-link`);
+    if (!res.ok) throw new Error('Failed to fetch resume link');
+    return res.json();
+};
