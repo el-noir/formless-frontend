@@ -73,5 +73,8 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ### C1: AI Sentiment & Summary Engine (Planned)
 - `docs/C1_AI_SENTIMENT_SUMMARY_ENGINE_WORKSTREAMS_AND_TICKETS.md` — workstreams, Jira-ready tickets, caching/async controls, trust & safety
 
+### C2: Deep Integration Ecosystem (Planned)
+- `docs/C2_DEEP_INTEGRATION_ECOSYSTEM_WORKSTREAMS_AND_TICKETS.md` — subtasks + Jira tickets for webhooks, Zapier/Make, SLO, and delivery ops
+
 ## 📄 License
 Private / Proprietary.

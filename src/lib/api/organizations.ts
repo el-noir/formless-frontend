@@ -515,6 +515,31 @@ export const syncFormAutomations = async (orgId: string, formId: string, automat
     return res.json();
 };
 
+export const getAutomationLogs = async (
+    orgId: string,
+    formId: string,
+    params?: { limit?: number; offset?: number },
+) => {
+    const query = new URLSearchParams();
+    if (params?.limit) query.set('limit', String(params.limit));
+    if (params?.offset) query.set('offset', String(params.offset));
+    const qs = query.toString() ? `?${query}` : '';
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/automations/logs${qs}`);
+    if (!res.ok) throw new Error('Failed to fetch automation logs');
+    return res.json();
+};
+
+export const testAutomation = async (orgId: string, formId: string, automationId: string) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/automations/${automationId}/test`, {
+        method: 'POST',
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to test automation');
+    }
+    return res.json();
+};
+
 export const updateOrgForm = async (orgId: string, formId: string, payload: any) => {
     const res = await apiFetch(`${BASE(orgId)}/forms/${formId}`, {
         method: 'PATCH',
