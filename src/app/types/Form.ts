@@ -63,7 +63,9 @@ export interface TemplateSummary {
   fieldCount: number;
   tags: string[];
   signature?: boolean;
+  featured?: boolean;
   nicheSlug?: string;
+  weeklyUsageCount?: number;
   suggestedAiName?: string;
   suggestedWelcomeMessage?: string;
   persona?: string;

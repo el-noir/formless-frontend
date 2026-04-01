@@ -54,6 +54,7 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                 // Track template view
                 const signatureCount = loadedTemplates.filter((t) => t.signature).length;
                 trackEvent('template_gallery_viewed', {
+                    orgId,
                     objective,
                     niche,
                     complexity,
@@ -95,21 +96,24 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
         return matchesSearch;
     });
 
-    const filteredSignature = filtered.filter((t) => t.signature === true);
-    const filteredRegular = filtered.filter((t) => t.signature !== true);
+    const filteredFeatured = filtered.filter((t) => t.featured === true);
+    const filteredSignature = filtered.filter((t) => t.signature === true && t.featured !== true);
+    const filteredRegular = filtered.filter((t) => t.signature !== true && t.featured !== true);
 
-    const handleCreate = async () => {
+    const handleCreate = async (withAi = false) => {
         if (!selectedTemplate) return;
         setIsSubmitting(true);
         try {
             // Track template selection
             const trackingData = {
+                orgId,
                 templateId: selectedTemplate.id,
                 templateName: selectedTemplate.name,
                 isSignature: selectedTemplate.signature || false,
                 nicheSlug: selectedTemplate.nicheSlug || null,
                 customTone: customTone,
                 hasCustomTitle: customTitle.length > 0,
+                withAi,
             };
             trackEvent('template_selected', trackingData);
             
@@ -122,7 +126,14 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                 },
             });
             toast.success("Form created from template!");
-            onCreated(result.id);
+            
+            if (withAi && selectedTemplate.previewPrompt) {
+                // Pass the prompt via query param to trigger auto-customize in builder
+                const promptParam = encodeURIComponent(selectedTemplate.previewPrompt);
+                window.location.href = `/dashboard/${orgId}/forms/${result.id}/builder?prompt=${promptParam}`;
+            } else {
+                onCreated(result.id);
+            }
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : "Failed to create form";
             toast.error(msg);
@@ -163,7 +174,7 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                             value={customTitle}
                             onChange={(e) => setCustomTitle(e.target.value)}
                             placeholder={selectedTemplate.name}
-                            className="w-full bg-[#111116] border border-gray-800 rounded-lg text-sm text-white px-4 py-2.5 focus:outline-none focus:border-brand-purple transition-colors placeholder-gray-600"
+                            className="w-full bg-brand-surface border border-gray-800 rounded-lg text-sm text-white px-4 py-2.5 focus:outline-none focus:border-brand-purple transition-colors placeholder-gray-600"
                         />
                     </div>
 
@@ -178,7 +189,7 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                             onChange={(e) => setCustomAiName(e.target.value)}
                             placeholder="e.g. Alex"
                             maxLength={30}
-                            className="w-full bg-[#111116] border border-gray-800 rounded-lg text-sm text-white px-4 py-2.5 focus:outline-none focus:border-brand-purple transition-colors placeholder-gray-600"
+                            className="w-full bg-brand-surface border border-gray-800 rounded-lg text-sm text-white px-4 py-2.5 focus:outline-none focus:border-brand-purple transition-colors placeholder-gray-600"
                         />
                     </div>
 
@@ -198,18 +209,28 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                     >
                         Cancel
                     </button>
-                    <button
-                        onClick={handleCreate}
-                        disabled={isSubmitting}
-                        className="flex items-center gap-2 bg-brand-purple hover:bg-[#0da372] disabled:opacity-50 text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors"
-                    >
-                        {isSubmitting ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                            <Check className="w-4 h-4" />
-                        )}
-                        Create from Template
-                    </button>
+                    <div className="flex flex-col sm:flex-row items-center gap-3">
+                        <button
+                            onClick={() => handleCreate(true)}
+                            disabled={isSubmitting || !selectedTemplate.previewPrompt}
+                            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white hover:bg-gray-100 disabled:opacity-50 text-black text-sm font-medium py-2 px-5 rounded-lg transition-colors"
+                        >
+                            <span className="text-lg">✨</span>
+                            Customize with AI
+                        </button>
+                        <button
+                            onClick={() => handleCreate(false)}
+                            disabled={isSubmitting}
+                            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-brand-purple hover:bg-[#0da372] disabled:opacity-50 text-white text-sm font-medium py-2 px-5 rounded-lg transition-colors"
+                        >
+                            {isSubmitting ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <Check className="w-4 h-4" />
+                            )}
+                            Create from Template
+                        </button>
+                    </div>
                 </div>
             </div>
         );
@@ -239,18 +260,18 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search templates..."
-                    className="w-full bg-[#111116] border border-gray-800 rounded-lg text-sm text-white pl-9 pr-4 py-2.5 focus:outline-none focus:border-brand-purple transition-colors placeholder-gray-600"
+                    className="w-full bg-brand-surface border border-gray-800 rounded-lg text-sm text-white pl-9 pr-4 py-2.5 focus:outline-none focus:border-brand-purple transition-colors placeholder-gray-600"
                 />
             </div>
 
             {/* Filters Skeleton */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-6 bg-[#111116] border border-gray-800 rounded-xl p-3">
+            <div className="flex flex-col sm:flex-row gap-3 mb-6 bg-brand-surface border border-gray-800 rounded-xl p-3">
                 <div className="flex-1">
                     <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-1.5">Objective</label>
                     <select
                         value={objective}
                         onChange={(e) => setObjective(e.target.value as any)}
-                        className="w-full bg-[#0B0B0F] border border-gray-800 rounded-lg text-xs text-white px-3 py-2 focus:outline-none focus:border-brand-purple"
+                        className="w-full bg-brand-dark border border-gray-800 rounded-lg text-xs text-white px-3 py-2 focus:outline-none focus:border-brand-purple"
                     >
                         {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
                     </select>
@@ -260,7 +281,7 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                     <select
                         value={niche}
                         onChange={(e) => setNiche(e.target.value)}
-                        className="w-full bg-[#0B0B0F] border border-gray-800 rounded-lg text-xs text-white px-3 py-2 focus:outline-none focus:border-brand-purple"
+                        className="w-full bg-brand-dark border border-gray-800 rounded-lg text-xs text-white px-3 py-2 focus:outline-none focus:border-brand-purple"
                     >
                         <option value="all">All Niches</option>
                         <option value="lead">Lead Generation</option>
@@ -274,7 +295,7 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                     <select
                         value={complexity}
                         onChange={(e) => setComplexity(e.target.value)}
-                        className="w-full bg-[#0B0B0F] border border-gray-800 rounded-lg text-xs text-white px-3 py-2 focus:outline-none focus:border-brand-purple"
+                        className="w-full bg-brand-dark border border-gray-800 rounded-lg text-xs text-white px-3 py-2 focus:outline-none focus:border-brand-purple"
                     >
                         <option value="all">Any Length</option>
                         <option value="short">Quick (1-3 qs)</option>
@@ -295,22 +316,22 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                 </div>
             ) : (
                 <>
-                    {/* Featured Signature Templates */}
-                    {filteredSignature.length > 0 && (
+                    {/* Featured Templates */}
+                    {filteredFeatured.length > 0 && (
                         <>
                             <div className="mb-6">
                                 <div className="flex items-center gap-2 mb-3">
                                     <h3 className="text-xs font-semibold text-gray-300">⭐ Featured Templates</h3>
                                     <span className="text-[8px] px-1.5 py-0.5 bg-brand-purple/20 text-brand-purple rounded-full">
-                                        {filteredSignature.length} picked
+                                        {filteredFeatured.length} picked
                                     </span>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 pb-4 border-b border-gray-800">
-                                    {filteredSignature.map((tmpl) => (
+                                    {filteredFeatured.map((tmpl) => (
                                         <button
                                             key={tmpl.id}
                                             onClick={() => setSelectedTemplate(tmpl)}
-                                            className="text-left bg-gradient-to-br from-[#1a1a20] to-[#0B0B0F] border border-brand-purple/30 rounded-lg p-4 hover:border-brand-purple hover:from-[#2a1a2f] transition-all group relative"
+                                            className="text-left bg-linear-to-br from-[#1a1a20] to-brand-dark border border-brand-purple/30 rounded-lg p-4 hover:border-brand-purple hover:from-[#2a1a2f] transition-all group relative"
                                         >
                                             <span className="absolute top-2 right-2 text-[8px] font-semibold px-2 py-1 bg-brand-purple/20 text-brand-purple rounded-full">
                                                 Featured
@@ -327,6 +348,11 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                                                         <span>·</span>
                                                         <span className="capitalize">{tmpl.recommendedTone}</span>
                                                     </div>
+                                                    {typeof tmpl.weeklyUsageCount === "number" && (
+                                                        <p className="text-[10px] text-amber-400/90 mt-1.5">
+                                                            🔥 Used by {tmpl.weeklyUsageCount} teams this week
+                                                        </p>
+                                                    )}
                                                 </div>
                                             </div>
                                         </button>
@@ -336,13 +362,54 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                         </>
                     )}
 
+                    {/* Signature Templates */}
+                    {filteredSignature.length > 0 && (
+                        <div className="mb-6">
+                            <div className="flex items-center gap-2 mb-3">
+                                <h3 className="text-xs font-semibold text-gray-300">✨ Signature Templates</h3>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 pb-4 border-b border-gray-800">
+                                {filteredSignature.map((tmpl) => (
+                                    <button
+                                        key={tmpl.id}
+                                        onClick={() => setSelectedTemplate(tmpl)}
+                                        className="text-left bg-brand-dark border border-gray-700/80 rounded-lg p-4 hover:border-brand-purple/60 transition-all group relative"
+                                    >
+                                        <span className="absolute top-2 right-2 text-[8px] font-semibold px-2 py-1 bg-gray-700/50 text-gray-200 rounded-full">
+                                            Signature
+                                        </span>
+                                        <div className="flex items-start gap-3 pr-12">
+                                            <span className="text-2xl shrink-0">{tmpl.icon}</span>
+                                            <div className="min-w-0">
+                                                <h3 className="text-sm font-medium text-white mb-0.5 group-hover:text-brand-purple transition-colors">
+                                                    {tmpl.name}
+                                                </h3>
+                                                <p className="text-[10px] text-gray-500 line-clamp-2 mb-2">{tmpl.description}</p>
+                                                <div className="flex items-center gap-2 text-[10px] text-gray-600">
+                                                    <span>{tmpl.fieldCount} questions</span>
+                                                    <span>·</span>
+                                                    <span className="capitalize">{tmpl.recommendedTone}</span>
+                                                </div>
+                                                {typeof tmpl.weeklyUsageCount === "number" && (
+                                                    <p className="text-[10px] text-amber-400/90 mt-1.5">
+                                                        🔥 Used by {tmpl.weeklyUsageCount} teams this week
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
                     {/* All Templates */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {filteredRegular.map((tmpl) => (
                             <button
                                 key={tmpl.id}
                                 onClick={() => setSelectedTemplate(tmpl)}
-                                className="text-left bg-[#0B0B0F] border border-gray-800/80 rounded-lg p-4 hover:border-gray-700 transition-all group"
+                                className="text-left bg-brand-dark border border-gray-800/80 rounded-lg p-4 hover:border-gray-700 transition-all group"
                             >
                                 <div className="flex items-start gap-3">
                                     <span className="text-2xl shrink-0">{tmpl.icon}</span>
@@ -356,6 +423,11 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
                                             <span>·</span>
                                             <span className="capitalize">{tmpl.recommendedTone}</span>
                                         </div>
+                                        {typeof tmpl.weeklyUsageCount === "number" && (
+                                            <p className="text-[10px] text-amber-400/90 mt-1.5">
+                                                🔥 Used by {tmpl.weeklyUsageCount} teams this week
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             </button>

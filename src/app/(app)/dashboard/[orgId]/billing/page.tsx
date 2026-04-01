@@ -3,8 +3,8 @@
 import { useParams, useRouter } from "next/navigation";
 import { useOrgStore } from "@/stores/orgStore";
 import { Check, CreditCard, Rocket, Shield, Wand2 } from "lucide-react";
-import { createStripeCheckoutSession, createStripePortalSession } from "@/lib/api/organizations";
-import { useState } from "react";
+import { createStripeCheckoutSession, createStripePortalSession, getMyOrganizations } from "@/lib/api/organizations";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 
@@ -12,11 +12,36 @@ export default function BillingPage() {
   const params = useParams();
   const orgId = params.orgId as string;
   const router = useRouter();
-  const { getCurrentOrg } = useOrgStore();
-  const currentOrg = getCurrentOrg();
+  const { organizations, setOrganizations } = useOrgStore();
+  const currentOrg = organizations.find((o) => o.id === orgId) ?? null;
   const [loading, setLoading] = useState<string | null>(null);
 
   const plan = currentOrg?.plan || "standard";
+
+  useEffect(() => {
+    const refreshOrganizations = async () => {
+      try {
+        const orgs = await getMyOrganizations();
+        const summaries = orgs.map((o: any) => ({
+          id: o.id,
+          name: o.name,
+          plan: o.plan,
+          myRole: o.myRole,
+          memberCount: o.memberCount,
+          formCount: o.formCount,
+          limits: {
+            maxForms: o.limits?.maxForms ?? 10,
+            maxMembers: o.limits?.maxMembers ?? 5,
+          },
+        }));
+        setOrganizations(summaries);
+      } catch {
+        // Non-blocking: billing page can still render with persisted data
+      }
+    };
+
+    refreshOrganizations();
+  }, [setOrganizations]);
 
   const handleUpgrade = async (priceId: string) => {
     try {
@@ -70,7 +95,7 @@ export default function BillingPage() {
   ];
 
   return (
-    <div className="p-6 md:p-8 xl:p-10 max-w-[1600px] mx-auto w-full">
+    <div className="p-6 md:p-8 xl:p-10 max-w-400 mx-auto w-full">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h2 className="text-xl font-semibold text-gray-100 tracking-tight mb-1">
@@ -84,7 +109,7 @@ export default function BillingPage() {
         {PLANS.map((p) => (
           <div
             key={p.name}
-            className={`relative p-6 rounded-md border ${p.isPopular ? "border-emerald-500/50 bg-[#0B0B0F]" : "border-gray-800/80 bg-[#0B0B0F]"
+            className={`relative p-6 rounded-md border ${p.isPopular ? "border-emerald-500/50 bg-brand-dark" : "border-gray-800/80 bg-brand-dark"
               } flex flex-col hover:border-gray-700 transition-colors shadow-sm`}
           >
             {p.isPopular && (
@@ -141,7 +166,7 @@ export default function BillingPage() {
         ))}
       </div>
 
-      <div className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-5 flex flex-col md:flex-row items-center justify-between gap-4 relative shadow-sm">
+      <div className="bg-brand-dark border border-gray-800/80 rounded-md p-5 flex flex-col md:flex-row items-center justify-between gap-4 relative shadow-sm">
         <div className="flex items-start gap-4 z-10">
           <div className="p-2.5 bg-[#1C1C22] border border-gray-800 text-gray-400 rounded-md shrink-0">
             <Shield className="w-4 h-4" />
@@ -152,7 +177,7 @@ export default function BillingPage() {
           </div>
         </div>
         <button
-          className="shrink-0 bg-[#111116] hover:bg-[#1C1C22] border border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white font-medium text-xs py-2 px-5 rounded-md transition-all shadow-sm z-10 w-full md:w-auto"
+          className="shrink-0 bg-brand-surface hover:bg-[#1C1C22] border border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white font-medium text-xs py-2 px-5 rounded-md transition-all shadow-sm z-10 w-full md:w-auto"
         >
           Contact Sales
         </button>

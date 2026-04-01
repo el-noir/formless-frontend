@@ -181,12 +181,13 @@ export const getFormTones = async (orgId: string): Promise<ToneOption[]> => {
 
 export const getFormTemplates = async (
     orgId: string,
-    params?: { objective?: string; niche?: string; complexity?: string },
+    params?: { objective?: string; niche?: string; complexity?: string; featured?: boolean },
 ): Promise<TemplateSummary[]> => {
     const query = new URLSearchParams();
     if (params?.objective && params.objective !== 'all') query.set('objective', params.objective);
     if (params?.niche && params.niche !== 'all') query.set('niche', params.niche);
     if (params?.complexity && params.complexity !== 'all') query.set('complexity', params.complexity);
+    if (typeof params?.featured === 'boolean') query.set('featured', String(params.featured));
     
     const qs = query.toString() ? `?${query}` : '';
     const res = await apiFetch(`${BASE(orgId)}/forms/config/templates${qs}`);

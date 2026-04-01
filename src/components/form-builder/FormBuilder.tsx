@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { BuilderHeader } from "./BuilderHeader";
 import { PersonaTab, type Tone } from "./config/PersonaTab";
 import { WelcomeTab } from "./config/WelcomeTab";
@@ -8,10 +9,11 @@ import { DesignTab } from "./config/DesignTab";
 import { ShareTab } from "./config/ShareTab";
 import { ChatPreview } from "./preview/ChatPreview";
 import { GeneratingOverlay } from "./GeneratingOverlay";
-import { generateChatLink, saveChatConfig, publishForm, syncOrgForm } from "@/lib/api/organizations";
+import { generateChatLink, saveChatConfig, publishForm, syncOrgForm, aiRefineForm, updateForm } from "@/lib/api/organizations";
 import { useOrgStore } from "@/stores/orgStore";
 import { User, MessageCircle, Share2, Palette } from "lucide-react";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
 
 interface FormBuilderProps {
     form: any;
@@ -34,6 +36,8 @@ const AUTOSAVE_DEBOUNCE_MS = 1200;
 type SaveStatus = "idle" | "saving" | "saved" | "error";
 
 export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
+    const searchParams = useSearchParams();
+    const router = useRouter();
     const currentOrg = useOrgStore((s) => s.getCurrentOrg());
     const canRemoveBranding = currentOrg?.plan === 'pro' || currentOrg?.plan === 'enterprise';
 
@@ -54,6 +58,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
     const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
     const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const isFirstRender = useRef(true);
+    const hasAppliedPromptRef = useRef(false);
 
     // Publish state
     const [chatLink, setChatLink] = useState<string | null>(null);
@@ -66,6 +71,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
     // Sync state
     const [isSyncing, setIsSyncing] = useState(false);
     const [currentForm, setCurrentForm] = useState(form);
+    const [isAutoRefining, setIsAutoRefining] = useState(false);
 
     // Auto-dismiss generating overlay
     const mounted = useRef(true);
@@ -74,6 +80,84 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
         const t = setTimeout(() => { if (mounted.current) setIsGenerating(false); }, TOTAL_GENERATE_MS);
         return () => { mounted.current = false; clearTimeout(t); };
     }, []);
+
+    useEffect(() => {
+        const prompt = searchParams.get("prompt");
+        if (!prompt || !currentForm || hasAppliedPromptRef.current) return;
+
+        hasAppliedPromptRef.current = true;
+
+        let cancelled = false;
+        const runAutoRefine = async () => {
+            setIsAutoRefining(true);
+            setIsGenerating(true);
+
+            try {
+                const preview = {
+                    title: currentForm.title,
+                    description: currentForm.description || "",
+                    fields: currentForm.fields || [],
+                    chatConfig: {
+                        aiName: aiName || "Alex",
+                        tone: tone,
+                        welcomeMessage: welcomeMessage || "",
+                        closingMessage: "",
+                    },
+                    tags: currentForm.tags || [],
+                    fieldCount: (currentForm.fields || []).length,
+                    estimatedMinutes: Math.max(1, Math.ceil((currentForm.fields || []).length / 3)),
+                };
+
+                const refined = await aiRefineForm(orgId, {
+                    instruction: prompt,
+                    currentForm: preview,
+                });
+
+                if (cancelled) return;
+
+                await updateForm(orgId, formId, {
+                    title: refined.title,
+                    description: refined.description,
+                    fields: refined.fields,
+                    chatConfig: {
+                        aiName: refined.chatConfig?.aiName || aiName,
+                        tone: (refined.chatConfig?.tone as Tone) || tone,
+                        welcomeMessage: refined.chatConfig?.welcomeMessage || welcomeMessage,
+                        avatar,
+                    },
+                    tags: refined.tags,
+                });
+
+                setCurrentForm((prev: any) => ({
+                    ...prev,
+                    title: refined.title,
+                    description: refined.description,
+                    fields: refined.fields,
+                    tags: refined.tags,
+                }));
+                setAiName(refined.chatConfig?.aiName || aiName);
+                setTone((refined.chatConfig?.tone as Tone) || tone);
+                setWelcomeMessage(refined.chatConfig?.welcomeMessage || welcomeMessage);
+
+                toast.success("AI customization applied");
+            } catch (e: any) {
+                if (!cancelled) {
+                    toast.error(e?.message || "Failed to auto-customize with AI");
+                }
+            } finally {
+                if (!cancelled) {
+                    setIsAutoRefining(false);
+                    setIsGenerating(false);
+                    router.replace(`/dashboard/${orgId}/forms/${formId}/builder`);
+                }
+            }
+        };
+
+        runAutoRefine();
+        return () => {
+            cancelled = true;
+        };
+    }, [searchParams, currentForm, orgId, formId, aiName, tone, welcomeMessage, avatar, router]);
 
     // Debounced auto-save whenever config changes
     const doSave = useCallback(async (config: { 
@@ -122,6 +206,15 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
             const fullUrl = `${window.location.origin}/chat/${data.data.token}`;
             setChatLink(fullUrl);
             setActiveTab("share");
+
+            if (currentForm?.source === "TEMPLATE") {
+                trackEvent('template_publish', {
+                    orgId,
+                    formId,
+                    formTitle: currentForm.title,
+                    source: currentForm.source,
+                });
+            }
         } catch (e: any) {
             setPublishError(e.message || "Failed to generate link");
         } finally {
@@ -150,7 +243,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
 
     return (
         <div className="flex flex-col flex-1 overflow-hidden relative">
-            {isGenerating && (
+            {(isGenerating || isAutoRefining) && (
                 <GeneratingOverlay form={form} totalMs={TOTAL_GENERATE_MS} />
             )}
 
