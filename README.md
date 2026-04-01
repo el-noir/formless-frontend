@@ -50,8 +50,9 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 - `src/hooks`: Custom React hooks for state and data fetching.
 - `src/store`: Zustand stores for global state management.
 
-## 📚 Embed Integration Docs
+## 📚 Feature Docs & Workstreams
 
+### A3: Embed Widget Hardening (Shipped)
 - `docs/EMBED_DEVELOPER_DOCS.md` — entry point for all embed docs
 - `docs/EMBED_INSTALL_NEXTJS.md` — Next.js install guide
 - `docs/EMBED_INSTALL_REACT_SPA.md` — React SPA install guide
@@ -62,6 +63,9 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 - `docs/EMBED_QA_VALIDATION_NOTES.md` — QA execution notes and pass template
 - `docs/EMBED_DOCS_QA_RUN_LOG.md` — reusable QA run log for execution evidence
 - `docs/A3_WORKSTREAMS_AND_TICKETS.md` — A3 streams, tickets, and risk matrix
+
+### B1: Real-time WYSIWYG Split Builder (In Progress)
+- `docs/B1_WYSIWYG_WORKSTREAMS_AND_TICKETS.md` — workstreams, 16 Jira tickets, risk matrix, sequencing
 
 ## 📄 License
 Private / Proprietary.

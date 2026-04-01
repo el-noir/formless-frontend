@@ -184,11 +184,10 @@ export function ChatPreview({
                         {messages.map((msg: any, i: number) => (
                             <div
                                 key={`msg-${i}-${msg.text}`}
-                                className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                                className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in duration-300`}
                                 style={{
-                                    animation: "fadeIn 0.3s ease forwards",
-                                    animationDelay: `${hasTestAnswers ? 0 : msg.delay}ms`, // Fast load if we have history
-                                    opacity: hasTestAnswers ? 1 : 0,
+                                    animationDelay: `${hasTestAnswers ? 0 : msg.delay}ms`,
+                                    animationFillMode: 'both'
                                 }}
                             >
                                 {msg.role === "ai" && (
@@ -214,11 +213,10 @@ export function ChatPreview({
                         {/* Typing indicator — appears after last message is done */}
                         {!isLoading && (
                             <div
-                                className="flex gap-2 justify-start"
+                                className="flex gap-2 justify-start animate-in fade-in duration-300"
                                 style={{
-                                    animation: "fadeIn 0.3s ease forwards",
                                     animationDelay: `${(messages[messages.length - 1]?.delay ?? 0) + 700}ms`,
-                                    opacity: 0,
+                                    animationFillMode: 'both'
                                 }}
                             >
                                 <div

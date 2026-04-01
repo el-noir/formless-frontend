@@ -97,8 +97,31 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
         const answerableFields = currentFields.filter((f: any) => f.type !== "SECTION_HEADER" && f.type !== "STATEMENT");
         if (answerableFields.length === 0) return;
 
-        // Hash helper for cache using JSON
-        const payload = { fields: currentFields, chatConfig: config, testAnswers: currentAnswers };
+        const safeFields = currentFields.map(f => ({
+            id: f.id,
+            entryId: f.entryId,
+            label: f.label,
+            type: f.type,
+            required: f.required,
+            description: f.description,
+            placeholder: f.placeholder,
+            options: f.options ? f.options.map((o: any) => ({ label: o.label, value: o.value })) : undefined,
+            scaleConfig: f.scaleConfig ? {
+                min: f.scaleConfig.min,
+                max: f.scaleConfig.max,
+                minLabel: f.scaleConfig.minLabel,
+                maxLabel: f.scaleConfig.maxLabel,
+                step: f.scaleConfig.step
+            } : undefined
+        }));
+
+        const safeConfig = {
+            tone: config.tone,
+            welcomeMessage: config.welcomeMessage,
+            aiName: config.aiName
+        };
+
+        const payload = { fields: safeFields, chatConfig: safeConfig, testAnswers: currentAnswers };
         const cacheKey = JSON.stringify(payload);
 
         if (previewCacheRef.current.has(cacheKey)) {
@@ -125,7 +148,8 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
             }
         } catch (err: any) {
             if (err.name !== 'AbortError') {
-                toast.error('Preview update failed');
+                console.error("Preview fetch err:", err);
+                toast.error(err?.message || 'Preview update failed');
             }
         } finally {
             if (!abortControllerRef.current?.signal.aborted) {
@@ -136,10 +160,10 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            triggerPreviewUpdate(fields, { tone, welcomeMessage }, testAnswers);
+            triggerPreviewUpdate(fields, { tone, welcomeMessage, aiName }, testAnswers);
         }, 450);
         return () => clearTimeout(timer);
-    }, [fields, tone, welcomeMessage, testAnswers, triggerPreviewUpdate]);
+    }, [fields, tone, welcomeMessage, aiName, testAnswers, triggerPreviewUpdate]);
 
     const handleTestAnswerSubmit = useCallback((ans: string) => {
         setTestAnswers(prev => [...prev, ans]);
