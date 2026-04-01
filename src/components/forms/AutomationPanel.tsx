@@ -38,6 +38,7 @@ interface DeliveryLog {
     httpStatus?: number;
     latencyMs?: number;
     errorMessage?: string;
+    responseBody?: string;
     createdAt: string;
 }
 
@@ -56,7 +57,7 @@ interface AutomationPanelProps {
     onUpdate?: (updatedForm: any) => void;
 }
 
-// ─── Sample payload for the modal ─────────────────────────────────────────
+// ─── Sample payload for the modal ───────────────────────────────────────
 const buildSamplePayload = (formTitle: string) => ({
     schemaVersion: 'v1',
     event: 'submission.completed',
@@ -83,6 +84,14 @@ const EVENTS = [
     { id: 'submission.failed', label: 'Submission Failed', emoji: '❌' },
     { id: 'form.published', label: 'Form Published', emoji: '🚀' },
     { id: 'form.updated', label: 'Form Modified', emoji: '✏️' },
+];
+
+const WEBHOOK_TEMPLATES = [
+    { id: 'custom', label: '🔧 Custom URL', placeholder: 'https://your-endpoint.com/webhook' },
+    { id: 'zapier', label: '⚡ Zapier Catch Hook', placeholder: 'https://hooks.zapier.com/hooks/catch/...' },
+    { id: 'make', label: '🔮 Make (Integromat)', placeholder: 'https://hook.eu1.make.com/...' },
+    { id: 'n8n', label: '🤖 n8n Webhook', placeholder: 'https://your-n8n.app/webhook/...' },
+    { id: 'pipedream', label: '🌊 Pipedream', placeholder: 'https://eopXXXXXX.m.pipedream.net' },
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────
@@ -408,7 +417,21 @@ export function AutomationPanel({ orgId, formId, form }: AutomationPanelProps) {
                                         {/* Fields */}
                                         <div className="grid grid-cols-2 gap-4 mb-5">
                                             <div className="space-y-1.5">
-                                                <label className="text-[10px] text-gray-500 font-black uppercase tracking-wider">Payload URL</label>
+                                                <div className="flex items-center justify-between">
+                                                    <label className="text-[10px] text-gray-500 font-black uppercase tracking-wider">Payload URL</label>
+                                                    <select
+                                                        onChange={e => {
+                                                            const tpl = WEBHOOK_TEMPLATES.find(t => t.id === e.target.value);
+                                                            if (tpl && tpl.id !== 'custom') handleField(idx, 'url', '');
+                                                        }}
+                                                        className="bg-black/40 border border-gray-800 rounded-md px-1.5 py-0.5 text-[9px] font-bold text-gray-500 focus:outline-none focus:border-brand-purple/30 uppercase tracking-wide"
+                                                        defaultValue="custom"
+                                                    >
+                                                        {WEBHOOK_TEMPLATES.map(t => (
+                                                            <option key={t.id} value={t.id}>{t.label}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                                 <input
                                                     type="url"
                                                     value={auto.config.url}
@@ -515,36 +538,51 @@ export function AutomationPanel({ orgId, formId, form }: AutomationPanelProps) {
                             ) : (
                                 <div className="space-y-2">
                                     {filteredLogs.map(log => (
-                                        <div key={log._id} className="flex items-center justify-between p-3.5 rounded-xl bg-[#111116]/40 border border-gray-800/50 hover:bg-[#111116]/70 transition-colors group">
-                                            <div className="flex items-center gap-4">
-                                                <div className="shrink-0">
-                                                    {log.status === 'SUCCESS'
-                                                        ? <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                                                        : log.status === 'FAILED'
-                                                            ? <XCircle className="w-4 h-4 text-rose-500" />
-                                                            : <Loader2 className="w-4 h-4 text-amber-500 animate-spin" />}
-                                                </div>
-                                                <div>
-                                                    <div className="flex items-center gap-2 flex-wrap">
-                                                        <span className="text-[12px] font-mono font-bold text-gray-300">{log.event}</span>
-                                                        <span className={`text-[9px] px-1.5 py-0.5 rounded font-black uppercase ${log.status === 'SUCCESS' ? 'bg-emerald-500/10 text-emerald-500' : log.status === 'RETRYING' ? 'bg-amber-500/10 text-amber-400' : 'bg-rose-500/10 text-rose-500'}`}>
-                                                            {log.status} {log.httpStatus ? `${log.httpStatus}` : ''}
-                                                        </span>
-                                                        {log.latencyMs != null && (
-                                                            <span className="text-[9px] text-gray-600">{log.latencyMs}ms</span>
-                                                        )}
+                                        <div key={log._id} className="p-3.5 rounded-xl bg-[#111116]/40 border border-gray-800/50 hover:bg-[#111116]/70 transition-colors">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="shrink-0">
+                                                        {log.status === 'SUCCESS'
+                                                            ? <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                                                            : log.status === 'FAILED'
+                                                                ? <XCircle className="w-4 h-4 text-rose-500" />
+                                                                : <Loader2 className="w-4 h-4 text-amber-500 animate-spin" />}
                                                     </div>
-                                                    <div className="text-[10px] text-gray-700 mt-0.5 flex gap-2">
-                                                        <span>Attempt {log.attemptCount}</span>
-                                                        <span>·</span>
-                                                        <span>{formatDistanceToNow(new Date(log.createdAt))} ago</span>
+                                                    <div>
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            <span className="text-[12px] font-mono font-bold text-gray-300">{log.event}</span>
+                                                            <span className={`text-[9px] px-1.5 py-0.5 rounded font-black uppercase ${log.status === 'SUCCESS' ? 'bg-emerald-500/10 text-emerald-500' : log.status === 'RETRYING' ? 'bg-amber-500/10 text-amber-400' : 'bg-rose-500/10 text-rose-500'}`}>
+                                                                {log.status} {log.httpStatus ? `${log.httpStatus}` : ''}
+                                                            </span>
+                                                            {log.latencyMs != null && (
+                                                                <span className="text-[9px] text-gray-600">{log.latencyMs}ms</span>
+                                                            )}
+                                                        </div>
+                                                        <div className="text-[10px] text-gray-700 mt-0.5 flex gap-2">
+                                                            <span>Attempt {log.attemptCount}</span>
+                                                            <span>·</span>
+                                                            <span>{formatDistanceToNow(new Date(log.createdAt))} ago</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            {log.errorMessage && (
-                                                <p className="text-[10px] text-rose-400/70 max-w-[180px] truncate font-mono" title={log.errorMessage}>
-                                                    {log.errorMessage}
-                                                </p>
+                                            {/* Error + Response Body */}
+                                            {(log.errorMessage || log.responseBody) && (
+                                                <div className="mt-2.5 ml-8 space-y-1.5">
+                                                    {log.errorMessage && (
+                                                        <p className="text-[10px] text-rose-400/80 font-mono" title={log.errorMessage}>
+                                                            ✗ {log.errorMessage}
+                                                        </p>
+                                                    )}
+                                                    {log.responseBody && (
+                                                        <div className="bg-black/30 border border-gray-800/40 rounded-md px-2.5 py-1.5">
+                                                            <p className="text-[9px] text-gray-600 font-bold uppercase mb-1">Endpoint Response</p>
+                                                            <p className="text-[10px] text-gray-400 font-mono break-all leading-relaxed" title={log.responseBody}>
+                                                                {log.responseBody.length > 180 ? `${log.responseBody.substring(0, 180)}…` : log.responseBody}
+                                                            </p>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             )}
                                         </div>
                                     ))}
