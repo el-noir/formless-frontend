@@ -64,7 +64,7 @@ export function ChatPreview({
 
     // Select messages depending on if we have backend preview loaded yet
     const messages = useMemo(() => {
-        const seq: { role: "ai" | "user"; text: string; delay: number }[] = [];
+        const seq: { role: "ai" | "user"; text: string; delay: number; isFollowUp?: boolean }[] = [];
         let cumulativeDelay = 0;
 
         if (!previewData) {
@@ -200,11 +200,14 @@ export function ChatPreview({
                                 )}
                                 <div
                                     className={`px-3 py-2 rounded-2xl text-xs leading-relaxed max-w-[75%] ${msg.role === "ai"
-                                        ? "bg-[#1C1C22] border border-gray-800 text-gray-200 rounded-tl-sm"
-                                        : "text-white rounded-tr-sm"
+                                        ? "bg-[#1C1C22] border border-gray-800 text-gray-200 rounded-tl-sm relative"
+                                        : "text-white rounded-tr-sm relative"
                                         }`}
                                     style={msg.role === "user" ? { backgroundColor: themeColor } : {}}
                                 >
+                                    {msg.isFollowUp && msg.role === 'ai' && (
+                                        <div className="absolute -top-2.5 left-2 bg-[#6D28D9] text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded font-bold shadow-sm border border-[#5B21B6] text-white z-10 whitespace-nowrap">Contextual Follow-up</div>
+                                    )}
                                     {msg.text}
                                 </div>
                             </div>
