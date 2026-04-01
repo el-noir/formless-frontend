@@ -540,6 +540,23 @@ export const testAutomation = async (orgId: string, formId: string, automationId
     return res.json();
 };
 
+export const toggleAutomation = async (
+    orgId: string,
+    formId: string,
+    automationId: string,
+    enabled: boolean,
+) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/automations/${automationId}/toggle`, {
+        method: 'PATCH',
+        body: JSON.stringify({ enabled }),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to toggle automation');
+    }
+    return res.json();
+};
+
 export const updateOrgForm = async (orgId: string, formId: string, payload: any) => {
     const res = await apiFetch(`${BASE(orgId)}/forms/${formId}`, {
         method: 'PATCH',
