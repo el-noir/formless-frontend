@@ -324,11 +324,11 @@ export default function OrgFormViewerPage() {
                                 <h4 className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-3">Copy-Paste Snippet</h4>
                                 <div className="relative group">
                                     <pre className="bg-black/40 border border-gray-800 rounded-lg p-5 text-[11px] text-emerald-400/90 overflow-x-auto font-mono leading-relaxed pr-12">
-                                        {`<script \n  src="${typeof window !== 'undefined' ? window.location.origin : 'https://zerofill.app'}/widget.js?v=2" \n  data-zerofill-token="${form.chatLinkToken}"\n></script>`}
+                                        {`<script \n  src="${typeof window !== 'undefined' ? window.location.origin : 'https://zerofill.app'}/widget/v1.js" \n  data-zerofill-token="${form.chatLinkToken}"\n></script>`}
                                     </pre>
                                     <button
                                         onClick={() => {
-                                            const code = `<script src="${typeof window !== 'undefined' ? window.location.origin : 'https://zerofill.app'}/widget.js?v=2" data-zerofill-token="${form.chatLinkToken}"></script>`;
+                                            const code = `<script src="${typeof window !== 'undefined' ? window.location.origin : 'https://zerofill.app'}/widget/v1.js" data-zerofill-token="${form.chatLinkToken}"></script>`;
                                             navigator.clipboard.writeText(code);
                                             toast.success("Snippet copied!");
                                         }}

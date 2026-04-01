@@ -3,7 +3,7 @@
 import React, { useEffect, useState, Suspense, useCallback, useMemo } from "react";
 import { useAuthStore } from "@/stores/authStore";
 import { useOrgStore } from "@/stores/orgStore";
-import { getOrgForms, getDashboardStats } from "@/lib/api/organizations";
+import { getOrgForms, getDashboardStats, getDashboardWidgetHandshakeTelemetry } from "@/lib/api/organizations";
 import { KPICards } from "@/components/dashboard/KPICards";
 import { KPICardsSkeleton } from "@/components/dashboard/skeletons/KPICardsSkeleton";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
@@ -33,6 +33,8 @@ function DashboardContent() {
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<any>(null);
   const [loadingStats, setLoadingStats] = useState(false);
+  const [handshakeStats, setHandshakeStats] = useState<any>(null);
+  const [loadingHandshakeStats, setLoadingHandshakeStats] = useState(false);
   const router = useRouter();
 
   // Fetch forms — stable reference so the useEffect below doesn't loop
@@ -65,15 +67,30 @@ function DashboardContent() {
     }
   }, [orgId]);
 
+  const fetchHandshakeStats = useCallback(async () => {
+    setHandshakeStats(null);
+    setLoadingHandshakeStats(true);
+    try {
+      const data = await getDashboardWidgetHandshakeTelemetry(orgId, { days: 30, limit: 5 });
+      setHandshakeStats(data);
+    } catch (err: any) {
+      console.error("Error fetching widget handshake telemetry:", err);
+    } finally {
+      setLoadingHandshakeStats(false);
+    }
+  }, [orgId]);
+
   useEffect(() => {
     if (accessToken && orgId) {
       fetchForms();
       fetchStats();
+      fetchHandshakeStats();
     } else {
       setForms([]);
       setStats(null);
+      setHandshakeStats(null);
     }
-  }, [accessToken, orgId, fetchForms, fetchStats]);
+  }, [accessToken, orgId, fetchForms, fetchStats, fetchHandshakeStats]);
 
   const isLoading = loadingStats || loadingForms;
   const isAdmin = useMemo(() => isAdminOfCurrentOrg(), [isAdminOfCurrentOrg]);
@@ -164,6 +181,61 @@ function DashboardContent() {
           </div>
         </div>
       )}
+
+      <div className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-5 mb-8 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-gray-200 font-medium text-sm">Widget Handshake Reliability</h3>
+          <span className="text-[11px] text-gray-500">Last 30 days</span>
+        </div>
+
+        {loadingHandshakeStats && !handshakeStats ? (
+          <p className="text-xs text-gray-500">Loading telemetry…</p>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+              <div className="bg-[#111116] border border-gray-800 rounded-md p-3">
+                <p className="text-[11px] text-gray-500 mb-1">Org Fallback Rate</p>
+                <p className="text-lg font-semibold text-gray-100 tabular-nums">{(handshakeStats?.fallbackRate ?? 0).toFixed(2)}%</p>
+              </div>
+              <div className="bg-[#111116] border border-gray-800 rounded-md p-3">
+                <p className="text-[11px] text-gray-500 mb-1">Total Handshakes</p>
+                <p className="text-lg font-semibold text-gray-100 tabular-nums">{handshakeStats?.totalHandshakes ?? 0}</p>
+              </div>
+              <div className="bg-[#111116] border border-gray-800 rounded-md p-3">
+                <p className="text-[11px] text-gray-500 mb-1">Total Fallbacks</p>
+                <p className="text-lg font-semibold text-gray-100 tabular-nums">{handshakeStats?.totalFallbacks ?? 0}</p>
+              </div>
+            </div>
+
+            <div className="border border-gray-800/70 rounded-md overflow-hidden">
+              <div className="grid grid-cols-12 px-3 py-2 text-[11px] text-gray-500 border-b border-gray-800/70 bg-[#111116]">
+                <span className="col-span-6">Form</span>
+                <span className="col-span-2 text-right">Rate</span>
+                <span className="col-span-2 text-right">Fallbacks</span>
+                <span className="col-span-2 text-right">Handshakes</span>
+              </div>
+              {(handshakeStats?.byForm?.length ?? 0) === 0 ? (
+                <p className="px-3 py-3 text-xs text-gray-500">No widget handshake telemetry yet.</p>
+              ) : (
+                <div className="divide-y divide-gray-800/50">
+                  {handshakeStats.byForm.map((row: any) => (
+                    <button
+                      key={row.formId}
+                      onClick={() => router.push(`/dashboard/${orgId}/forms/${row.formId}`)}
+                      className="w-full text-left grid grid-cols-12 px-3 py-2.5 text-xs hover:bg-[#111116] transition-colors"
+                    >
+                      <span className="col-span-6 text-gray-300 truncate pr-3">{row.formTitle}</span>
+                      <span className="col-span-2 text-right tabular-nums text-gray-200">{Number(row.fallbackRate || 0).toFixed(2)}%</span>
+                      <span className="col-span-2 text-right tabular-nums text-amber-400">{row.totalFallbacks ?? 0}</span>
+                      <span className="col-span-2 text-right tabular-nums text-gray-400">{row.totalHandshakes ?? 0}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
 
       {/* ── Top Forms + Activity ───────────────────────────────── */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">

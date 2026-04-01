@@ -433,14 +433,30 @@ export const getDashboardStats = async (orgId: string, params?: { days?: number 
 
 export const getDashboardActivity = async (
     orgId: string,
-    params?: { page?: number; pageSize?: number },
+    params?: { page?: number; pageSize?: number; action?: string; event?: string },
 ) => {
     const query = new URLSearchParams();
     if (params?.page) query.set('page', String(params.page));
     if (params?.pageSize) query.set('pageSize', String(params.pageSize));
+    if (params?.action) query.set('action', params.action);
+    if (params?.event) query.set('event', params.event);
     const qs = query.toString() ? `?${query}` : '';
     const res = await apiFetch(`${BASE(orgId)}/dashboard/activity${qs}`);
     if (!res.ok) throw new Error('Failed to fetch dashboard activity');
+    const data = await res.json();
+    return data.data;
+};
+
+export const getDashboardWidgetHandshakeTelemetry = async (
+    orgId: string,
+    params?: { days?: number; limit?: number },
+) => {
+    const query = new URLSearchParams();
+    if (params?.days) query.set('days', String(params.days));
+    if (params?.limit) query.set('limit', String(params.limit));
+    const qs = query.toString() ? `?${query}` : '';
+    const res = await apiFetch(`${BASE(orgId)}/dashboard/telemetry/widget-handshake${qs}`);
+    if (!res.ok) throw new Error('Failed to fetch widget handshake telemetry');
     const data = await res.json();
     return data.data;
 };
