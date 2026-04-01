@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useMemo } from "react";
-import { Sparkles } from "lucide-react";
+import React, { useEffect, useRef, useMemo, useState } from "react";
+import { Sparkles, RotateCcw } from "lucide-react";
 
 type Tone = "friendly" | "professional" | "concise";
 
@@ -14,6 +14,8 @@ interface Field {
 }
 
 interface ChatPreviewProps {
+    orgId?: string;
+    formId?: string;
     formTitle: string;
     aiName: string;
     aiAvatar: string;
@@ -23,79 +25,32 @@ interface ChatPreviewProps {
     removeBranding?: boolean;
     themeColor?: string;
     buttonStyle?: 'rounded' | 'square';
+    
+    previewData?: any;
+    isLoading?: boolean;
+    isDraft?: boolean;
+    onTestAnswerSubmit?: (ans: string) => void;
+    onResetTestAnswers?: () => void;
 }
 
-// Turn a field into the AI's question for it
-function fieldToQuestion(field: Field, tone: Tone): string {
-    const label = field.label;
-    const required = field.required;
-
-    if (tone === "concise") {
-        return `${label}?`;
-    }
-    if (tone === "professional") {
-        return `Could you please provide your ${label.toLowerCase()}${required ? "" : " (optional)"}?`;
-    }
-    // friendly
-    const starters = ["Great! Now, ", "Perfect! Next — ", "Got it! ", "Awesome! "];
-    const i = Math.abs(label.charCodeAt(0)) % starters.length;
-    return `${starters[i]}what's your ${label.toLowerCase()}?`;
-}
-
-// Build a realistic message sequence from the actual form fields
-function buildMessages(formTitle: string, aiName: string, tone: Tone, welcomeMessage: string, fields: Field[]) {
-    const questionFields = fields.filter((f) => f.type !== "SECTION_HEADER").slice(0, 3);
-
-    const aiOpening = welcomeMessage?.trim()
-        ? welcomeMessage
-        : tone === "concise"
-            ? `Let's fill out "${formTitle}". Ready?`
-            : tone === "professional"
-                ? `Welcome. I'll guide you through completing "${formTitle}".`
-                : `Hi! I'm here to help you fill out "${formTitle}" 👋 Ready to begin?`;
-
-    const messages: { role: "ai" | "user"; text: string; delay: number }[] = [
-        { role: "ai", text: aiOpening, delay: 0 },
-        { role: "user", text: "Yes, let's go!", delay: 700 },
-    ];
-
-    questionFields.forEach((field, i) => {
-        const question = fieldToQuestion(field, tone);
-        messages.push({ role: "ai", text: question, delay: messages[messages.length - 1].delay + 900 });
-
-        // realistic user answer based on field type
-        let userAns = "Sure!";
-        switch (field.type) {
-            case "SHORT_TEXT":
-            case "SHORT_ANSWER": userAns = i === 0 ? "John Smith" : i === 1 ? "john@example.com" : "Marketing"; break;
-            case "EMAIL": userAns = "john@example.com"; break;
-            case "LINEAR_SCALE":
-            case "SCALE": userAns = "8 out of 10"; break;
-            case "MULTIPLE_CHOICE":
-                userAns = field.options?.[0]?.label ?? "Option A"; break;
-            case "CHECKBOXES":
-                userAns = [field.options?.[0]?.label, field.options?.[1]?.label].filter(Boolean).join(", ") || "A, B"; break;
-            case "DATE": userAns = "March 15, 2025"; break;
-            case "PARAGRAPH": userAns = "Everything was great, very smooth experience!"; break;
-            default: userAns = "Got it ✓";
-        }
-        messages.push({ role: "user", text: userAns, delay: messages[messages.length - 1].delay + 700 });
-    });
-
-    return messages;
-}
-
-export function ChatPreview({ 
-    formTitle, 
-    aiName, 
-    aiAvatar, 
-    welcomeMessage, 
-    tone, 
-    fields, 
+export function ChatPreview({
+    formTitle,
+    aiName,
+    aiAvatar,
+    welcomeMessage,
+    tone,
+    fields,
     removeBranding,
     themeColor = "#10b981",
-    buttonStyle = "rounded"
+    buttonStyle = "rounded",
+    previewData,
+    isLoading = false,
+    isDraft,
+    onTestAnswerSubmit,
+    onResetTestAnswers
 }: ChatPreviewProps) {
+    const [inputValue, setInputValue] = useState('');
+
     // Utility to add alpha to hex colors for subtle borders
     const themeWithAlpha = (alpha: number) => {
         if (!themeColor.startsWith('#')) return themeColor;
@@ -106,10 +61,47 @@ export function ChatPreview({
     };
 
     const isUrl = aiAvatar?.startsWith('http') || aiAvatar?.startsWith('/');
-    const messages = useMemo(
-        () => buildMessages(formTitle, aiName, tone, welcomeMessage, fields),
-        [formTitle, aiName, tone, welcomeMessage, fields]
-    );
+
+    // Select messages depending on if we have backend preview loaded yet
+    const messages = useMemo(() => {
+        const seq: { role: "ai" | "user"; text: string; delay: number }[] = [];
+        let cumulativeDelay = 0;
+
+        if (!previewData) {
+            // Simple static mock if no data yet
+            const aiOpening = welcomeMessage?.trim() || `Hi! I'm here to help you fill out "${formTitle}". Ready to begin?`;
+            seq.push({ role: "ai", text: aiOpening, delay: 0 });
+            return seq;
+        }
+
+        // B1-103: Render sequences based on backend's state map (Greeting -> FieldsSoFar Loop -> AI Reaction -> Next Question)
+        seq.push({ role: "ai", text: previewData.greetingPrompt || "Welcome!", delay: 0 });
+
+        const fieldsSoFar = previewData.fieldsSoFar || [];
+
+        if (fieldsSoFar.length > 0) {
+           seq.push({ role: "user", text: "Yes, I'm ready!", delay: cumulativeDelay += 700 });
+           
+           fieldsSoFar.forEach((ansObj: any, idx: number) => {
+               const aiQuestion = ansObj.label ? `${ansObj.label}?` : "Next?";
+               seq.push({ role: "ai", text: aiQuestion, delay: cumulativeDelay += 200 }); // speed up history playback
+               seq.push({ role: "user", text: ansObj.value, delay: cumulativeDelay += 200 });
+           });
+        } else if (previewData.nextQuestion) {
+           seq.push({ role: "user", text: "Yes, I'm ready!", delay: cumulativeDelay += 700 });
+        }
+
+        if (previewData.lastResponse) {
+           seq.push({ role: "ai", text: previewData.lastResponse, delay: cumulativeDelay += 600 });
+        }
+
+        if (previewData.nextQuestion) {
+           seq.push({ role: "ai", text: previewData.nextQuestion, delay: cumulativeDelay += 700 });
+        }
+
+        return seq;
+    }, [formTitle, welcomeMessage, previewData]);
+
     const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -118,22 +110,56 @@ export function ChatPreview({
         return () => clearTimeout(t);
     }, [messages]);
 
+    const handleSend = () => {
+        if (!inputValue.trim() || !onTestAnswerSubmit) return;
+        onTestAnswerSubmit(inputValue);
+        setInputValue("");
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSend();
+        }
+    };
+
+    const hasTestAnswers = previewData?.fieldsSoFar?.length > 0;
+
     return (
         <div className="h-full flex flex-col bg-[#0B0B0F]">
             {/* Preview label */}
-            <div className="flex items-center justify-center gap-2 py-2 border-b border-gray-800/80 shrink-0">
-                <span className="text-[10px] font-semibold text-gray-600 uppercase tracking-wider">Live Preview</span>
+            <div className="flex items-center justify-center gap-2 py-2 border-b border-gray-800/80 shrink-0 relative">
+                {isDraft && (
+                    <span className="absolute left-4 bg-gray-800 text-gray-300 text-[9px] px-2 py-0.5 rounded-full font-medium tracking-wide">
+                        BUILDER
+                    </span>
+                )}
+                <span className="text-[10px] font-semibold text-gray-600 uppercase tracking-wider relative flex items-center gap-2">
+                    Live Preview
+                    {isLoading && <span className="relative w-1.5 h-1.5 rounded-full bg-blue-400/50 animate-pulse" title="Syncing preview..." />}
+                </span>
+                
+                {hasTestAnswers && onResetTestAnswers && (
+                    <button 
+                        onClick={onResetTestAnswers}
+                        className="absolute right-4 text-gray-500 hover:text-white transition-colors flex items-center gap-1 opacity-80"
+                        title="Reset Test Answers"
+                    >
+                        <RotateCcw className="w-3 h-3" />
+                        <span className="text-[9px] font-medium tracking-wide">Reset</span>
+                    </button>
+                )}
             </div>
 
             {/* Phone-frame */}
             <div className="flex-1 flex items-center justify-center p-6 overflow-auto">
                 <div
-                    className="w-full max-w-sm bg-[#0f0f14] border border-gray-800/80 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+                    className="w-full max-w-sm bg-[#0f0f14] border border-gray-800/80 rounded-2xl overflow-hidden shadow-2xl flex flex-col relative transition-all duration-300"
                     style={{ height: "520px" }}
                 >
                     {/* Chat topbar */}
-                    <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800/80 bg-[#0B0B0F] shrink-0">
-                        <div 
+                    <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800/80 bg-[#0B0B0F] shrink-0 z-10">
+                        <div
                             className="w-8 h-8 rounded-full border flex items-center justify-center text-base overflow-hidden"
                             style={{ backgroundColor: themeWithAlpha(0.1), borderColor: themeWithAlpha(0.2) }}
                         >
@@ -142,31 +168,31 @@ export function ChatPreview({
                         <div>
                             <p className="text-xs font-medium text-white">{aiName || "AI Assistant"}</p>
                             <div className="flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                                <p className="text-[10px] text-gray-500">Online</p>
+                                <span className={`w-1.5 h-1.5 rounded-full ${isLoading ? "bg-amber-400" : "bg-green-400"}`} />
+                                <p className="text-[10px] text-gray-500">{isLoading ? 'Thinking...' : 'Online'}</p>
                             </div>
                         </div>
                         {!removeBranding && (
-                          <div className="ml-auto">
-                              <Sparkles className="w-4 h-4 text-brand-purple/50" />
-                          </div>
+                            <div className="ml-auto">
+                                <Sparkles className="w-4 h-4 text-brand-purple/50" />
+                            </div>
                         )}
                     </div>
 
                     {/* Messages */}
-                    <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-                        {messages.map((msg, i) => (
+                    <div className={`flex-1 overflow-y-auto px-4 py-4 space-y-3 transition-opacity duration-300 ${isLoading ? "opacity-60" : "opacity-100"}`}>
+                        {messages.map((msg: any, i: number) => (
                             <div
-                                key={`${formTitle}-${aiName}-${tone}-${welcomeMessage}-${i}`}
+                                key={`msg-${i}-${msg.text}`}
                                 className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                                 style={{
                                     animation: "fadeIn 0.3s ease forwards",
-                                    animationDelay: `${msg.delay}ms`,
-                                    opacity: 0,
+                                    animationDelay: `${hasTestAnswers ? 0 : msg.delay}ms`, // Fast load if we have history
+                                    opacity: hasTestAnswers ? 1 : 0,
                                 }}
                             >
                                 {msg.role === "ai" && (
-                                    <div 
+                                    <div
                                         className="w-6 h-6 rounded-full border flex items-center justify-center text-[10px] shrink-0 mt-0.5 overflow-hidden"
                                         style={{ backgroundColor: themeWithAlpha(0.1), borderColor: themeWithAlpha(0.2) }}
                                     >
@@ -185,64 +211,65 @@ export function ChatPreview({
                             </div>
                         ))}
 
-                        {/* Typing indicator — appears after last message */}
-                        <div
-                            className="flex gap-2 justify-start"
-                            style={{
-                                animation: "fadeIn 0.3s ease forwards",
-                                animationDelay: `${(messages[messages.length - 1]?.delay ?? 0) + 700}ms`,
-                                opacity: 0,
-                            }}
-                        >
-                            <div 
-                                className="w-6 h-6 rounded-full border flex items-center justify-center text-[10px] shrink-0 mt-0.5 overflow-hidden"
-                                style={{ backgroundColor: themeWithAlpha(0.1), borderColor: themeWithAlpha(0.2) }}
+                        {/* Typing indicator — appears after last message is done */}
+                        {!isLoading && (
+                            <div
+                                className="flex gap-2 justify-start"
+                                style={{
+                                    animation: "fadeIn 0.3s ease forwards",
+                                    animationDelay: `${(messages[messages.length - 1]?.delay ?? 0) + 700}ms`,
+                                    opacity: 0,
+                                }}
                             >
-                                {isUrl ? <img src={aiAvatar} alt="" className="w-full h-full object-cover" /> : aiAvatar}
+                                <div
+                                    className="w-6 h-6 rounded-full border flex items-center justify-center text-[10px] shrink-0 mt-0.5 overflow-hidden"
+                                    style={{ backgroundColor: themeWithAlpha(0.1), borderColor: themeWithAlpha(0.2) }}
+                                >
+                                    {isUrl ? <img src={aiAvatar} alt="" className="w-full h-full object-cover" /> : aiAvatar}
+                                </div>
+                                <div className="px-3 py-2.5 rounded-2xl rounded-tl-sm bg-[#1C1C22] border border-gray-800 flex gap-1 items-center">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: "0ms" }} />
+                                    <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: "150ms" }} />
+                                    <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: "300ms" }} />
+                                </div>
                             </div>
-                            <div className="px-3 py-2.5 rounded-2xl rounded-tl-sm bg-[#1C1C22] border border-gray-800 flex gap-1 items-center">
-                                <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: "0ms" }} />
-                                <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: "150ms" }} />
-                                <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: "300ms" }} />
-                            </div>
-                        </div>
-                        <div ref={bottomRef} />
+                        )}
+                        <div ref={bottomRef} className="h-2" />
                     </div>
 
                     {/* Input bar */}
-                    <div className="px-3 py-3 border-t border-gray-800/80 bg-[#0B0B0F] shrink-0">
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2 bg-[#111116] border border-gray-800 rounded-xl px-3 py-2">
-                                <span className="text-xs text-gray-600 flex-1">Type a message...</span>
-                                <div 
-                                    className={`w-6 h-6 flex items-center justify-center opacity-80 ${buttonStyle === 'rounded' ? 'rounded-full' : 'rounded'}`}
-                                    style={{ backgroundColor: themeColor }}
-                                >
-                                    <svg viewBox="0 0 24 24" fill="none" className="w-3 h-3">
-                                        <path d="M5 12h14M12 5l7 7-7 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
+                    {previewData && !isLoading && (
+                        <div className="px-3 py-3 border-t border-gray-800/80 bg-[#0B0B0F] shrink-0 z-10 transition-all">
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center gap-2 bg-[#111116] border border-gray-800 rounded-xl px-3 py-2">
+                                    <input 
+                                        className="text-xs text-white bg-transparent outline-none flex-1 placeholder-gray-600"
+                                        placeholder="Type a test answer..." 
+                                        value={inputValue}
+                                        onChange={(e) => setInputValue(e.target.value)}
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                    <button 
+                                        onClick={handleSend}
+                                        disabled={!inputValue.trim()}
+                                        className={`w-6 h-6 flex items-center justify-center transition-opacity hover:opacity-100 disabled:opacity-50 opacity-80 ${buttonStyle === 'rounded' ? 'rounded-full' : 'rounded'}`}
+                                        style={{ backgroundColor: themeColor }}
+                                    >
+                                        <svg viewBox="0 0 24 24" fill="none" className="w-3 h-3">
+                                            <path d="M5 12h14M12 5l7 7-7 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
                                 </div>
+                                {!removeBranding && (
+                                    <p className="text-center text-[8px] text-gray-700">
+                                        ⚡ Powered by Formless
+                                    </p>
+                                )}
                             </div>
-                            {!removeBranding && (
-                                <p className="text-center text-[8px] text-gray-700">
-                                    Powered by <span className="text-gray-600">0Fill</span>
-                                </p>
-                            )}
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
-
-            <div className="text-center pb-4 shrink-0">
-                <p className="text-[10px] text-gray-700">Preview updates as you configure</p>
-            </div>
-
-            <style jsx>{`
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(4px); }
-                    to   { opacity: 1; transform: translateY(0); }
-                }
-            `}</style>
         </div>
     );
 }

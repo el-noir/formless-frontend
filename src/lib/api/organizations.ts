@@ -309,6 +309,26 @@ export const updateForm = async (orgId: string, formId: string, payload: UpdateF
     return data.data;
 };
 
+export const previewForm = async (
+    orgId: string,
+    formId: string,
+    payload: { fields: any[]; chatConfig?: any; testAnswers?: string[] },
+    signal?: AbortSignal
+) => {
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/preview`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        signal,
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to fetch form preview');
+    }
+    const data = await res.json();
+    return data.data; // { systemPrompt, greetingPrompt, lastResponse, nextQuestion, currentFieldIndex, conversationState, fieldsSoFar, draftHash }
+};
+
+
 export const publishForm = async (orgId: string, formId: string) => {
     const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/publish`, { method: 'POST' });
     if (!res.ok) {

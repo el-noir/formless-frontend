@@ -81,6 +81,74 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
         return () => { mounted.current = false; clearTimeout(t); };
     }, []);
 
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Preview internal state (B1 WYSIWYG)
+    // ─────────────────────────────────────────────────────────────────────────────
+    const [testAnswers, setTestAnswers] = useState<string[]>([]);
+    const [previewData, setPreviewData] = useState<any>(null);
+    const [isPreviewLoading, setIsPreviewLoading] = useState(false);
+    
+    const abortControllerRef = useRef<AbortController | null>(null);
+    const previewCacheRef = useRef<Map<string, any>>(new Map());
+
+    const fields = currentForm?.fields || [];
+    
+    const triggerPreviewUpdate = useCallback(async (currentFields: any[], config: any, currentAnswers: string[]) => {
+        const answerableFields = currentFields.filter((f: any) => f.type !== "SECTION_HEADER" && f.type !== "STATEMENT");
+        if (answerableFields.length === 0) return;
+
+        // Hash helper for cache using JSON
+        const payload = { fields: currentFields, chatConfig: config, testAnswers: currentAnswers };
+        const cacheKey = JSON.stringify(payload);
+
+        if (previewCacheRef.current.has(cacheKey)) {
+            setPreviewData(previewCacheRef.current.get(cacheKey));
+            return;
+        }
+
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        abortControllerRef.current = new AbortController();
+
+        setIsPreviewLoading(true);
+        try {
+            const { previewForm } = await import('@/lib/api/organizations');
+            const result = await previewForm(orgId, formId, payload, abortControllerRef.current.signal);
+            if (result) {
+                previewCacheRef.current.set(cacheKey, result);
+                if (previewCacheRef.current.size > 50) {
+                    const firstKey = previewCacheRef.current.keys().next().value;
+                    if (firstKey) previewCacheRef.current.delete(firstKey);
+                }
+                setPreviewData(result);
+            }
+        } catch (err: any) {
+            if (err.name !== 'AbortError') {
+                toast.error('Preview update failed');
+            }
+        } finally {
+            if (!abortControllerRef.current?.signal.aborted) {
+                setIsPreviewLoading(false);
+            }
+        }
+    }, [orgId, formId]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            triggerPreviewUpdate(fields, { tone, welcomeMessage }, testAnswers);
+        }, 450);
+        return () => clearTimeout(timer);
+    }, [fields, tone, welcomeMessage, testAnswers, triggerPreviewUpdate]);
+
+    const handleTestAnswerSubmit = useCallback((ans: string) => {
+        setTestAnswers(prev => [...prev, ans]);
+    }, []);
+
+    const handleResetTestAnswers = useCallback(() => {
+        setTestAnswers([]);
+    }, []);
+
     useEffect(() => {
         const prompt = searchParams.get("prompt");
         if (!prompt || !currentForm || hasAppliedPromptRef.current) return;
@@ -96,7 +164,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                 const preview = {
                     title: currentForm.title,
                     description: currentForm.description || "",
-                    fields: currentForm.fields || [],
+                    fields: fields,
                     chatConfig: {
                         aiName: aiName || "Alex",
                         tone: tone,
@@ -104,8 +172,8 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                         closingMessage: "",
                     },
                     tags: currentForm.tags || [],
-                    fieldCount: (currentForm.fields || []).length,
-                    estimatedMinutes: Math.max(1, Math.ceil((currentForm.fields || []).length / 3)),
+                    fieldCount: fields.length,
+                    estimatedMinutes: Math.max(1, Math.ceil(fields.length / 3)),
                 };
 
                 const refined = await aiRefineForm(orgId, {
@@ -157,7 +225,7 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
         return () => {
             cancelled = true;
         };
-    }, [searchParams, currentForm, orgId, formId, aiName, tone, welcomeMessage, avatar, router]);
+    }, [searchParams, currentForm, orgId, formId, aiName, tone, welcomeMessage, avatar, router, fields]);
 
     // Debounced auto-save whenever config changes
     const doSave = useCallback(async (config: { 
@@ -337,6 +405,8 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                 {/* RIGHT: Preview Panel */}
                 <div className={`flex-1 overflow-hidden ${!previewMode ? "hidden md:block" : "block"}`}>
                     <ChatPreview
+                        orgId={orgId}
+                        formId={formId}
                         formTitle={currentForm.title}
                         aiName={aiName}
                         aiAvatar={avatar}
@@ -346,6 +416,11 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                         removeBranding={removeBranding}
                         themeColor={themeColor}
                         buttonStyle={buttonStyle}
+                        previewData={previewData}
+                        isLoading={isPreviewLoading}
+                        isDraft={true}
+                        onTestAnswerSubmit={handleTestAnswerSubmit}
+                        onResetTestAnswers={handleResetTestAnswers}
                     />
                 </div>
             </div>
