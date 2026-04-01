@@ -179,9 +179,15 @@ export const getFormTones = async (orgId: string): Promise<ToneOption[]> => {
     return data.data;
 };
 
-export const getFormTemplates = async (orgId: string, category?: string): Promise<TemplateSummary[]> => {
+export const getFormTemplates = async (
+    orgId: string,
+    params?: { objective?: string; niche?: string; complexity?: string },
+): Promise<TemplateSummary[]> => {
     const query = new URLSearchParams();
-    if (category) query.set('category', category);
+    if (params?.objective && params.objective !== 'all') query.set('objective', params.objective);
+    if (params?.niche && params.niche !== 'all') query.set('niche', params.niche);
+    if (params?.complexity && params.complexity !== 'all') query.set('complexity', params.complexity);
+    
     const qs = query.toString() ? `?${query}` : '';
     const res = await apiFetch(`${BASE(orgId)}/forms/config/templates${qs}`);
     if (!res.ok) throw new Error('Failed to fetch templates');

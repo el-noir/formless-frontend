@@ -66,6 +66,13 @@ export interface TemplateSummary {
   nicheSlug?: string;
   suggestedAiName?: string;
   suggestedWelcomeMessage?: string;
+  persona?: string;
+  funnelStage?: string;
+  complexity?: 'short' | 'medium' | 'long';
+  expectedCompletionLength?: number;
+  previewPrompt?: string;
+  outcomes?: string[];
+  analyticsGoals?: string[];
 }
 
 // ─── Field ───────────────────────────────────────────────────────────────────

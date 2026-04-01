@@ -47,13 +47,15 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
 
     useEffect(() => {
         setLoading(true);
-        getFormTemplates(orgId, objective === "all" ? undefined : objective)
+        getFormTemplates(orgId, { objective, niche, complexity })
             .then((loadedTemplates) => {
                 setTemplates(loadedTemplates);
                 // Track template view
                 const signatureCount = loadedTemplates.filter((t) => t.signature).length;
                 console.log('[A2-Tracking] Templates Loaded:', {
-                    category: objective === "all" ? "all" : objective,
+                    objective,
+                    niche,
+                    complexity,
                     totalCount: loadedTemplates.length,
                     signatureCount,
                     templates: loadedTemplates.map((t) => ({
@@ -66,7 +68,7 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
             })
             .catch(() => toast.error("Failed to load templates"))
             .finally(() => setLoading(false));
-    }, [orgId, objective]);
+    }, [orgId, objective, niche, complexity]);
 
     // Load tones when entering customize step
     useEffect(() => {
@@ -89,15 +91,7 @@ export function TemplatePicker({ orgId, onCreated, onBack }: TemplatePickerProps
             t.description.toLowerCase().includes(search.toLowerCase()) ||
             t.tags.some((tag) => tag.toLowerCase().includes(search.toLowerCase()));
 
-        const matchesNiche = niche === "all" || (t.nicheSlug && t.nicheSlug.includes(niche));
-
-        // Basic skeleton logic for complexity (fieldCount)
-        const matchesComplexity = complexity === "all" ||
-            (complexity === "short" && t.fieldCount <= 3) ||
-            (complexity === "medium" && t.fieldCount > 3 && t.fieldCount <= 8) ||
-            (complexity === "long" && t.fieldCount > 8);
-
-        return matchesSearch && matchesNiche && matchesComplexity;
+        return matchesSearch;
     });
 
     const filteredSignature = filtered.filter((t) => t.signature === true);
