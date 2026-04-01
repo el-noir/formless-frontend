@@ -32,6 +32,25 @@ export const sendPublicChatMessage = async (token: string, sessionId: string, me
     return data.data;
 };
 
+export const trackPublicWidgetEvent = async (
+    token: string,
+    event: 'widget_loaded' | 'widget_opened' | 'conversation_started_from_embed' | 'widget_handshake_success' | 'widget_handshake_fallback',
+    properties?: Record<string, unknown>,
+) => {
+    const res = await apiFetch(`${BASE}/${token}/widget-events`, {
+        method: 'POST',
+        body: JSON.stringify({ event, properties: properties || {} }),
+    });
+
+    if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json().catch(() => ({}));
+    return data?.success === true;
+};
+
 /**
  * Streaming variant of sendPublicChatMessage.
  * Calls onToken() for each text delta, then onMetadata() when the stream ends.

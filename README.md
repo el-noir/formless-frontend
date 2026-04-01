@@ -50,5 +50,18 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 - `src/hooks`: Custom React hooks for state and data fetching.
 - `src/store`: Zustand stores for global state management.
 
+## 📚 Embed Integration Docs
+
+- `docs/EMBED_DEVELOPER_DOCS.md` — entry point for all embed docs
+- `docs/EMBED_INSTALL_NEXTJS.md` — Next.js install guide
+- `docs/EMBED_INSTALL_REACT_SPA.md` — React SPA install guide
+- `docs/EMBED_INSTALL_WORDPRESS.md` — WordPress install guide
+- `docs/EMBED_INSTALL_SHOPIFY.md` — Shopify install guide
+- `docs/EMBED_TROUBLESHOOTING_MATRIX.md` — failure diagnosis and fixes
+- `docs/EMBED_TEST_CHECKLIST_AND_SNIPPETS.md` — sample snippets and test checklist
+- `docs/EMBED_QA_VALIDATION_NOTES.md` — QA execution notes and pass template
+- `docs/EMBED_DOCS_QA_RUN_LOG.md` — reusable QA run log for execution evidence
+- `docs/A3_WORKSTREAMS_AND_TICKETS.md` — A3 streams, tickets, and risk matrix
+
 ## 📄 License
 Private / Proprietary.

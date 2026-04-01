@@ -3,7 +3,7 @@
 import React, { useEffect, useState, Suspense, useCallback, useMemo } from "react";
 import { useAuthStore } from "@/stores/authStore";
 import { useOrgStore } from "@/stores/orgStore";
-import { getOrgForms, getDashboardStats, getDashboardWidgetHandshakeTelemetry } from "@/lib/api/organizations";
+import { getOrgForms, getDashboardStats, getDashboardWidgetHandshakeTelemetry, getDashboardEmbedFunnelTelemetry } from "@/lib/api/organizations";
 import { KPICards } from "@/components/dashboard/KPICards";
 import { KPICardsSkeleton } from "@/components/dashboard/skeletons/KPICardsSkeleton";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
@@ -35,6 +35,8 @@ function DashboardContent() {
   const [loadingStats, setLoadingStats] = useState(false);
   const [handshakeStats, setHandshakeStats] = useState<any>(null);
   const [loadingHandshakeStats, setLoadingHandshakeStats] = useState(false);
+  const [embedFunnelStats, setEmbedFunnelStats] = useState<any>(null);
+  const [loadingEmbedFunnelStats, setLoadingEmbedFunnelStats] = useState(false);
   const router = useRouter();
 
   // Fetch forms — stable reference so the useEffect below doesn't loop
@@ -80,17 +82,32 @@ function DashboardContent() {
     }
   }, [orgId]);
 
+  const fetchEmbedFunnelStats = useCallback(async () => {
+    setEmbedFunnelStats(null);
+    setLoadingEmbedFunnelStats(true);
+    try {
+      const data = await getDashboardEmbedFunnelTelemetry(orgId, { days: 30, limit: 6 });
+      setEmbedFunnelStats(data);
+    } catch (err: any) {
+      console.error("Error fetching embed funnel telemetry:", err);
+    } finally {
+      setLoadingEmbedFunnelStats(false);
+    }
+  }, [orgId]);
+
   useEffect(() => {
     if (accessToken && orgId) {
       fetchForms();
       fetchStats();
       fetchHandshakeStats();
+      fetchEmbedFunnelStats();
     } else {
       setForms([]);
       setStats(null);
       setHandshakeStats(null);
+      setEmbedFunnelStats(null);
     }
-  }, [accessToken, orgId, fetchForms, fetchStats, fetchHandshakeStats]);
+  }, [accessToken, orgId, fetchForms, fetchStats, fetchHandshakeStats, fetchEmbedFunnelStats]);
 
   const isLoading = loadingStats || loadingForms;
   const isAdmin = useMemo(() => isAdminOfCurrentOrg(), [isAdminOfCurrentOrg]);
@@ -182,7 +199,7 @@ function DashboardContent() {
         </div>
       )}
 
-      <div className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-5 mb-8 shadow-sm">
+      <div className="bg-brand-dark border border-gray-800/80 rounded-md p-5 mb-8 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-gray-200 font-medium text-sm">Widget Handshake Reliability</h3>
           <span className="text-[11px] text-gray-500">Last 30 days</span>
@@ -232,6 +249,98 @@ function DashboardContent() {
                   ))}
                 </div>
               )}
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="bg-[#0B0B0F] border border-gray-800/80 rounded-md p-5 mb-8 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-gray-200 font-medium text-sm">Embed Funnel</h3>
+          <span className="text-[11px] text-gray-500">Loaded → Opened → Started</span>
+        </div>
+
+        {loadingEmbedFunnelStats && !embedFunnelStats ? (
+          <p className="text-xs text-gray-500">Loading embed funnel telemetry…</p>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
+              <div className="bg-brand-surface border border-gray-800 rounded-md p-3 lg:col-span-2">
+                <p className="text-[11px] text-gray-500 mb-1">Loaded</p>
+                <p className="text-lg font-semibold text-gray-100 tabular-nums">{embedFunnelStats?.totals?.loaded ?? 0}</p>
+              </div>
+              <div className="bg-brand-surface border border-gray-800 rounded-md p-3 lg:col-span-2">
+                <p className="text-[11px] text-gray-500 mb-1">Opened</p>
+                <p className="text-lg font-semibold text-gray-100 tabular-nums">{embedFunnelStats?.totals?.opened ?? 0}</p>
+              </div>
+              <div className="bg-brand-surface border border-gray-800 rounded-md p-3 lg:col-span-2">
+                <p className="text-[11px] text-gray-500 mb-1">Started Conversations</p>
+                <p className="text-lg font-semibold text-gray-100 tabular-nums">{embedFunnelStats?.totals?.conversationsStarted ?? 0}</p>
+              </div>
+              <div className="bg-brand-surface border border-gray-800 rounded-md p-3 sm:col-span-1 lg:col-span-2">
+                <p className="text-[11px] text-gray-500 mb-1">Open Rate</p>
+                <p className="text-lg font-semibold text-gray-100 tabular-nums">{Number(embedFunnelStats?.rates?.openRateFromLoaded ?? 0).toFixed(2)}%</p>
+              </div>
+              <div className="bg-brand-surface border border-gray-800 rounded-md p-3 sm:col-span-1 lg:col-span-2">
+                <p className="text-[11px] text-gray-500 mb-1">Start Rate from Opened</p>
+                <p className="text-lg font-semibold text-gray-100 tabular-nums">{Number(embedFunnelStats?.rates?.conversationRateFromOpened ?? 0).toFixed(2)}%</p>
+              </div>
+              <div className="bg-brand-surface border border-gray-800 rounded-md p-3 sm:col-span-1 lg:col-span-2">
+                <p className="text-[11px] text-gray-500 mb-1">Start Rate from Loaded</p>
+                <p className="text-lg font-semibold text-gray-100 tabular-nums">{Number(embedFunnelStats?.rates?.conversationRateFromLoaded ?? 0).toFixed(2)}%</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              <div className="border border-gray-800/70 rounded-md overflow-hidden">
+                <div className="grid grid-cols-12 px-3 py-2 text-[11px] text-gray-500 border-b border-gray-800/70 bg-brand-surface">
+                  <span className="col-span-5">Host Domain</span>
+                  <span className="col-span-2 text-right">Loaded</span>
+                  <span className="col-span-2 text-right">Opened</span>
+                  <span className="col-span-2 text-right">Started</span>
+                  <span className="col-span-1 text-right">%</span>
+                </div>
+                {(embedFunnelStats?.byHostDomain?.length ?? 0) === 0 ? (
+                  <p className="px-3 py-3 text-xs text-gray-500">No host-domain telemetry yet.</p>
+                ) : (
+                  <div className="divide-y divide-gray-800/50">
+                    {embedFunnelStats.byHostDomain.map((row: any, i: number) => (
+                      <div key={`${row.hostDomain}-${i}`} className="grid grid-cols-12 px-3 py-2.5 text-xs hover:bg-brand-surface transition-colors">
+                        <span className="col-span-5 text-gray-300 truncate pr-3">{row.hostDomain}</span>
+                        <span className="col-span-2 text-right tabular-nums text-gray-400">{row.loaded ?? 0}</span>
+                        <span className="col-span-2 text-right tabular-nums text-gray-400">{row.opened ?? 0}</span>
+                        <span className="col-span-2 text-right tabular-nums text-gray-300">{row.conversationsStarted ?? 0}</span>
+                        <span className="col-span-1 text-right tabular-nums text-emerald-400">{Number(row.conversationRateFromOpened ?? 0).toFixed(1)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="border border-gray-800/70 rounded-md overflow-hidden">
+                <div className="grid grid-cols-12 px-3 py-2 text-[11px] text-gray-500 border-b border-gray-800/70 bg-brand-surface">
+                  <span className="col-span-5">Embed Mode</span>
+                  <span className="col-span-2 text-right">Loaded</span>
+                  <span className="col-span-2 text-right">Opened</span>
+                  <span className="col-span-2 text-right">Started</span>
+                  <span className="col-span-1 text-right">%</span>
+                </div>
+                {(embedFunnelStats?.byEmbedMode?.length ?? 0) === 0 ? (
+                  <p className="px-3 py-3 text-xs text-gray-500">No mode telemetry yet.</p>
+                ) : (
+                  <div className="divide-y divide-gray-800/50">
+                    {embedFunnelStats.byEmbedMode.map((row: any, i: number) => (
+                      <div key={`${row.mode}-${i}`} className="grid grid-cols-12 px-3 py-2.5 text-xs hover:bg-brand-surface transition-colors">
+                        <span className="col-span-5 text-gray-300 truncate pr-3">{row.mode}</span>
+                        <span className="col-span-2 text-right tabular-nums text-gray-400">{row.loaded ?? 0}</span>
+                        <span className="col-span-2 text-right tabular-nums text-gray-400">{row.opened ?? 0}</span>
+                        <span className="col-span-2 text-right tabular-nums text-gray-300">{row.conversationsStarted ?? 0}</span>
+                        <span className="col-span-1 text-right tabular-nums text-emerald-400">{Number(row.conversationRateFromOpened ?? 0).toFixed(1)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </>
         )}

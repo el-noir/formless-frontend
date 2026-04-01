@@ -461,6 +461,20 @@ export const getDashboardWidgetHandshakeTelemetry = async (
     return data.data;
 };
 
+export const getDashboardEmbedFunnelTelemetry = async (
+    orgId: string,
+    params?: { days?: number; limit?: number },
+) => {
+    const query = new URLSearchParams();
+    if (params?.days) query.set('days', String(params.days));
+    if (params?.limit) query.set('limit', String(params.limit));
+    const qs = query.toString() ? `?${query}` : '';
+    const res = await apiFetch(`${BASE(orgId)}/dashboard/telemetry/embed-funnel${qs}`);
+    if (!res.ok) throw new Error('Failed to fetch embed funnel telemetry');
+    const data = await res.json();
+    return data.data;
+};
+
 // ─── Automations ─────────────────────────────────────────────────────────────
 
 export const getFormAutomations = async (orgId: string, formId: string) => {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { getPublicFormInfo, startPublicChat, sendPublicChatMessage, sendPublicChatMessageStream } from '@/lib/api/public-chat';
+import { getPublicFormInfo, startPublicChat, sendPublicChatMessage, sendPublicChatMessageStream, trackPublicWidgetEvent } from '@/lib/api/public-chat';
 import { Message, ProgressDetail } from '@/components/chat/types';
 
 interface FormInfo {
@@ -69,6 +69,33 @@ export function useChatSession(token: string, isEmbed: boolean = false) {
             const data = await startPublicChat(token, pageContext);
             setSessionId(data.sessionId);
             setChatState(data.state);
+
+            if (isEmbed) {
+                const rawMode = params?.get('widgetMode') || 'bubble';
+                const mode = ['inline', 'popup', 'bubble'].includes(rawMode)
+                    ? rawMode
+                    : 'bubble';
+                const scriptVersion = params?.get('scriptVersion') || 'v1';
+
+                let hostDomain: string | undefined;
+                const rawPageUrl = params?.get('pageUrl');
+                if (rawPageUrl) {
+                    try {
+                        hostDomain = new URL(rawPageUrl).hostname;
+                    } catch {
+                        hostDomain = undefined;
+                    }
+                }
+
+                trackPublicWidgetEvent(token, 'conversation_started_from_embed', {
+                    mode,
+                    scriptVersion,
+                    hostDomain,
+                }).catch(() => {
+                    // Telemetry failures should not block chat start.
+                });
+            }
+
             if (data.progressDetail) {
                 setProgressDetail(data.progressDetail);
                 setProgress(data.progressDetail.percentage);

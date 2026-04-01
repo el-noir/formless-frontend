@@ -4,9 +4,11 @@
     const requestedMode = script ? (script.getAttribute('data-mode') || 'bubble') : 'bubble';
     const requestedPosition = script ? (script.getAttribute('data-position') || 'bottom-right') : 'bottom-right';
     const requestedProtocol = script ? (script.getAttribute('data-protocol') || 'v1') : 'v1';
+    const scriptVersion = 'v1';
     const requestedAutoOpen = script ? script.getAttribute('data-auto-open') !== 'false' : true;
     const requestedAutoOpenDelay = parseInt(script?.getAttribute('data-auto-open-delay') || '5000', 10);
     const requestedThemeInherit = script ? script.getAttribute('data-theme-inherit') === 'true' : false;
+    const hostDomain = window.location.hostname || 'unknown';
 
     const baseUrl = (window.location.origin.includes('localhost') || window.location.protocol === 'file:')
         ? 'http://localhost:3000'
@@ -27,7 +29,12 @@
     function reportWidgetEvent(event, properties) {
         const payload = JSON.stringify({
             event,
-            properties: properties || {},
+            properties: {
+                mode: requestedMode,
+                scriptVersion,
+                hostDomain,
+                ...(properties || {}),
+            },
         });
 
         try {
@@ -139,6 +146,10 @@
             ? config.embedAutoOpenDelayMs
             : requestedAutoOpenDelay;
         const themeColor = config?.themeColor || '#10B981';
+        const pageTitle = encodeURIComponent(document.title || '');
+        const pageUrl = encodeURIComponent(window.location.href || '');
+        const modeQuery = encodeURIComponent(mode);
+        const versionQuery = encodeURIComponent(scriptVersion);
 
         const style = document.createElement('style');
         style.innerHTML = `
@@ -214,7 +225,7 @@
         if (mode === 'inline') {
             const iframeInline = document.createElement('iframe');
             iframeInline.id = 'zerofill-inline-iframe';
-            iframeInline.src = `${baseUrl}/chat/${token}/embed`;
+            iframeInline.src = `${baseUrl}/chat/${token}/embed?pageTitle=${pageTitle}&pageUrl=${pageUrl}&widgetMode=${modeQuery}&scriptVersion=${versionQuery}`;
             iframeInline.style.cssText = [
                 'width:100%',
                 'height:700px',
@@ -226,6 +237,9 @@
             iframeInline.setAttribute('loading', 'lazy');
             iframeInline.setAttribute('title', 'ZeroFill Chat');
             script?.parentNode?.insertBefore(iframeInline, script.nextSibling);
+            reportWidgetEvent('widget_loaded', {
+                mode,
+            });
             return;
         }
 
@@ -249,10 +263,20 @@
             ].join(';');
 
             launcher.onclick = function () {
-                window.open(`${baseUrl}/chat/${token}/embed`, '_blank', 'noopener,noreferrer,width=420,height=700');
+                reportWidgetEvent('widget_opened', {
+                    mode,
+                });
+                window.open(
+                    `${baseUrl}/chat/${token}/embed?pageTitle=${pageTitle}&pageUrl=${pageUrl}&widgetMode=${modeQuery}&scriptVersion=${versionQuery}`,
+                    '_blank',
+                    'noopener,noreferrer,width=420,height=700'
+                );
             };
 
             document.body.appendChild(launcher);
+            reportWidgetEvent('widget_loaded', {
+                mode,
+            });
             return;
         }
 
@@ -282,9 +306,7 @@
         container.appendChild(button);
         document.body.appendChild(container);
 
-        const pageTitle = encodeURIComponent(document.title || '');
-        const pageUrl = encodeURIComponent(window.location.href || '');
-        const iframeSrc = `${baseUrl}/chat/${token}/embed?pageTitle=${pageTitle}&pageUrl=${pageUrl}`;
+        const iframeSrc = `${baseUrl}/chat/${token}/embed?pageTitle=${pageTitle}&pageUrl=${pageUrl}&widgetMode=${modeQuery}&scriptVersion=${versionQuery}`;
 
         let isOpen = false;
         let iframeLoaded = false;
@@ -297,6 +319,7 @@
             }
             reportWidgetEvent('widget_opened', {
                 protocol: requestedProtocol,
+                mode,
             });
             iframeContainer.classList.add('open');
             button.setAttribute('aria-label', 'Close chat');
@@ -328,6 +351,10 @@
                 if (!isOpen) openWidget();
             }, Math.max(0, autoOpenDelay));
         }
+
+        reportWidgetEvent('widget_loaded', {
+            mode,
+        });
     }
 
     (async function init() {
@@ -338,6 +365,7 @@
                 attempt: handshakeResult?.attempt || 1,
                 protocol: requestedProtocol,
                 compatibilityMode: handshakeResult?.data?.compatibilityMode || 'unknown',
+                scriptVersion,
             });
         } catch (err) {
             console.warn('ZeroFill Widget: handshake unavailable, using local defaults.', err?.message || err);
@@ -347,6 +375,7 @@
                 code: err?.code || null,
                 status: err?.status || null,
                 reason: String(err?.message || 'handshake_unavailable').slice(0, 200),
+                scriptVersion,
             });
         }
 
