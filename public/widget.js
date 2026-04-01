@@ -1,11 +1,19 @@
 (function () {
     const script = document.currentScript;
     const token = script ? script.getAttribute('data-zerofill-token') : null;
+    const mode = script ? (script.getAttribute('data-mode') || 'bubble') : 'bubble';
+    const position = script ? (script.getAttribute('data-position') || 'bottom-right') : 'bottom-right';
+    const protocol = script ? (script.getAttribute('data-protocol') || 'v1') : 'v1';
     const autoOpen = script ? script.getAttribute('data-auto-open') !== 'false' : true; // default: auto-open
     const autoOpenDelay = parseInt(script?.getAttribute('data-auto-open-delay') || '5000', 10);
+    const themeInherit = script ? script.getAttribute('data-theme-inherit') === 'true' : false;
     const baseUrl = (window.location.origin.includes('localhost') || window.location.protocol === 'file:')
         ? 'http://localhost:3000'
         : 'https://zerofill.app';
+
+    if (protocol !== 'v1') {
+        console.warn(`ZeroFill Widget: Unsupported data-protocol "${protocol}". Falling back to v1.`);
+    }
 
     if (!token || token === 'undefined') {
         console.error('ZeroFill Widget: Missing or invalid data-zerofill-token attribute. Please copy the code from your dashboard.');
@@ -77,6 +85,16 @@
             transform: translateY(0) scale(1);
         }
 
+        #zerofill-widget-container.left {
+            right: auto;
+            left: 20px;
+        }
+
+        #zerofill-widget-container.left #zerofill-iframe-container {
+            right: auto;
+            left: 0;
+        }
+
         #zerofill-iframe {
             width: 100%;
             height: 100%;
@@ -95,6 +113,9 @@
     // Elements
     const container = document.createElement('div');
     container.id = 'zerofill-widget-container';
+    if (position === 'bottom-left') {
+        container.classList.add('left');
+    }
 
     const iframeContainer = document.createElement('div');
     iframeContainer.id = 'zerofill-iframe-container';
@@ -114,6 +135,43 @@
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
     `;
+
+    if (mode === 'popup') {
+        const launcher = document.createElement('button');
+        launcher.id = 'zerofill-popup-launcher';
+        launcher.textContent = 'Open Chat';
+        launcher.style.cssText = [
+            'position:fixed',
+            position === 'bottom-left' ? 'left:20px' : 'right:20px',
+            'bottom:20px',
+            'z-index:999999',
+            'border:none',
+            'border-radius:9999px',
+            'padding:10px 14px',
+            themeInherit ? 'background:inherit' : 'background:#10B981',
+            themeInherit ? 'color:inherit' : 'color:#ffffff',
+            'box-shadow:0 4px 12px rgba(0,0,0,0.15)',
+            'cursor:pointer',
+            'font:600 12px/1.2 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif'
+        ].join(';');
+
+        launcher.onclick = function () {
+            window.open(`${baseUrl}/chat/${token}/embed`, '_blank', 'noopener,noreferrer,width=420,height=700');
+        };
+        document.body.appendChild(launcher);
+        return;
+    }
+
+    if (mode === 'inline') {
+        const iframeInline = document.createElement('iframe');
+        iframeInline.id = 'zerofill-inline-iframe';
+        iframeInline.src = `${baseUrl}/chat/${token}/embed`;
+        iframeInline.style.cssText = 'width:100%;height:700px;border:0;border-radius:12px;max-width:100%';
+        iframeInline.setAttribute('loading', 'lazy');
+        iframeInline.setAttribute('title', 'ZeroFill Chat');
+        script?.parentNode?.insertBefore(iframeInline, script.nextSibling);
+        return;
+    }
 
     container.appendChild(iframeContainer);
     container.appendChild(button);

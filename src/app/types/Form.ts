@@ -134,6 +134,10 @@ export interface ChatConfig {
   closingMessage?: string;
   customPersonality?: string;
   allowedDomains?: string[];
+  embedMode?: EmbedMode;
+  embedPosition?: 'bottom-right' | 'bottom-left';
+  embedAutoOpenDelayMs?: number;
+  embedThemeInherit?: boolean;
 }
 
 // ─── Settings ────────────────────────────────────────────────────────────────
@@ -263,4 +267,16 @@ export interface FormListItem {
   chatLinkToken: string | null;
   version: number;
   createdAt: string;
+}
+
+export type EmbedMode = 'inline_iframe' | 'popup_launcher' | 'floating_bubble';
+
+export interface EmbedSnippetResponse {
+  protocolVersion: string;
+  scriptVersion: string;
+  token: string;
+  embedUrl: string;
+  scriptUrl: string;
+  mode: EmbedMode | 'all';
+  snippets: Record<EmbedMode, string>;
 }

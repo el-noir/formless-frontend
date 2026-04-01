@@ -324,6 +324,11 @@ export function FormBuilder({ form, orgId, formId }: FormBuilderProps) {
                                 orgId={orgId}
                                 formId={formId}
                                 initialExpiresAt={form.chatLinkExpiresAt ?? null}
+                                initialAllowedDomains={currentForm?.chatConfig?.allowedDomains ?? []}
+                                initialEmbedMode={currentForm?.chatConfig?.embedMode}
+                                initialEmbedPosition={currentForm?.chatConfig?.embedPosition}
+                                initialEmbedAutoOpenDelayMs={currentForm?.chatConfig?.embedAutoOpenDelayMs}
+                                initialEmbedThemeInherit={currentForm?.chatConfig?.embedThemeInherit}
                             />
                         )}
                     </div>

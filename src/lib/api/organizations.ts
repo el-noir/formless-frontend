@@ -10,6 +10,8 @@ import type {
     TemplateSummary,
     FormResponse,
     AiGeneratedFormPreview,
+    EmbedMode,
+    EmbedSnippetResponse,
 } from "@/app/types/Form";
 
 const BASE = (orgId: string) => `/organizations/${orgId}`;
@@ -163,6 +165,35 @@ export const generateChatLink = async (orgId: string, formId: string) => {
     }
     return res.json();
 };
+
+export const getEmbedSnippets = async (
+    orgId: string,
+    formId: string,
+    params?: {
+        mode?: EmbedMode;
+        position?: 'bottom-right' | 'bottom-left';
+        autoOpenDelayMs?: number;
+        themeInherit?: boolean;
+        hostDomain?: string;
+    }
+): Promise<EmbedSnippetResponse> => {
+    const query = new URLSearchParams();
+    if (params?.mode) query.set('mode', params.mode);
+    if (params?.position) query.set('position', params.position);
+    if (typeof params?.autoOpenDelayMs === 'number') query.set('autoOpenDelayMs', String(params.autoOpenDelayMs));
+    if (typeof params?.themeInherit === 'boolean') query.set('themeInherit', String(params.themeInherit));
+    if (params?.hostDomain) query.set('hostDomain', params.hostDomain);
+
+    const qs = query.toString() ? `?${query}` : '';
+    const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/embed-snippets${qs}`);
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || err?.error?.message || 'Failed to generate embed snippets');
+    }
+    const data = await res.json();
+    return data.data;
+};
+
 export const getFormResponses = async (orgId: string, formId: string) => {
     const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/responses`);
     if (!res.ok) throw new Error('Failed to fetch form responses');
@@ -349,7 +380,17 @@ export const getFormAnalyticsFieldDetail = async (
 export const saveChatConfig = async (
     orgId: string,
     formId: string,
-    config: { aiName?: string; tone?: string; avatar?: string; welcomeMessage?: string; allowedDomains?: string[] },
+    config: {
+        aiName?: string;
+        tone?: string;
+        avatar?: string;
+        welcomeMessage?: string;
+        allowedDomains?: string[];
+        embedMode?: 'inline_iframe' | 'popup_launcher' | 'floating_bubble';
+        embedPosition?: 'bottom-right' | 'bottom-left';
+        embedAutoOpenDelayMs?: number;
+        embedThemeInherit?: boolean;
+    },
 ) => {
     const res = await apiFetch(`${BASE(orgId)}/forms/${formId}/chat-config`, {
         method: 'PATCH',
